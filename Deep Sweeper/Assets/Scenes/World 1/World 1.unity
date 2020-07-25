@@ -831,12 +831,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minHeight: 2
-  speed: 10
-  maxTurbo: 1.7
+  speed: 8
+  maxTurbo: 5
   turnSpeed: 1
   ascendSpeed: 4
   descendSpeed: 1
-  maxVelocity: 5
+  maxVelocity: 10
   useFloat: 1
   floatSpeed: 1
   waveDelay: 0.1

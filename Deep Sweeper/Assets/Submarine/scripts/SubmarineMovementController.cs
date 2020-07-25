@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SubmarineMovementController : MonoBehaviour
 {
@@ -22,8 +21,8 @@ public class SubmarineMovementController : MonoBehaviour
     [Tooltip("The submarine's descending speed.")]
     [SerializeField] private float descendSpeed = 1;
 
-    [Tooltip("The maximum velocity the submariine is able to reach.")]
-    [SerializeField] private float maxVelocity = 5;
+    [Tooltip("The maximum velocity magnitude is determined by current speed divided by relativeMaxMagnitude.")]
+    [SerializeField] [Range(1, 50f)] private float maxVelocity = 30;
 
     [Header("Wave Floating Settings")]
     [Tooltip("True to allow the submarine to float over the underwater waves at rest.")]
@@ -40,7 +39,6 @@ public class SubmarineMovementController : MonoBehaviour
 
     private Rigidbody rigidBody;
     private DirectionUnit directionUnit;
-    private Vector3 prevVel;
     private Vector3 startingFloatPos;
     private Vector3 lastDirection;
     private float delayFloatTimer;
@@ -53,7 +51,6 @@ public class SubmarineMovementController : MonoBehaviour
         this.rigidBody = GetComponent<Rigidbody>();
         this.directionUnit = DirectionUnit.Instance;
         this.lastDirection = Vector3.zero;
-        this.prevVel = Vector3.zero;
         this.delayFloatTimer = waveDelay;
         this.startingFloatPos = transform.position;
         this.lerpedFloatTime = 0;
@@ -63,12 +60,11 @@ public class SubmarineMovementController : MonoBehaviour
     }
 
     private void Update() {
+        //get user input
         float horInput = Input.GetAxis("Horizontal");
         float verInput = Input.GetAxis("Vertical");
         float ascendInput = Input.GetAxis("Ascend");
         float turboInput = Input.GetAxis("Turbo") * (maxTurbo - 1) + 1;
-
-        print("turbo: " + turboInput);
 
         lastDirection = Move(horInput, verInput, ascendInput, turboInput);
         if (Mathf.Abs(verInput) > 0 || Mathf.Abs(horInput) > 0) Turn(lastDirection);
@@ -80,6 +76,7 @@ public class SubmarineMovementController : MonoBehaviour
         rigidBody.constraints = unfreezeCond ? defaultConstaint : yFreezeConstaint;
         if (!resting) Descend(ascendInput);
 
+        //float
         if (useFloat) {
             bool atMinHeight = Mathf.Abs(transform.position.y - minHeight) < .1f;
 
@@ -102,10 +99,6 @@ public class SubmarineMovementController : MonoBehaviour
     /// <param name="turboInput">Additional turbo multiplier [1:2]</param>
     /// <returns>The direction to which the user is directing.</returns>
     private Vector3 Move(float horInput, float verInput, float ascendInput, float turboInput) {
-        /*//prevent the submarine's velocity from diverging
-        if (rigidBody.velocity.magnitude > maxVelocity)
-            return lastDirection;*/
-
         float finalSpeed = speed * turboInput;
         Vector3 verDirection = directionUnit.transform.forward * verInput;
         Vector3 horDirection = directionUnit.transform.right * horInput;
@@ -114,7 +107,9 @@ public class SubmarineMovementController : MonoBehaviour
         Vector3 forceVector = direction * finalSpeed + ascendVector;
         direction.y = 0;
         rigidBody.AddForce(forceVector);
-        prevVel = rigidBody.velocity;
+
+        //prevent the submarine's velocity from diverging
+        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxVelocity);
         return direction;
     }
 
