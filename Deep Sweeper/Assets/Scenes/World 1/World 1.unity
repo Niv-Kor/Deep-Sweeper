@@ -368,7 +368,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 600
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -811,7 +811,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136175971}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71.089905, y: 2, z: 66.10995}
+  m_LocalPosition: {x: 193, y: 2, z: 230}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2039030661}
@@ -834,7 +834,7 @@ MonoBehaviour:
   speed: 8
   maxTurbo: 5
   turnSpeed: 1
-  ascendSpeed: 4
+  ascendSpeed: 12
   descendSpeed: 1
   maxVelocity: 10
   useFloat: 1
