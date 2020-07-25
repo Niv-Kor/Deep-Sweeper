@@ -173,7 +173,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479274470}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71.089905, y: 0.35819137, z: 66.10995}
+  m_LocalPosition: {x: 71.089905, y: 2.41, z: 67.267}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2099123040}
@@ -401,6 +401,52 @@ Transform:
   m_Father: {fileID: 2099123040}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 270, y: 0, z: -90}
+--- !u!1 &1120074056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1120074057}
+  - component: {fileID: 1120074058}
+  m_Layer: 0
+  m_Name: Direction Unit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1120074057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120074056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2099123040}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1120074058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120074056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358afc4575ecb144ca53b6e8d6f73e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  freezeX: 1
+  freezeY: 0
+  freezeZ: 1
 --- !u!1 &1510324078
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,6 +646,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
+  - {fileID: 1120074057}
   m_Father: {fileID: 479274473}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -783,17 +830,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b205c0e5b5c981419b53e9a1d24470e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraRig: {fileID: 2099123039}
   minHeight: 2
-  speed: 4
-  turnSpeed: 0.7
-  ascendSpeed: 1
+  speed: 10
+  maxTurbo: 1.7
+  turnSpeed: 1
+  ascendSpeed: 4
   descendSpeed: 1
   maxVelocity: 5
   useFloat: 1
   floatSpeed: 1
   waveDelay: 0.1
-  waveLength: 0.3
+  waveLength: 1
 --- !u!54 &2136175974
 Rigidbody:
   m_ObjectHideFlags: 0
