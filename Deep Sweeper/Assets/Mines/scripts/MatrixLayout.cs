@@ -99,7 +99,7 @@ public class MatrixLayout : MonoBehaviour
 
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.SurroundingMines = minedNeighbours;
+                grid.Indicator = minedNeighbours;
             }
         }
     }
