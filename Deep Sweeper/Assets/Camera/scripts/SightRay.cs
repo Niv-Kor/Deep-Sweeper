@@ -7,12 +7,14 @@ public class SightRay : MonoBehaviour
         private GameObject mineObj;
         private MineGrid grid;
         private MineHighlighter highlighter;
+        private MineExploder exploder;
 
         /// <param name="mine">A mine object</param>
         public MineInfo(GameObject mine) {
             this.mineObj = mine;
             this.grid = mineObj.GetComponentInParent<MineGrid>();
             this.highlighter = mineObj.GetComponent<MineHighlighter>();
+            this.exploder = mineObj.GetComponent<MineExploder>();
         }
 
         /// <summary>
@@ -38,6 +40,14 @@ public class SightRay : MonoBehaviour
         public void ToggleFlag() {
             grid.IsFlagged = !grid.IsFlagged;
         }
+
+        /// <summary>
+        /// Explode the mine.
+        /// </summary>
+        public void Explode() {
+            grid.IsFlagged = false;
+            exploder.Explode();
+        }
     }
 
     [Tooltip("Maximum raycast distance from the sight's center.")]
@@ -57,6 +67,11 @@ public class SightRay : MonoBehaviour
             bool rightMouse = Input.GetMouseButtonDown(1);
 
             if (rightMouse) selectedMine.ToggleFlag();
+            if (leftMouse) {
+                selectedMine.ToggleFlag();
+                selectedMine.Explode();
+                selectedMine = null;
+            }
         }
     }
 

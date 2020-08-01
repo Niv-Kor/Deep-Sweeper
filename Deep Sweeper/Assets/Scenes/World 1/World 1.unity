@@ -742,6 +742,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1066997158, guid: 52e71de8fc15c2c4981450201a804b66, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300002, guid: b9d7ac1a0f551404f8d32e1e02b64325, type: 3}
+    - target: {fileID: 1066997159, guid: 52e71de8fc15c2c4981450201a804b66, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 169.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066997159, guid: 52e71de8fc15c2c4981450201a804b66, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066997159, guid: 52e71de8fc15c2c4981450201a804b66, type: 3}
+      propertyPath: TrailModule.widthOverTrail.scalar
+      value: 11.29
+      objectReference: {fileID: 0}
     - target: {fileID: 4699313910211609283, guid: 52e71de8fc15c2c4981450201a804b66,
         type: 3}
       propertyPath: m_Name
@@ -1319,7 +1335,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -4.800049, y: 0}
+  m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: 380.3413, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &3032209287425594851
@@ -1338,7 +1354,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -4.800049, y: 0}
+  m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: 378.2412, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &3032272088470828757
