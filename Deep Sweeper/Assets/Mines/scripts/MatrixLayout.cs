@@ -77,14 +77,16 @@ public class MatrixLayout : MonoBehaviour
     private void SpreadMines(int amount) {
         int gridsAmount = Grids.Count;
         amount = Mathf.Min(amount, gridsAmount);
-        HashSet<int> randomSet = new HashSet<int>();
+        List<int> numsStock = new List<int>();
+
+        //fill stock with [0:amount) sequence
+        for (int i = 0; i < gridsAmount; i++) numsStock.Add(i);
 
         while (amount-- > 0) {
-            int randomIndex;
-            do randomIndex = Random.Range(0, gridsAmount - 1);
-            while (randomSet.Contains(randomIndex));
-            randomSet.Add(randomIndex);
-            Grids[randomIndex].IsMined = true;
+            int randomIndex = Random.Range(0, numsStock.Count);
+            int num = numsStock[randomIndex];
+            numsStock.Remove(num);
+            Grids[num].IsMined = true;
         }
     }
 
@@ -95,11 +97,9 @@ public class MatrixLayout : MonoBehaviour
         for (int i = 0; i < matrixSize.x; i++) {
             for (int j = 0; j < matrixSize.y; j++) {
                 MineGrid grid = gridsMatrix[i, j];
-                if (grid.IsMined) continue;
-
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.Indicator = minedNeighbours;
+                grid.MinesIndicator.MinedNeighbours = minedNeighbours;
             }
         }
     }
