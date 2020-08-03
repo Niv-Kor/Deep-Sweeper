@@ -115,7 +115,7 @@ public class UnluckFlagGUI:MonoBehaviour{
     		if(txt != null){
     		txt.text = activeObj.name;
     		txt.text = txt.text.Replace("(Clone)", "");		
-    		txt.text = txt.text + " " + activeObj.GetComponent<UnluckAnimatedMesh>().meshContainerFBX.name;
+    		txt.text = txt.text + " " + activeObj.GetComponent<FlagAnimator>().meshContainerFBX.name;
     		txt.text = txt.text.Replace("_", " ");
     		txt.text = txt.text.Replace("Flag ", "");
     		}

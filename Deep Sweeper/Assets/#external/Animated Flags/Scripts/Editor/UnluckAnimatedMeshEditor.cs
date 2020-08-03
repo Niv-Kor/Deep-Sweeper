@@ -1,15 +1,12 @@
-//	Unluck Software	
-// 	www.chemicalbliss.com
-
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(UnluckAnimatedMesh))]
+[CustomEditor(typeof(FlagAnimator))]
 [CanEditMultipleObjects]
 [System.Serializable]
 public class UnluckAnimatedMeshEditor: Editor {	
     public override void OnInspectorGUI() {
-		UnluckAnimatedMesh target_cs= (UnluckAnimatedMesh)target;
+		FlagAnimator target_cs = (FlagAnimator) target;
         DrawDefaultInspector();
 		
 		if(GUILayout.Button("Force Change Mesh")){

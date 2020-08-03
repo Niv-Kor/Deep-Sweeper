@@ -7,6 +7,5 @@ public class CamBaseRelocator : MonoBehaviour
 
     private void Update() {
         transform.position = followTarget.position;
-        //transform.rotation = followTarget.rotation;
     }
 }

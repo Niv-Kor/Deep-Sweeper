@@ -1,52 +1,79 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MineGrid : MonoBehaviour
 {
-    public class Indicator
-    {
-        private TextMeshPro text;
-        private MeshRenderer renderer;
-        private int m_minedNeighbours;
-
-        public int MinedNeighbours {
-            get { return m_minedNeighbours; }
-            set {
-                m_minedNeighbours = value;
-                text.text = "" + value;
-            }
-        }
-
-        public bool Enabled {
-            get { return renderer.enabled; }
-            set { renderer.enabled = value; }
-        }
-
-        /// <param name="obj">A game object consisting of TextMeshPro and MeshRenderer components</param>
-        public Indicator(GameObject obj) {
-            this.text = obj.GetComponent<TextMeshPro>();
-            this.renderer = obj.GetComponent<MeshRenderer>();
-        }
-    }
-
     [Header("Prefabs")]
     [Tooltip("Child object that indicates the amount of mined neighbours.")]
-    [SerializeField] private GameObject indicatorObject;
+    [SerializeField] private Indicator indicator;
 
     [Tooltip("Flag cane child object")]
     [SerializeField] private GameObject flagCane;
 
-    public bool IsMined { get; set; }
-    public Indicator MinesIndicator { get; private set; }
+    private Sweeper sweeper;
+    private MineFlagger flagger;
+    private ChainRoot chain;
 
+    public Indicator MinesIndicator { get { return indicator; } }
+    public MineField Field { get; set; }
+    public Vector2 Position { get; set; }
+
+    public bool IsMined { get; set; }
     public bool IsFlagged {
-        get { return flagCane.activeSelf; }
-        set { flagCane.SetActive(value); }
+        get { return flagger.IsFlagged; }
+        set {
+            if (value) flagger.Place();
+            else flagger.Pull();
+        }
     }
 
     private void Awake() {
-        this.MinesIndicator = new Indicator(indicatorObject);
+        this.sweeper = GetComponentInChildren<Sweeper>();
+        this.flagger = GetComponentInChildren<MineFlagger>();
+        this.chain = GetComponentInChildren<ChainRoot>();
         this.IsMined = false;
-        MinesIndicator.Enabled = true;
+    }
+
+    /// <summary>
+    /// Put a flag on the mine or dispose it.
+    /// </summary>
+    public void ToggleFlag() {
+        IsFlagged = !IsFlagged;
+    }
+
+    /// <summary>
+    /// Explode the mine.
+    /// </summary>
+    public void Reveal(bool explosion) {
+        if (MinesIndicator.Enabled) return;
+        int neighbours = MinesIndicator.MinedNeighbours;
+
+        if (IsMined) {
+            ///TODO explode and lose
+        }
+        else {
+            int row = (int) Position.y;
+            int col = (int) Position.x;
+            List<MineGrid> section = Field.GetSection(row, col);
+            MinesIndicator.Enabled = true;
+            IsFlagged = false;
+
+            if (explosion) sweeper.Explode();
+            else sweeper.Vanish();
+
+            //push away neighbour mines with recoil
+            foreach (MineGrid mineGrid in section) {
+                if (mineGrid != null) {
+                    Vector3 recoilSource = transform.position;
+                    recoilSource.y = mineGrid.chain.transform.position.y;
+                    mineGrid.chain.PushAwayFrom(recoilSource, 15, 2.5f);
+                }
+            }
+
+            //keep revealing grids recursively
+            if (neighbours == 0)
+                foreach (MineGrid mineGrid in section)
+                    if (mineGrid != null) mineGrid.Reveal(explosion);
+        }
     }
 }
