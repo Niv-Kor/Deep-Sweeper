@@ -133,9 +133,4 @@ public class SubmarineMovementController : MonoBehaviour
             }
         }
     }
-
-    public void Shock(float force) {
-        Vector3 backwards = CameraBase.Instance.FPCam.transform.forward * -1;
-        rigidBody.AddForce(backwards * force);
-    }
 }

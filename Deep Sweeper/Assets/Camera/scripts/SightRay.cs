@@ -1,20 +1,40 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SightRay : MonoBehaviour
 {
+    private class MineInfo
+    {
+        private GameObject avatar;
+
+        public MineGrid Grid { get; private set; }
+
+        public MineInfo(GameObject mine) {
+            this.avatar = mine;
+            this.Grid = mine.GetComponentInParent<MineGrid>();
+        }
+
+        /// <summary>
+        /// Check if the refrenced object is the same as another object.
+        /// </summary>
+        /// <param name="other">The object to test</param>
+        /// <returns>True if both objects reference the same location in memory.</returns>
+        public bool Equals(GameObject other) {
+            return avatar == other;
+        }
+    }
+
     [Tooltip("Maximum raycast distance from the sight's center.")]
     [SerializeField] private float maxDistance = 100f;
 
     [Tooltip("Maximum raycast distance from the sight's center.")]
     [SerializeField] private LayerMask hitLayers;
 
-    private MineGrid selectedMine;
+    private MineInfo selectedMine;
     private Transform camTransform;
     private SubmarineGun gun;
 
     private void Start() {
-        this.camTransform = CameraBase.Instance.FPCam.transform;
+        this.camTransform = CameraManager.Instance.FPCam.transform;
         this.gun = FindObjectOfType<SubmarineGun>();
     }
 
@@ -27,10 +47,10 @@ public class SightRay : MonoBehaviour
         if (mouseLeft) gun.Fire();
 
         if (selectedMine != null) {
-            if (mouseRight) selectedMine.ToggleFlag();
+            if (mouseRight) selectedMine.Grid.ToggleFlag();
             if (mouseLeft) {
-                selectedMine.IsFlagged = false;
-                selectedMine.Reveal(true);
+                selectedMine.Grid.IsFlagged = false;
+                selectedMine.Grid.Reveal(true);
                 selectedMine = null;
                 Crosshair.Instance.Release();
             }
@@ -49,7 +69,7 @@ public class SightRay : MonoBehaviour
             GameObject mineObj = raycastHit.collider.gameObject;
 
             if (selectedMine == null) SelectMine(mineObj);
-            else if (selectedMine != mineObj) SelectMine(mineObj);
+            else if (!selectedMine.Equals(mineObj)) SelectMine(mineObj);
         }
         else if (selectedMine != null) {
             selectedMine = null;
@@ -62,7 +82,7 @@ public class SightRay : MonoBehaviour
     /// </summary>
     /// <param name="mine">The object to select</param>
     private void SelectMine(GameObject mine) {
-        selectedMine = mine.GetComponentInParent<MineGrid>();
+        selectedMine = new MineInfo(mine);
         Crosshair.Instance.Lock();
     }
 }

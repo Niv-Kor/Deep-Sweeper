@@ -27,8 +27,8 @@ public class Crosshair : Singleton<Crosshair>
     [Tooltip("The scale to which the outer circle transforms when locking.")]
     [SerializeField] private float outerScale;
 
-    [Tooltip("The angle in which the inner crosshair spins when locking.")]
-    [SerializeField] private float innerAngle;
+    [Tooltip("The angle in which the inner crosshair spins every locking frame.")]
+    [SerializeField] private float innerRollAngle;
 
     [Tooltip("The color to which the outer circle changes when locking.")]
     [SerializeField] private Color outerColor;
@@ -43,7 +43,7 @@ public class Crosshair : Singleton<Crosshair>
     private Color defOuterColor, startOuterColor;
     private RawImage outerImg, innerImg;
     private float lerpedTime;
-    private bool locking, releasing;
+    private bool locked, locking, releasing;
 
     private void Start() {
         this.defFrameScale = frame.localScale;
@@ -56,33 +56,41 @@ public class Crosshair : Singleton<Crosshair>
         this.lerpedTime = 0;
         this.locking = false;
         this.releasing = false;
+        this.locked = false;
     }
 
     private void Update() {
-        if (!locking && !releasing) return;
-        float timer = locking ? lockTime : releaseTime;
+        //endlessly spin the inner crosshair
+        if (locked || locking) inner.Rotate(0, 0, innerRollAngle);
 
-        if (lerpedTime < timer) {
-            Vector3 destFrameScale = locking ? defFrameScale * frameScale : defFrameScale;
-            Vector3 destOuterScale = locking ? defOuterScale * outerScale : defOuterScale;
-            float destInnerAngle = locking ? innerAngle : defInnerAngle;
-            Quaternion originInnerAngleVec = Quaternion.Euler(new Vector3(0, 0, startInnerAngle));
-            Quaternion destInnerAngleVec = Quaternion.Euler(new Vector3(0, 0, destInnerAngle));
-            Color destInnerColor = locking ? innerColor : defInnerColor;
-            Color destOuterColor = locking ? outerColor : defOuterColor;
+        //animate
+        if (locking || releasing) {
+            float timer = locking ? lockTime : releaseTime;
 
-            //animate
-            lerpedTime += Time.deltaTime;
-            frame.localScale = Vector3.Lerp(startFrameScale, destFrameScale, lerpedTime / timer);
-            outer.localScale = Vector3.Lerp(startOuterScale, destOuterScale, lerpedTime / timer);
-            inner.rotation = Quaternion.Lerp(originInnerAngleVec, destInnerAngleVec, lerpedTime / timer);
-            innerImg.color = Color.Lerp(startInnerColor, destInnerColor, lerpedTime / timer);
-            outerImg.color = Color.Lerp(startOuterColor, destOuterColor, lerpedTime / timer);
-        }
-        else {
-            lerpedTime = 0;
-            locking = false;
-            releasing = false;
+            if (lerpedTime < timer) {
+                Vector3 destFrameScale = locking ? defFrameScale * frameScale : defFrameScale;
+                Vector3 destOuterScale = locking ? defOuterScale * outerScale : defOuterScale;
+                Color destInnerColor = locking ? innerColor : defInnerColor;
+                Color destOuterColor = locking ? outerColor : defOuterColor;
+
+                lerpedTime += Time.deltaTime;
+                frame.localScale = Vector3.Lerp(startFrameScale, destFrameScale, lerpedTime / timer);
+                outer.localScale = Vector3.Lerp(startOuterScale, destOuterScale, lerpedTime / timer);
+                innerImg.color = Color.Lerp(startInnerColor, destInnerColor, lerpedTime / timer);
+                outerImg.color = Color.Lerp(startOuterColor, destOuterColor, lerpedTime / timer);
+
+                if (releasing) {
+                    Quaternion originInnerAngleVec = Quaternion.Euler(new Vector3(0, 0, startInnerAngle));
+                    Quaternion destInnerAngleVec = Quaternion.Euler(new Vector3(0, 0, defInnerAngle));
+                    inner.rotation = Quaternion.Lerp(originInnerAngleVec, destInnerAngleVec, lerpedTime / timer);
+                }
+            }
+            else {
+                lerpedTime = 0;
+                locked = locking;
+                locking = false;
+                releasing = false;
+            }
         }
     }
 
@@ -111,6 +119,7 @@ public class Crosshair : Singleton<Crosshair>
     /// Release the sight's lock on the target.
     /// </summary>
     public void Release() {
+        locked = false;
         locking = false;
         releasing = true;
         CacheStartingConditions();

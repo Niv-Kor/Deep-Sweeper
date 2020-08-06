@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CameraBase : Singleton<CameraBase>
+public class CameraManager : Singleton<CameraManager>
 {
     [Tooltip("First person camera.")]
     [SerializeField] public Camera FPCam;

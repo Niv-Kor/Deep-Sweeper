@@ -10,6 +10,9 @@ public class MineGrid : MonoBehaviour
     [Tooltip("Flag cane child object")]
     [SerializeField] private GameObject flagCane;
 
+    private static readonly float EXTERN_RECOIL_SPEED = 30;
+    private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
+
     private Sweeper sweeper;
     private MineFlagger flagger;
     private ChainRoot chain;
@@ -66,7 +69,7 @@ public class MineGrid : MonoBehaviour
                 if (mineGrid != null) {
                     Vector3 recoilSource = transform.position;
                     recoilSource.y = mineGrid.chain.transform.position.y;
-                    mineGrid.chain.PushAwayFrom(recoilSource, 15, 2.5f);
+                    mineGrid.chain.PushAwayFrom(recoilSource, EXTERN_RECOIL_SPEED, EXTERN_RECOIL_FORCE);
                 }
             }
 

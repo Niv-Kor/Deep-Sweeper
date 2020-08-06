@@ -190,7 +190,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -318,7 +318,7 @@ Transform:
   m_GameObject: {fileID: 292333178}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0.2022, z: 0}
-  m_LocalScale: {x: 1.0000005, y: 1.0000005, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1886967602}
   m_RootOrder: 6
@@ -382,7 +382,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -510,7 +510,7 @@ Transform:
   m_GameObject: {fileID: 313806931}
   m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: -0.4381, z: 0}
-  m_LocalScale: {x: 1.0000005, y: 1.0000005, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1886967602}
   m_RootOrder: 13
@@ -574,7 +574,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -766,7 +766,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -958,7 +958,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1150,7 +1150,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1342,7 +1342,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1534,7 +1534,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1726,7 +1726,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1918,7 +1918,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2030,7 +2030,7 @@ GameObject:
   - component: {fileID: 900887317}
   - component: {fileID: 900887315}
   m_Layer: 0
-  m_Name: Chain head
+  m_Name: Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6974,7 +6974,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -7166,7 +7166,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -7358,7 +7358,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -7550,7 +7550,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -7742,7 +7742,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -7934,7 +7934,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -8127,7 +8127,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -8251,6 +8251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1886967602}
   - component: {fileID: 1886967601}
+  - component: {fileID: 7170198046941371265}
   m_Layer: 0
   m_Name: Chain
   m_TagString: Untagged
@@ -8345,6 +8346,41 @@ MonoBehaviour:
     type: 3}
   prevPrefab_2: {fileID: 0}
   prevPrefabCount: 1
+--- !u!114 &7170198046941371265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886967600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1a9ef4c033e6d349b21a11ced5a70db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainRoot: {fileID: 2225804244071676171}
+  joints:
+  - {fileID: 817942200}
+  - {fileID: 424185984}
+  - {fileID: 881195150}
+  - {fileID: 2011320186}
+  - {fileID: 1260846609}
+  - {fileID: 292333179}
+  - {fileID: 1082405930}
+  - {fileID: 152786593}
+  - {fileID: 1858921965}
+  - {fileID: 1776545332}
+  - {fileID: 1779630799}
+  - {fileID: 2139901406}
+  - {fileID: 313806932}
+  - {fileID: 451229700}
+  - {fileID: 2014079710}
+  - {fileID: 1783488694}
+  - {fileID: 623154309}
+  - {fileID: 782083910}
+  - {fileID: 615207710}
+  - {fileID: 1309277754}
+  enableAtDistance: 50
 --- !u!1 &1913004421
 GameObject:
   m_ObjectHideFlags: 0
@@ -8630,7 +8666,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -8822,7 +8858,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -9014,7 +9050,7 @@ Rigidbody:
   m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -9728,15 +9764,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef5e2e86d2e633948949e4ef03b3fbe6, type: 3}
---- !u!4 &1775788858 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: ef5e2e86d2e633948949e4ef03b3fbe6,
-    type: 3}
-  m_PrefabInstance: {fileID: 1776187834}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1776287514 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: ef5e2e86d2e633948949e4ef03b3fbe6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1776187834}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1775788858 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: ef5e2e86d2e633948949e4ef03b3fbe6,
     type: 3}
   m_PrefabInstance: {fileID: 1776187834}
   m_PrefabAsset: {fileID: 0}
@@ -9819,6 +9855,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 548fe1257e73a0b40b1a537d1a32715b, type: 3}
+--- !u!4 &918559686 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1926854635635543151, guid: 548fe1257e73a0b40b1a537d1a32715b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1926854636461823913}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &426929882550644245 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2256675470851520956, guid: 548fe1257e73a0b40b1a537d1a32715b,
@@ -9828,12 +9870,6 @@ Transform:
 --- !u!1 &588587884176332213 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1339404839275381276, guid: 548fe1257e73a0b40b1a537d1a32715b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1926854636461823913}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &918559686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1926854635635543151, guid: 548fe1257e73a0b40b1a537d1a32715b,
     type: 3}
   m_PrefabInstance: {fileID: 1926854636461823913}
   m_PrefabAsset: {fileID: 0}
