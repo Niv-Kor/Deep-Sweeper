@@ -6,14 +6,39 @@ public class SubmarineGun : MonoBehaviour
     [Tooltip("The player submarine's rigidbody.")]
     [SerializeField] private Rigidbody submarine;
 
+    [Header("Timing")]
+    [Tooltip("The time it takes to load a new bullet.")]
+    [SerializeField] private float loadingTime;
+
     [Header("Physics")]
     [Tooltip("The force in which the fire recoil takes place.")]
     [SerializeField] private float recoil;
 
+    [Tooltip("The speed of the bullet.")]
+    [SerializeField] private float speed;
+
     private ParticleSystem[] particles;
+    private float loadingTimer;
+    private bool bulletInBarrel;
+
+    public delegate void BulletLoad();
+    public event BulletLoad BulletLoadTrigger;
 
     private void Start() {
         this.particles = GetComponentsInChildren<ParticleSystem>();
+        this.loadingTimer = 0;
+        this.bulletInBarrel = true;
+        BulletLoadTrigger += delegate () { bulletInBarrel = true; };
+    }
+
+    private void Update() {
+        if (!bulletInBarrel) {
+            if (loadingTimer < loadingTime) loadingTimer += Time.deltaTime;
+            else {
+                loadingTimer = 0;
+                BulletLoadTrigger?.Invoke();
+            }
+        }
     }
 
     /// <summary>
@@ -30,7 +55,10 @@ public class SubmarineGun : MonoBehaviour
     /// Fire a missile from the center of the sight.
     /// </summary>
     public void Fire() {
-        foreach (ParticleSystem particle in particles) particle.Play();
-        Recoil();
+        if (bulletInBarrel) {
+            bulletInBarrel = false;
+            foreach (ParticleSystem particle in particles) particle.Play();
+            Recoil();
+        }
     }
 }

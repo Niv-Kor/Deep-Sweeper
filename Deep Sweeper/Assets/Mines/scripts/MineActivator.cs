@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
-public class ChainActivator : MonoBehaviour
+public class MineActivator : MonoBehaviour
 {
     [Header("Prefabs")]
-    [Tooltip("The ChainRoot components on one of the chain joint.")]
+    [Tooltip("The mine head avatar object.")]
+    [SerializeField] private GameObject mineHead;
+
+    [Tooltip("The ChainRoot components on one of the chain joints.")]
     [SerializeField] private ChainRoot chainRoot;
 
     [Tooltip("The joints whose kinematics will toggle according to their activation state.")]
@@ -14,6 +18,7 @@ public class ChainActivator : MonoBehaviour
     [SerializeField] private float enableAtDistance;
 
     private GameObject submarine;
+    private MeshRenderer avatarRenderer;
 
     public bool ChainEnabled {
         get { return chainRoot.enabled; }
@@ -25,6 +30,7 @@ public class ChainActivator : MonoBehaviour
 
     private void Start() {
         this.submarine = GameObject.FindGameObjectWithTag("Player");
+        this.avatarRenderer = mineHead.GetComponent<MeshRenderer>();
         this.ChainEnabled = false;
     }
 
@@ -44,7 +50,8 @@ public class ChainActivator : MonoBehaviour
     /// </summary>
     /// <param name="flag"></param>
     private void Activate(bool flag) {
-        foreach (Rigidbody joint in joints)
-            joint.isKinematic = !flag;
+        foreach (Rigidbody joint in joints) joint.isKinematic = !flag;
+        avatarRenderer.shadowCastingMode = flag ? ShadowCastingMode.On : ShadowCastingMode.Off;
+        avatarRenderer.receiveShadows = flag;
     }
 }

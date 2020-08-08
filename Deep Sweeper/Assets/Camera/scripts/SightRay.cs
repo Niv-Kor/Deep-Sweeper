@@ -49,8 +49,6 @@ public class SightRay : MonoBehaviour
         if (selectedMine != null) {
             if (mouseRight) selectedMine.Grid.ToggleFlag();
             if (mouseLeft) {
-                selectedMine.Grid.IsFlagged = false;
-                selectedMine.Grid.Reveal(true);
                 selectedMine = null;
                 Crosshair.Instance.Release();
             }

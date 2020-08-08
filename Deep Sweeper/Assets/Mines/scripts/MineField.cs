@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class MineField : MonoBehaviour
@@ -7,49 +8,81 @@ public class MineField : MonoBehaviour
     [Tooltip("The grid object.")]
     [SerializeField] private GameObject gridPrefab = null;
 
-    [Header("Grid Configurations")]
-    [Tooltip("The size of the matrix [rows/columns].")]
-    [SerializeField] private Vector2 matrixSize;
+    [Header("Area Definition")]
+    [Tooltip("The field confines' offset.")]
+    [SerializeField] private Vector3 confines;
 
-    [Tooltip("The offset of the top left grid on the terrain.")]
-    [SerializeField] private Vector2 firstOffset;
+    [Tooltip("The size of the field area.")]
+    [SerializeField] private Vector2 confinesSize;
 
     [Tooltip("Space between grids.")]
     [SerializeField] private float gridSpace;
 
-    [Tooltip("The height of the grid above the ground. Should idealy be slightly larger than 0.")]
-    [SerializeField] private float gridHeight = .01f;
-
     [Header("Mines")]
-    [Tooltip("Amount of randomly spreaded mines")]
-    [SerializeField] private int minesAmount;
+    [Tooltip("Percentage of randomly spreaded mines.")]
+    [SerializeField] private int minesPercent;
 
     private static readonly string GRIDS_PARENT_NAME = "Grids";
+    private static readonly Color GIZMOS_COLOR = new Color(0xff, 0x0, 0xe8);
 
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
+    private Vector3 gridSize;
+    private Vector2 matrixSize;
+    private int gridsAmount, minesAmount;
 
     public List<MineGrid> Grids { get; private set; }
 
     private void Start() {
+        MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
+        this.gridSize = gridRenderer.bounds.size;
         this.terrain = GetComponent<Terrain>();
         this.Grids = new List<MineGrid>();
+        this.matrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
+        this.gridsAmount = (int) matrixSize.x * (int) matrixSize.y;
+        this.minesAmount = (int) (minesPercent * gridsAmount / 100);
+
         LayoutMatrix();
         SpreadMines(minesAmount);
         CountNeighbours();
         OpenInitial();
     }
 
+    private void OnDrawGizmos() {
+        Vector3 ptA = confines;
+        Vector3 ptB = ptA + new Vector3(0, 0, confinesSize.y);
+        Vector3 ptC = ptB + new Vector3(confinesSize.x, 0, 0);
+        Vector3 ptD = ptA + new Vector3(confinesSize.x, 0, 0);
+
+        Debug.DrawLine(ptA, ptB, GIZMOS_COLOR);
+        Debug.DrawLine(ptB, ptC, GIZMOS_COLOR);
+        Debug.DrawLine(ptC, ptD, GIZMOS_COLOR);
+        Debug.DrawLine(ptD, ptA, GIZMOS_COLOR);
+    }
+
+    /// <summary>
+    /// Calculate the horizontal and vertical amount of mine grids that
+    /// can fit inside the specified field confines.
+    /// </summary>
+    /// <returns>
+    /// A 2-dimensional matrix, where the x coordinates represent
+    /// the amount of grids that can fit horizontally,
+    /// and the y coordinates represent the amount of grids
+    /// that can fit vertically in the field.
+    /// </returns>
+    private Vector2 CalcMatrixSize() {
+        int xAmount = (int) (confinesSize.x / (gridSize.x + gridSpace));
+        int zAmount = (int) (confinesSize.y / (gridSize.z + gridSpace));
+        return new Vector2(zAmount, xAmount);
+    }
+
     /// <summary>
     /// Layout the matrix upon the terrain.
     /// </summary>
     private void LayoutMatrix() {
-        MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
-        Vector3 offset = new Vector3(firstOffset.x, gridHeight, firstOffset.y);
-        Vector3 gridSize = gridRenderer.bounds.size;
         gridSize.y = 0;
-        Vector3 startPoint = terrain.transform.position + offset + gridSize / 2;
+        Vector3 startPoint = terrain.transform.position + confines + gridSize / 2;
         GameObject gridsObj = new GameObject(GRIDS_PARENT_NAME);
         gridsObj.transform.SetParent(terrain.transform);
 
@@ -77,7 +110,6 @@ public class MineField : MonoBehaviour
     /// </summary>
     /// <param name="amount">Amount of mines to spread</param>
     private void SpreadMines(int amount) {
-        int gridsAmount = Grids.Count;
         amount = Mathf.Min(amount, gridsAmount);
         List<int> numsStock = new List<int>();
 
@@ -110,16 +142,28 @@ public class MineField : MonoBehaviour
     /// Intially open a random section of mines-free grids.
     /// </summary>
     private void OpenInitial() {
-        if (Grids.Count == 0 || minesAmount >= Grids.Count) return;
+        if (gridsAmount == 0 || minesAmount >= gridsAmount) return;
+
+        //fill indices pool
+        List<int> indicesPool = new List<int>();
+        for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
 
         MineGrid grid;
-        int index;
+        bool lowerStandard = false;
 
         do {
-            index = Random.Range(0, Grids.Count);
-            grid = Grids[index];
+            if (indicesPool.Count == 0) {
+                //fill pool again and now ignore the mined neighbours condition
+                for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
+                lowerStandard = true;
+            }
+
+            int poolIndex = Random.Range(0, indicesPool.Count);
+            int gridIndex = indicesPool[poolIndex];
+            indicesPool.RemoveAt(poolIndex);
+            grid = Grids[gridIndex];
         }
-        while (grid.MinesIndicator.MinedNeighbours != 0 || grid.IsMined);
+        while (grid.IsMined || (grid.MinesIndicator.MinedNeighbours != 0 && !lowerStandard));
 
         grid.Reveal(false);
     }

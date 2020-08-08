@@ -11,6 +11,7 @@ namespace Constants
         public static readonly string NAME_WATER = "Water";
         public static readonly string NAME_UI = "UI";
         public static readonly string NAME_MINE = "Mine";
+        public static readonly string NAME_BULLET = "Bullet";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -19,6 +20,7 @@ namespace Constants
         public static readonly LayerMask WATER = LayerMask.GetMask(NAME_WATER);
         public static readonly LayerMask UI = LayerMask.GetMask(NAME_UI);
         public static readonly LayerMask MINE = LayerMask.GetMask(NAME_MINE);
+        public static readonly LayerMask BULLET = LayerMask.GetMask(NAME_BULLET);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.

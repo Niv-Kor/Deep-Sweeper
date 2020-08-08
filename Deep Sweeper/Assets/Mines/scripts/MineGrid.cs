@@ -30,11 +30,18 @@ public class MineGrid : MonoBehaviour
         }
     }
 
+    public delegate void MineHit();
+    public event MineHit MineHitTrigger;
+
     private void Awake() {
         this.sweeper = GetComponentInChildren<Sweeper>();
         this.flagger = GetComponentInChildren<MineFlagger>();
         this.chain = GetComponentInChildren<ChainRoot>();
         this.IsMined = false;
+    }
+
+    private void Start() {
+        MineHitTrigger += delegate() { Reveal(true); };
     }
 
     /// <summary>
@@ -49,7 +56,9 @@ public class MineGrid : MonoBehaviour
     /// </summary>
     public void Reveal(bool explosion) {
         if (MinesIndicator.Enabled) return;
+
         int neighbours = MinesIndicator.MinedNeighbours;
+        IsFlagged = false;
 
         if (IsMined) {
             ///TODO explode and lose
@@ -78,5 +87,12 @@ public class MineGrid : MonoBehaviour
                 foreach (MineGrid mineGrid in section)
                     if (mineGrid != null) mineGrid.Reveal(explosion);
         }
+    }
+
+    /// <summary>
+    /// Trigger the mine's hit.
+    /// </summary>
+    public void TriggerHit() {
+        MineHitTrigger?.Invoke();
     }
 }
