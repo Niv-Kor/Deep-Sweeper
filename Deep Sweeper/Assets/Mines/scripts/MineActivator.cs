@@ -37,12 +37,8 @@ public class MineActivator : MonoBehaviour
     private void Update() {
         float distance = Vector3.Distance(submarine.transform.position, transform.position);
 
-        if (!ChainEnabled && distance <= enableAtDistance) {
-            ChainEnabled = true;
-        }
-        else if (ChainEnabled && distance > enableAtDistance) {
-            ChainEnabled = false;
-        }
+        if (!ChainEnabled && distance <= enableAtDistance) ChainEnabled = true;
+        else if (ChainEnabled && distance > enableAtDistance) ChainEnabled = false;
     }
 
     /// <summary>

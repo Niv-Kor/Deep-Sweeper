@@ -7,7 +7,6 @@ using com.ootii.Helpers;
 using com.ootii.Input;
 using com.ootii.Messages;
 using com.ootii.Utilities;
-using com.ootii.Data.Serializers;
 
 namespace com.ootii.Cameras
 {

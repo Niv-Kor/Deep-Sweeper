@@ -6,24 +6,25 @@ public class Bullet : MonoBehaviour
     [Tooltip("Hit particles prefab to instantiate.")]
     [SerializeField] private GameObject hitParticlesPrefab;
 
-    private static readonly string BULLETS_PARENT_NAME = "Particles";
+    [Tooltip("The layers that cause a particle effect when hit by the bullet.")]
+    [SerializeField] private LayerMask damageableSurfaces;
 
-    private GameObject bulletsParent;
+    private Transform bulletsParent;
     private List<ParticleCollisionEvent> collisionEvents;
 
     private void Start() {
         this.collisionEvents = new List<ParticleCollisionEvent>();
-        this.bulletsParent = new GameObject(BULLETS_PARENT_NAME);
-        bulletsParent.transform.SetParent(transform);
+        this.bulletsParent = FXManager.Instance.gameObject.transform;
     }
 
-    private void OnParticleCollision(GameObject other) {
-        int hits = ParticlePhysicsExtensions.GetCollisionEvents(GetComponent<ParticleSystem>(), other, collisionEvents);
+    private void OnParticleCollision(GameObject obj) {
+        if (!Constants.Layers.ContainedInMask(obj.layer, damageableSurfaces)) return;
+        int hits = ParticlePhysicsExtensions.GetCollisionEvents(GetComponent<ParticleSystem>(), obj, collisionEvents);
 
         //instantiate the hit particles
         if (hits > 0) {
             GameObject particlesObj = Instantiate(hitParticlesPrefab);
-            particlesObj.transform.SetParent(bulletsParent.transform);
+            particlesObj.transform.SetParent(bulletsParent);
             particlesObj.transform.position = collisionEvents[0].intersection;
         }
     }

@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Knot3
+  m_Shader: {fileID: 4800000, guid: 60266dd225cdd804696fba6a0852c651, type: 3}
+  m_ShaderKeywords: NCE_SPECULAR
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampTex:
+        m_Texture: {fileID: 2800000, guid: 92981a7e88e3dd04cad5161f3fbe5c0f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StylizedShadowTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DarkSideRange: 0
+    - _ExpandFactor: 1
+    - _OutlineWidth: 0.02
+    - _RampSmooth: 0
+    - _RampThreshold: 0.5
+    - _RimMax: 1
+    - _RimMin: 0.5
+    - _RimSmooth: 0
+    - _RimThreshold: 0.5
+    - _Saturation: 1
+    - _Shininess: 0.2
+    - _SpecPower: 128
+    - _SpecSmooth: 0.1
+    - _SpecularRotationX: 0
+    - _SpecularRotationY: 0
+    - _SpecularRotationZ: 0
+    - _SpecularScale: 0.01
+    - _SpecularScaleX: 0
+    - _SpecularScaleY: 0
+    - _SpecularSplitX: 0
+    - _SpecularSplitY: 0
+    - _SpecularTranslationX: 0
+    - _SpecularTranslationY: 0
+    - _ToonSteps: 2
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DarkColor: {r: 0.83823526, g: 0.63598764, b: 0.35748267, a: 1}
+    - _HighlitColor: {r: 0.97794116, g: 0.8843623, b: 0.6112132, a: 1}
+    - _OutlineColor: {r: 1, g: 0.7543103, b: 0.5808823, a: 0}
+    - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}

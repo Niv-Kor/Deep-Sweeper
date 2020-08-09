@@ -14,7 +14,7 @@ public class MineGrid : MonoBehaviour
     private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
 
     private Sweeper sweeper;
-    private MineFlagger flagger;
+    private MineSelector selector;
     private ChainRoot chain;
 
     public Indicator MinesIndicator { get { return indicator; } }
@@ -23,10 +23,10 @@ public class MineGrid : MonoBehaviour
 
     public bool IsMined { get; set; }
     public bool IsFlagged {
-        get { return flagger.IsFlagged; }
+        get { return selector.Mode == SelectionModes.FLAG; }
         set {
-            if (value) flagger.Place();
-            else flagger.Pull();
+            var targetMode = value ? SelectionModes.FLAG : SelectionModes.DEFAULT;
+            selector.Mode = targetMode;
         }
     }
 
@@ -35,7 +35,7 @@ public class MineGrid : MonoBehaviour
 
     private void Awake() {
         this.sweeper = GetComponentInChildren<Sweeper>();
-        this.flagger = GetComponentInChildren<MineFlagger>();
+        this.selector = GetComponentInChildren<MineSelector>();
         this.chain = GetComponentInChildren<ChainRoot>();
         this.IsMined = false;
     }

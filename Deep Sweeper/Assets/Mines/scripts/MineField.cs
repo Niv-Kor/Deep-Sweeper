@@ -22,9 +22,10 @@ public class MineField : MonoBehaviour
     [Tooltip("Percentage of randomly spreaded mines.")]
     [SerializeField] private int minesPercent;
 
-    private static readonly string GRIDS_PARENT_NAME = "Grids";
+    private static readonly string GRIDS_PARENT_NAME = "Field";
     private static readonly Color GIZMOS_COLOR = new Color(0xff, 0x0, 0xe8);
 
+    private static int fieldIndex = 0;
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
     private Vector3 gridSize;
@@ -83,7 +84,8 @@ public class MineField : MonoBehaviour
     private void LayoutMatrix() {
         gridSize.y = 0;
         Vector3 startPoint = terrain.transform.position + confines + gridSize / 2;
-        GameObject gridsObj = new GameObject(GRIDS_PARENT_NAME);
+        string parentObjName = GRIDS_PARENT_NAME + " (" + (fieldIndex++) + ")";
+        GameObject gridsObj = new GameObject(parentObjName);
         gridsObj.transform.SetParent(terrain.transform);
 
         for (int i = 0; i < matrixSize.x; i++) {
