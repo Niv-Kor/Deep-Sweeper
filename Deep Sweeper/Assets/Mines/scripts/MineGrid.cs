@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class MineGrid : MonoBehaviour
 {
-    [Header("Prefabs")]
-    [Tooltip("Child object that indicates the amount of mined neighbours.")]
-    [SerializeField] private Indicator indicator;
-
-    [Tooltip("Flag cane child object")]
-    [SerializeField] private GameObject flagCane;
-
     private static readonly float EXTERN_RECOIL_SPEED = 30;
     private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
 
@@ -17,7 +10,7 @@ public class MineGrid : MonoBehaviour
     private MineSelector selector;
     private ChainRoot chain;
 
-    public Indicator MinesIndicator { get { return indicator; } }
+    public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
     public Vector2 Position { get; set; }
 
@@ -34,6 +27,7 @@ public class MineGrid : MonoBehaviour
     public event MineHit MineHitTrigger;
 
     private void Awake() {
+        this.MinesIndicator = GetComponentInChildren<Indicator>();
         this.sweeper = GetComponentInChildren<Sweeper>();
         this.selector = GetComponentInChildren<MineSelector>();
         this.chain = GetComponentInChildren<ChainRoot>();
@@ -55,7 +49,7 @@ public class MineGrid : MonoBehaviour
     /// Explode the mine.
     /// </summary>
     public void Reveal(bool explosion) {
-        if (MinesIndicator.Enabled) return;
+        if (MinesIndicator.IsDisplayed()) return;
 
         int neighbours = MinesIndicator.MinedNeighbours;
         IsFlagged = false;
@@ -67,7 +61,7 @@ public class MineGrid : MonoBehaviour
             int row = (int) Position.y;
             int col = (int) Position.x;
             List<MineGrid> section = Field.GetSection(row, col);
-            MinesIndicator.Enabled = true;
+            MinesIndicator.Display(true, !explosion);
             IsFlagged = false;
 
             if (explosion) sweeper.Explode();

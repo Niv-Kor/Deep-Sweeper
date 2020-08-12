@@ -1,52 +1,31 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
-    [Serializable]
-    private struct OverallColor
-    {
-        [Tooltip("The inner vertex color of the number.")]
-        [SerializeField] public Color Inner;
+    public delegate void IndicatorReveal(bool instant);
+    public event IndicatorReveal IndicatorRevealEvent;
 
-        [Tooltip("Outline color of the number.")]
-        [SerializeField] public Color Outline;
-    }
-
-    [Tooltip("The color of each indicative number.")]
-    [SerializeField] private OverallColor[] numberColors;
-
-    private static readonly Color WHITE = new Color(0xff, 0xff, 0xff);
-    private static readonly Color BLACK = new Color(0x0, 0x0, 0x0);
-
-    private TextMeshPro text;
-    private MeshRenderer render;
-    private int m_minedNeighbours;
+    private IndicatorText indicatorText;
 
     public int MinedNeighbours {
-        get { return m_minedNeighbours; }
-        set {
-            m_minedNeighbours = value;
-            text.text = value.ToString();
-
-            //change color
-            bool colorDefined = value >= 0 && value < numberColors.Length;
-            Color innerColor = colorDefined ? numberColors[value].Inner : WHITE;
-            Color outlineColor = colorDefined ? numberColors[value].Outline : BLACK;
-            text.faceColor = innerColor;
-            text.outlineColor = outlineColor;
-        }
-    }
-
-    public bool Enabled {
-        get { return render.enabled; }
-        set { render.enabled = value; }
+        get { return indicatorText.Value; }
+        set { indicatorText.Value = value; }
     }
 
     private void Awake() {
-        this.render = GetComponent<MeshRenderer>();
-        this.text = GetComponent<TextMeshPro>();
-        this.Enabled = false;
+        this.indicatorText = GetComponentInChildren<IndicatorText>();
     }
+
+    /// <summary>
+    /// Display the indicator.
+    /// </summary>
+    /// <param name="flag">True to display or false to hide</param>
+    /// <param name="instant">True to enable it instantly without special effects</param>
+    public void Display(bool flag, bool instant) {
+        indicatorText.Enabled = flag;
+        if (flag) IndicatorRevealEvent?.Invoke(instant);
+    }
+
+    /// <returns>True if the indicator is enabled and displayed.</returns>
+    public bool IsDisplayed() { return indicatorText.Enabled; }
 }

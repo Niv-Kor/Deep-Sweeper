@@ -6,7 +6,7 @@ public class MineField : MonoBehaviour
 {
     [Header("Prefabs")]
     [Tooltip("The grid object.")]
-    [SerializeField] private GameObject gridPrefab = null;
+    [SerializeField] private GameObject gridPrefab;
 
     [Header("Area Definition")]
     [Tooltip("The field confines' offset.")]
@@ -37,7 +37,7 @@ public class MineField : MonoBehaviour
     private void Start() {
         MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
         this.gridSize = gridRenderer.bounds.size;
-        this.terrain = GetComponent<Terrain>();
+        this.terrain = GetComponentInParent<Terrain>();
         this.Grids = new List<MineGrid>();
         this.matrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
@@ -86,7 +86,7 @@ public class MineField : MonoBehaviour
         Vector3 startPoint = terrain.transform.position + confines + gridSize / 2;
         string parentObjName = GRIDS_PARENT_NAME + " (" + (fieldIndex++) + ")";
         GameObject gridsObj = new GameObject(parentObjName);
-        gridsObj.transform.SetParent(terrain.transform);
+        gridsObj.transform.SetParent(transform);
 
         for (int i = 0; i < matrixSize.x; i++) {
             for (int j = 0; j < matrixSize.y; j++) {
