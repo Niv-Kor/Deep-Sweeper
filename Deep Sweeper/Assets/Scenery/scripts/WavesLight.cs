@@ -14,13 +14,13 @@ public class WavesLight : MonoBehaviour
     private float motionSpeed;
 
     private void Start() {
-        Waves waves = Waves.Instance;
+        WaterPhysics waves = WaterPhysics.Instance;
         this.lightComponent = GetComponent<Light>();
         this.direction = waves.Direction;
         float globalIntens = waves.IntensityPercentage;
         float intensDiff = speedRange.y - speedRange.x;
         this.motionSpeed = globalIntens * intensDiff / 100f;
-        Waves.Instance.WavesChangeTrigger += OnWavesChange;
+        WaterPhysics.Instance.WavesChangeTrigger += OnWavesChange;
         lightComponent.intensity = brightness;
     }
 

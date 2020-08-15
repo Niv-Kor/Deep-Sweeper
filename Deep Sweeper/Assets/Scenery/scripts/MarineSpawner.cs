@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class MarineSpawner : MonoBehaviour
+public abstract class MarineSpawner : MonoBehaviour
 {
-    private enum SpawnAffection
+    protected enum SpawnAffection
     {
         More,
         Less,
@@ -11,36 +11,42 @@ public class MarineSpawner : MonoBehaviour
 
     [Header("Prefabs")]
     [Tooltip("The particle system prefabs to instantiate.")]
-    [SerializeField] private GameObject[] prefabs;
+    [SerializeField] protected GameObject[] prefabs;
 
     [Tooltip("The name of the particle systems' parent object.")]
-    [SerializeField] private string parentObjectName;
+    [SerializeField] protected string parentObjectName;
 
     [Header("Settings")]
     [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a particle system's height.")]
-    [SerializeField] private Vector2 heightRange;
+    [SerializeField] protected Vector2 heightRange;
 
     [Tooltip("Amount of particle systems to spread across the terrain.")]
-    [SerializeField] private Vector2Int spreadRange;
+    [SerializeField] protected Vector2Int spreadRange;
 
     [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a particle system's volume.")]
-    [SerializeField] private Vector2Int volumeRange;
+    [SerializeField] protected Vector2Int volumeRange;
 
     [Header("Spawn Affection")]
     [Tooltip("Affection of the ground level's depth.")]
-    [SerializeField] private SpawnAffection depthAffection;
+    [SerializeField] protected SpawnAffection depthAffection;
 
     [Tooltip("Affection of the waves' turbulence.")]
-    [SerializeField] private SpawnAffection turbulenceAffection;
+    [SerializeField] protected SpawnAffection turbulenceAffection;
 
-    private GameObject parent;
-    private int spread, emission;
+    protected Terrain terrain;
+    protected GameObject parent;
+    protected Vector3 terrainPos;
+    protected Vector3 terrainDim;
+    protected int spread, emission;
 
-    private void Start() {
+    protected virtual void Start() {
+        this.terrain = GetComponentInParent<Terrain>();
+        this.terrainDim = terrain.terrainData.size;
+        this.terrainPos = transform.position;
         this.parent = new GameObject(parentObjectName);
         parent.transform.SetParent(transform);
 
-        Vector2Int environmentAffection = CalcSpreadAndEmission();
+        Vector2Int environmentAffection = CalcVolume();
         this.spread = environmentAffection.x;
         this.emission = environmentAffection.y;
         Spawn(spread);
@@ -50,30 +56,41 @@ public class MarineSpawner : MonoBehaviour
     /// Randomly spawn particle systems across the terrain.
     /// </summary>
     /// <param name="amount">Amout of systems to spawn</param>
-    private void Spawn(int amount) {
-        Terrain terrainComponent = GetComponentInParent<Terrain>();
-        Vector3 terrainDim = terrainComponent.terrainData.size;
-        Vector3 terrainPos = transform.position;
-
-        //find correct level emission
-        var emissionCurve = new ParticleSystem.MinMaxCurve(emission);
-
-        //instantiate
+    protected virtual void Spawn(int amount) {
         for (int i = 0; i < amount; i++) {
-            int prefabIndex = Random.Range(0, prefabs.Length);
-            GameObject instance = Instantiate(prefabs[prefabIndex]);
-            float x = Random.Range(terrainPos.x, terrainDim.x);
-            float y = Random.Range(heightRange.x, heightRange.y);
-            float z = Random.Range(terrainPos.z, terrainDim.z);
-            instance.transform.position = new Vector3(x, y, z);
+            GameObject instance = RandomlyInstantiate();
+            instance.transform.position = RandomizePosition();
             instance.transform.SetParent(parent.transform);
-
-            //set emission according to the waves' intensity
-            ParticleSystem particles = instance.GetComponent<ParticleSystem>();
-            ParticleSystem.EmissionModule module = particles.emission;
-            module.rateOverTime = emissionCurve;
+            ApplyEmission(instance, emission);
         }
     }
+
+    /// <summary>
+    /// Instantiate a random prefab from the list.
+    /// </summary>
+    /// <returns>An instance of a randomly selected prefab.</returns>
+    protected virtual GameObject RandomlyInstantiate() {
+        if (prefabs.Length > 0) {
+            int prefabIndex = Random.Range(0, prefabs.Length);
+            return Instantiate(prefabs[prefabIndex]);
+        }
+        else return null;
+    }
+
+    /// <returns>A random position across the terrain</returns>
+    protected virtual Vector3 RandomizePosition() {
+        float x = Random.Range(terrainPos.x, terrainDim.x);
+        float y = Random.Range(heightRange.x, heightRange.y);
+        float z = Random.Range(terrainPos.z, terrainDim.z);
+        return new Vector3(x, y, z);
+    }
+
+    /// <summary>
+    /// Apply emission level on a newly spawned instance.
+    /// </summary>
+    /// <param name="instance">The instance on which the emission should be applied</param>
+    /// <param name="emission">Amount of emission to apply</param>
+    protected abstract void ApplyEmission(GameObject instance, int emission);
 
     /// <summary>
     /// Calculate the correct amount of particles spread and emission
@@ -85,8 +102,8 @@ public class MarineSpawner : MonoBehaviour
     /// A Vector2 object with the spread value as X,
     /// and the emission value as Y.
     /// </returns>
-    private Vector2Int CalcSpreadAndEmission() {
-        float intensPercent = Waves.Instance.IntensityPercentage;
+    protected virtual Vector2Int CalcVolume() {
+        float intensPercent = WaterPhysics.Instance.IntensityPercentage;
         int spreadDiff = spreadRange.y - spreadRange.x;
         int volumeDiff = volumeRange.y - volumeRange.x;
         int avgSpread = (spreadRange.x + spreadRange.y) / 2;
