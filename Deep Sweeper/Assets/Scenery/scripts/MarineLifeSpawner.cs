@@ -5,12 +5,13 @@ public class MarineLifeSpawner : MarineSpawner
 {
     [Header("Emission Settings")]
     [Tooltip("The minimum 3D distance between each individual from the center instance.")]
-    [SerializeField] private Vector3 minIndividualDistance;
+    [SerializeField] public Vector3 MinIndividualDistance;
 
     [Tooltip("The maximum 3D distance between each individual from the center instance.")]
-    [SerializeField] private Vector3 maxIndividualDistance;
+    [SerializeField] public Vector3 MaxIndividualDistance;
 
     private static readonly string INSTANCE_NAME_TAG = "instance";
+    private static readonly string CLONE_TAG = "(Clone)";
 
     protected override void ApplyEmission(GameObject instance, int emission) {
         //insert the source instance to a lower level parent
@@ -48,9 +49,9 @@ public class MarineLifeSpawner : MarineSpawner
     /// <param name="point">The point from which to measure the generated distance</param>
     /// <returns></returns>
     private Vector3 RandomizeIndividualDistance(Vector3 point) {
-        float x = Random.Range(minIndividualDistance.x, maxIndividualDistance.x);
-        float y = Random.Range(minIndividualDistance.y, maxIndividualDistance.y);
-        float z = Random.Range(minIndividualDistance.z, maxIndividualDistance.z);
+        float x = Random.Range(MinIndividualDistance.x, MaxIndividualDistance.x);
+        float y = Random.Range(MinIndividualDistance.y, MaxIndividualDistance.y);
+        float z = Random.Range(MinIndividualDistance.z, MaxIndividualDistance.z);
         return point + new Vector3(x, y, z);
     }
 
@@ -60,6 +61,6 @@ public class MarineLifeSpawner : MarineSpawner
     /// <param name="name">A string from which to remove the suffix</param>
     /// <returns>The string without the '(Clone)' suffix.</returns>
     private string RemoveCloneTag(string name) {
-        return name.Replace("(Clone)", "");
+        return name.Replace(CLONE_TAG, string.Empty);
     }
 }

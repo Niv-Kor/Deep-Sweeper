@@ -2,36 +2,29 @@
 
 public abstract class MarineSpawner : MonoBehaviour
 {
-    protected enum SpawnAffection
-    {
-        More,
-        Less,
-        NoEffect
-    }
-
     [Header("Prefabs")]
     [Tooltip("The particle system prefabs to instantiate.")]
-    [SerializeField] protected GameObject[] prefabs;
+    [SerializeField] public GameObject[] Prefabs;
 
     [Tooltip("The name of the particle systems' parent object.")]
     [SerializeField] protected string parentObjectName;
 
     [Header("Settings")]
-    [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a particle system's height.")]
-    [SerializeField] protected Vector2 heightRange;
+    [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a spawn's height.")]
+    [SerializeField] public Vector2 HeightRange;
 
-    [Tooltip("Amount of particle systems to spread across the terrain.")]
-    [SerializeField] protected Vector2Int spreadRange;
+    [Tooltip("Amount of spawns to spread across the terrain.")]
+    [SerializeField] public Vector2Int SpreadRange;
 
-    [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a particle system's volume.")]
-    [SerializeField] protected Vector2Int volumeRange;
+    [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a spawn's volume.")]
+    [SerializeField] public Vector2Int VolumeRange;
 
     [Header("Spawn Affection")]
     [Tooltip("Affection of the ground level's depth.")]
-    [SerializeField] protected SpawnAffection depthAffection;
+    [SerializeField] public SpawnAffection DepthAffection;
 
     [Tooltip("Affection of the waves' turbulence.")]
-    [SerializeField] protected SpawnAffection turbulenceAffection;
+    [SerializeField] public SpawnAffection TurbulenceAffection;
 
     protected Terrain terrain;
     protected GameObject parent;
@@ -40,10 +33,10 @@ public abstract class MarineSpawner : MonoBehaviour
     protected int spread, emission;
 
     protected virtual void Start() {
-        this.terrain = GetComponentInParent<Terrain>();
+        this.terrain = FindObjectOfType<Terrain>();
         this.terrainDim = terrain.terrainData.size;
         this.terrainPos = transform.position;
-        this.parent = new GameObject(parentObjectName);
+        this.parent = !string.IsNullOrEmpty(parentObjectName) ? new GameObject(parentObjectName) : gameObject;
         parent.transform.SetParent(transform);
 
         Vector2Int environmentAffection = CalcVolume();
@@ -70,9 +63,9 @@ public abstract class MarineSpawner : MonoBehaviour
     /// </summary>
     /// <returns>An instance of a randomly selected prefab.</returns>
     protected virtual GameObject RandomlyInstantiate() {
-        if (prefabs.Length > 0) {
-            int prefabIndex = Random.Range(0, prefabs.Length);
-            return Instantiate(prefabs[prefabIndex]);
+        if (Prefabs.Length > 0) {
+            int prefabIndex = Random.Range(0, Prefabs.Length);
+            return Instantiate(Prefabs[prefabIndex]);
         }
         else return null;
     }
@@ -80,7 +73,7 @@ public abstract class MarineSpawner : MonoBehaviour
     /// <returns>A random position across the terrain</returns>
     protected virtual Vector3 RandomizePosition() {
         float x = Random.Range(terrainPos.x, terrainDim.x);
-        float y = Random.Range(heightRange.x, heightRange.y);
+        float y = Random.Range(HeightRange.x, HeightRange.y);
         float z = Random.Range(terrainPos.z, terrainDim.z);
         return new Vector3(x, y, z);
     }
@@ -104,15 +97,15 @@ public abstract class MarineSpawner : MonoBehaviour
     /// </returns>
     protected virtual Vector2Int CalcVolume() {
         float intensPercent = WaterPhysics.Instance.IntensityPercentage;
-        int spreadDiff = spreadRange.y - spreadRange.x;
-        int volumeDiff = volumeRange.y - volumeRange.x;
-        int avgSpread = (spreadRange.x + spreadRange.y) / 2;
-        int avgVolume = (volumeRange.x + volumeRange.y) / 2;
+        int spreadDiff = SpreadRange.y - SpreadRange.x;
+        int volumeDiff = VolumeRange.y - VolumeRange.x;
+        int avgSpread = (SpreadRange.x + SpreadRange.y) / 2;
+        int avgVolume = (VolumeRange.x + VolumeRange.y) / 2;
         int spreadByDepth, spreadByTurbulence;
         int emissionByDepth, emissionByTurbulence;
 
         //calculate depth affection
-        switch (depthAffection) {
+        switch (DepthAffection) {
             case SpawnAffection.More:
                 spreadByDepth = avgSpread;
                 emissionByDepth = avgVolume;
@@ -129,22 +122,22 @@ public abstract class MarineSpawner : MonoBehaviour
                 break;
 
             default:
-                spreadByDepth = spreadRange.x;
-                emissionByDepth = volumeRange.x;
+                spreadByDepth = SpreadRange.x;
+                emissionByDepth = VolumeRange.x;
                 break;
         }
 
         //calculate turbulence affection
-        switch (turbulenceAffection) {
+        switch (TurbulenceAffection) {
             case SpawnAffection.More:
-                spreadByTurbulence = (int) (intensPercent * spreadDiff / 100f + spreadRange.x);
-                emissionByTurbulence = (int) (intensPercent * volumeDiff / 100f + volumeRange.x);
+                spreadByTurbulence = (int) (intensPercent * spreadDiff / 100f + SpreadRange.x);
+                emissionByTurbulence = (int) (intensPercent * volumeDiff / 100f + VolumeRange.x);
                 break;
 
             case SpawnAffection.Less:
                 float intense = 100 - intensPercent;
-                spreadByTurbulence = (int) (intense * spreadDiff / 100f + spreadRange.x);
-                emissionByTurbulence = (int) (intense * volumeDiff / 100f + volumeRange.x);
+                spreadByTurbulence = (int) (intense * spreadDiff / 100f + SpreadRange.x);
+                emissionByTurbulence = (int) (intense * volumeDiff / 100f + VolumeRange.x);
                 break;
 
             case SpawnAffection.NoEffect:
@@ -153,8 +146,8 @@ public abstract class MarineSpawner : MonoBehaviour
                 break;
 
             default:
-                spreadByTurbulence = spreadRange.x;
-                emissionByTurbulence = volumeRange.x;
+                spreadByTurbulence = SpreadRange.x;
+                emissionByTurbulence = VolumeRange.x;
                 break;
         }
 

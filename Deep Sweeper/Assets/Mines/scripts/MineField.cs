@@ -37,7 +37,7 @@ public class MineField : MonoBehaviour
     private void Start() {
         MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
         this.gridSize = gridRenderer.bounds.size;
-        this.terrain = GetComponentInParent<Terrain>();
+        this.terrain = FindObjectOfType<Terrain>();
         this.Grids = new List<MineGrid>();
         this.matrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
