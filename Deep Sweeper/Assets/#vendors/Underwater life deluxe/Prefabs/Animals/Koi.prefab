@@ -114,6 +114,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a402841d2d17da94980a58bcbb35d40d, type: 2}
+  - {fileID: 2100000, guid: 058262e63c3e6ff4d90fee4345ce549b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -421,7 +422,7 @@ GameObject:
   - component: {fileID: 95578699097144716}
   - component: {fileID: -4624031594513368826}
   m_Layer: 12
-  m_Name: Koi_prefab
+  m_Name: Koi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -476,7 +477,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}

@@ -14,6 +14,7 @@ namespace Constants
         public static readonly string NAME_BULLET = "Bullet";
         public static readonly string NAME_PARTICLES = "Particles";
         public static readonly string NAME_PLAYER = "Player";
+        public static readonly string NAME_FISH_BORDERS = "Fish Borders";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -25,6 +26,7 @@ namespace Constants
         public static readonly LayerMask BULLET = LayerMask.GetMask(NAME_BULLET);
         public static readonly LayerMask PARTICLES = LayerMask.GetMask(NAME_PARTICLES);
         public static readonly LayerMask PLAYER = LayerMask.GetMask(NAME_PLAYER);
+        public static readonly LayerMask FISH_BORDERS = LayerMask.GetMask(NAME_FISH_BORDERS);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.
@@ -34,6 +36,19 @@ namespace Constants
         /// <returns>True if the mask contains the layer.</returns>
         public static bool ContainedInMask(int layer, LayerMask mask) {
             return (mask & 1 << layer) == 1 << layer;
+        }
+
+        /// <summary>
+        /// Get the layer value of a layer mask.
+        /// This function only works well with one layered masks.
+        /// </summary>
+        /// <param name="mask">The mask from which to extract the value</param>
+        /// <returns>
+        /// The value of the layer mask,
+        /// or the last one if it contains multiple layers.
+        /// </returns>
+        public static int GetLayerValue(LayerMask mask) {
+            return (int) Mathf.Log(mask.value, 2);
         }
     }
 }

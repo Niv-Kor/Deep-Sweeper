@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Mussel_material
   m_Shader: {fileID: 4800000, guid: 60266dd225cdd804696fba6a0852c651, type: 3}
-  m_ShaderKeywords: _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  m_ShaderKeywords: NCE_RAMP_TEXTURE _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -70,7 +70,7 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DarkSideRange: -0.31
+    - _DarkSideRange: -1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _ExpandFactor: 1

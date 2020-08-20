@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 95293238042123882}
   - component: {fileID: 8869141488430849476}
   m_Layer: 12
-  m_Name: Mandarin_fish_v2_prefab
+  m_Name: Mandarin_fish_v2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,7 +67,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
@@ -404,6 +403,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 582a9efcc51756d408578acd7eca45d2, type: 2}
+  - {fileID: 2100000, guid: 058262e63c3e6ff4d90fee4345ce549b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 95356449763829802}
   - component: {fileID: 7980521244949149495}
   m_Layer: 12
-  m_Name: Mackerel_prefab
+  m_Name: Mackerel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -379,7 +379,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
@@ -436,6 +435,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4310db73255a21e4da8ece2ef277ad7a, type: 2}
+  - {fileID: 2100000, guid: 058262e63c3e6ff4d90fee4345ce549b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

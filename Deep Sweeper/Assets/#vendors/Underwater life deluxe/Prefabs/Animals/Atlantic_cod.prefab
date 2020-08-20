@@ -265,6 +265,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e6d21b82a65747349ab3aecfcb0b4c43, type: 2}
+  - {fileID: 2100000, guid: db25e5bca1187d5419819b4a93e92523, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -575,7 +576,7 @@ GameObject:
   - component: {fileID: 95795399454770498}
   - component: {fileID: 748346804022149245}
   m_Layer: 12
-  m_Name: Atlantic_cod_prefab
+  m_Name: Atlantic_cod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -630,7 +631,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}

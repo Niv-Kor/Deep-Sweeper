@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mandarin_fish_v2_material
-  m_Shader: {fileID: 4800000, guid: 60266dd225cdd804696fba6a0852c651, type: 3}
+  m_Shader: {fileID: 4800000, guid: 840b7a049b4eaba45aa6b6d54b69c62a, type: 3}
   m_ShaderKeywords: _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

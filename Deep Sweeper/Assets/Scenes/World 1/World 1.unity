@@ -548,10 +548,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24f1192eeecb9547ab72034c9b03ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: 52, y: 0, z: 38}
+    Size: {x: 185.8, y: 0, z: 73.7}
   gridPrefab: {fileID: 4699313910211609283, guid: 52e71de8fc15c2c4981450201a804b66,
     type: 3}
-  confines: {x: 52, y: 0, z: 37.9}
-  confinesSize: {x: 185.8, y: 73.69}
   gridSpace: 3
   minesPercent: 20
 --- !u!114 &927526542
@@ -566,10 +567,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24f1192eeecb9547ab72034c9b03ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: 177.55, y: 0, z: 165.6}
+    Size: {x: 75.4, y: 0, z: 87}
   gridPrefab: {fileID: 4699313910211609283, guid: 52e71de8fc15c2c4981450201a804b66,
     type: 3}
-  confines: {x: 177.55, y: 0, z: 165.6}
-  confinesSize: {x: 75.4, y: 87}
   gridSpace: 3
   minesPercent: 20
 --- !u!114 &927526543
@@ -584,10 +586,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24f1192eeecb9547ab72034c9b03ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: 42.3, y: 0, z: 162.5}
+    Size: {x: 72.8, y: 0, z: 88.7}
   gridPrefab: {fileID: 4699313910211609283, guid: 52e71de8fc15c2c4981450201a804b66,
     type: 3}
-  confines: {x: 42.3, y: 0, z: 162.49}
-  confinesSize: {x: 72.8, y: 88.7}
   gridSpace: 3
   minesPercent: 20
 --- !u!1 &946284195 stripped
@@ -724,11 +727,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a78d99ed9eca0c40bf7d7aeef8a9858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: -100, y: 210, z: -100}
+    Size: {x: 500, y: 20, z: 500}
   Prefabs:
   - {fileID: 100000, guid: 23812c13c3523404682f1268e764f87f, type: 3}
   parentObjectName: Light Beams
-  HeightRange: {x: 210, y: 230}
-  SpreadRange: {x: 5, y: 20}
+  SpreadRange: {x: 10, y: 30}
   VolumeRange: {x: 1, y: 1}
   DepthAffection: 1
   TurbulenceAffection: 2
@@ -744,10 +749,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a78d99ed9eca0c40bf7d7aeef8a9858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: -50, y: 0, z: -50}
+    Size: {x: 400, y: 0, z: 400}
   Prefabs:
   - {fileID: 8781998184764746999, guid: 225b24789c8852747a96cff4beecf8c5, type: 3}
   parentObjectName: Bubbles
-  HeightRange: {x: 0, y: 0}
   SpreadRange: {x: 3, y: 7}
   VolumeRange: {x: 200, y: 700}
   DepthAffection: 0
@@ -763,7 +770,6 @@ GameObject:
   - component: {fileID: 1510324081}
   - component: {fileID: 1510324080}
   - component: {fileID: 1510324079}
-  - component: {fileID: 1510324082}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -832,49 +838,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1510324082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1510324078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07ec26b8dee646b4a8b5b380388bb9ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  creaturesPool:
-  - {fileID: 1107411160630964, guid: bd52fe591dcea5a4ba689c55c42d29eb, type: 3}
-  - {fileID: 1870853889962878, guid: 0885df2fceef3734896156b6c9d699be, type: 3}
-  - {fileID: 1466324459549200, guid: 4fc8100d2e0c5ce4e831af926e5192ca, type: 3}
-  - {fileID: 1829736499107408, guid: dea851e3a49b17846b7acecd88dc9e37, type: 3}
-  - {fileID: 1029734134427488, guid: 8d428c90a488dcf4ea2ad87d49947011, type: 3}
-  - {fileID: 1820572774563482, guid: 90d24330da4421b488fb2f02e5efa9bb, type: 3}
-  - {fileID: 1107190881394354, guid: 96e07ed0b6e146249a4eb204c8b42f6f, type: 3}
-  - {fileID: 1260883131845032, guid: 704d7e9771f635d49b675a9e09b632ff, type: 3}
-  - {fileID: 1935673931770608, guid: 9bcf87343c9dd1f49a2e5c1a0b71caa5, type: 3}
-  - {fileID: 1293192347442496, guid: 9fbe444004a392b448860861a6ed8d5f, type: 3}
-  - {fileID: 1565111735039504, guid: 9201dc26a935153478aaa12d87d470ae, type: 3}
-  - {fileID: 1565141193421758, guid: 7022a07fc5788ad47b2bbd0e5365b64a, type: 3}
-  - {fileID: 1911605819255016, guid: 5ef6cda3c62fbd94ea7530448a7a94ef, type: 3}
-  - {fileID: 1272166223363426, guid: d92e5f6e34b14d74893039690fd790af, type: 3}
-  - {fileID: 1536911975133754, guid: c9f75ca7dac948d498ade13b23649ad6, type: 3}
-  - {fileID: 1365381192422962, guid: 5469708956414f94797e5470f221a016, type: 3}
-  - {fileID: 1276205554959560, guid: 110b86501fff2414186f46873d54d1ea, type: 3}
-  - {fileID: 1748946944915498, guid: 9b37844427900714bac5b352dbd931d0, type: 3}
-  - {fileID: 1502900601577816, guid: 428bbdf30777be043a92558682b7757a, type: 3}
-  - {fileID: 1425027144221698, guid: cc9a616fb3be3b74c8674bc0e2da1ff5, type: 3}
-  - {fileID: 1091632286704298, guid: bf95cd27d201c0a4ca7c67904c646822, type: 3}
-  - {fileID: 1049270958944730, guid: 298e23c022d6e874899600b27c52366b, type: 3}
-  - {fileID: 1614411733284342, guid: f8332fba29c64c041b261e4069ae7363, type: 3}
-  - {fileID: 1883189314551638, guid: efceadb58900ddb4aa037cac848862f8, type: 3}
-  - {fileID: 1739802490283200, guid: 4a51b6b5114fb584d869e5bb7f99d736, type: 3}
-  - {fileID: 1045811944559828, guid: bab1287a00165c34eb228a8dc61d3469, type: 3}
-  - {fileID: 1301750832583068, guid: a2fa5a930c613414a9e7c8b729c7caa2, type: 3}
-  - {fileID: 1957303125167972, guid: 26be2583b4415674ba8757e8cbcf0a60, type: 3}
-  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
-  parentObj: {fileID: 1964278201}
 --- !u!1001 &1809371041
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -963,6 +926,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1964278202}
+  - component: {fileID: 1964278203}
   m_Layer: 0
   m_Name: Marine Life
   m_TagString: Untagged
@@ -984,6 +948,54 @@ Transform:
   m_Father: {fileID: 1510324081}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1964278203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964278201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07ec26b8dee646b4a8b5b380388bb9ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Confine:
+    Offset: {x: -100, y: 10, z: -100}
+    Size: {x: 500, y: 80, z: 500}
+  creaturesPool:
+  - {fileID: 1107411160630964, guid: bd52fe591dcea5a4ba689c55c42d29eb, type: 3}
+  - {fileID: 1870853889962878, guid: 0885df2fceef3734896156b6c9d699be, type: 3}
+  - {fileID: 1466324459549200, guid: 4fc8100d2e0c5ce4e831af926e5192ca, type: 3}
+  - {fileID: 1829736499107408, guid: dea851e3a49b17846b7acecd88dc9e37, type: 3}
+  - {fileID: 1029734134427488, guid: 8d428c90a488dcf4ea2ad87d49947011, type: 3}
+  - {fileID: 1820572774563482, guid: 90d24330da4421b488fb2f02e5efa9bb, type: 3}
+  - {fileID: 1107190881394354, guid: 96e07ed0b6e146249a4eb204c8b42f6f, type: 3}
+  - {fileID: 1260883131845032, guid: 704d7e9771f635d49b675a9e09b632ff, type: 3}
+  - {fileID: 1935673931770608, guid: 9bcf87343c9dd1f49a2e5c1a0b71caa5, type: 3}
+  - {fileID: 1293192347442496, guid: 9fbe444004a392b448860861a6ed8d5f, type: 3}
+  - {fileID: 1565111735039504, guid: 9201dc26a935153478aaa12d87d470ae, type: 3}
+  - {fileID: 1565141193421758, guid: 7022a07fc5788ad47b2bbd0e5365b64a, type: 3}
+  - {fileID: 1911605819255016, guid: 5ef6cda3c62fbd94ea7530448a7a94ef, type: 3}
+  - {fileID: 1272166223363426, guid: d92e5f6e34b14d74893039690fd790af, type: 3}
+  - {fileID: 1536911975133754, guid: c9f75ca7dac948d498ade13b23649ad6, type: 3}
+  - {fileID: 1365381192422962, guid: 5469708956414f94797e5470f221a016, type: 3}
+  - {fileID: 1276205554959560, guid: 110b86501fff2414186f46873d54d1ea, type: 3}
+  - {fileID: 1748946944915498, guid: 9b37844427900714bac5b352dbd931d0, type: 3}
+  - {fileID: 1502900601577816, guid: 428bbdf30777be043a92558682b7757a, type: 3}
+  - {fileID: 1425027144221698, guid: cc9a616fb3be3b74c8674bc0e2da1ff5, type: 3}
+  - {fileID: 1091632286704298, guid: bf95cd27d201c0a4ca7c67904c646822, type: 3}
+  - {fileID: 1049270958944730, guid: 298e23c022d6e874899600b27c52366b, type: 3}
+  - {fileID: 1614411733284342, guid: f8332fba29c64c041b261e4069ae7363, type: 3}
+  - {fileID: 1883189314551638, guid: efceadb58900ddb4aa037cac848862f8, type: 3}
+  - {fileID: 1739802490283200, guid: 4a51b6b5114fb584d869e5bb7f99d736, type: 3}
+  - {fileID: 1045811944559828, guid: bab1287a00165c34eb228a8dc61d3469, type: 3}
+  - {fileID: 1301750832583068, guid: a2fa5a930c613414a9e7c8b729c7caa2, type: 3}
+  - {fileID: 1957303125167972, guid: 26be2583b4415674ba8757e8cbcf0a60, type: 3}
+  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
+  borderLayer:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!1 &1970372935
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class MarineSpawner : MonoBehaviour
+public abstract class MarineSpawner : ConfinedArea
 {
     [Header("Prefabs")]
     [Tooltip("The particle system prefabs to instantiate.")]
@@ -10,9 +10,6 @@ public abstract class MarineSpawner : MonoBehaviour
     [SerializeField] protected string parentObjectName;
 
     [Header("Settings")]
-    [Tooltip("The minimum (inclusive) and maximum (exclusive) value of a spawn's height.")]
-    [SerializeField] public Vector2 HeightRange;
-
     [Tooltip("Amount of spawns to spread across the terrain.")]
     [SerializeField] public Vector2Int SpreadRange;
 
@@ -26,16 +23,10 @@ public abstract class MarineSpawner : MonoBehaviour
     [Tooltip("Affection of the waves' turbulence.")]
     [SerializeField] public SpawnAffection TurbulenceAffection;
 
-    protected Terrain terrain;
     protected GameObject parent;
-    protected Vector3 terrainPos;
-    protected Vector3 terrainDim;
     protected int spread, emission;
 
     protected virtual void Start() {
-        this.terrain = FindObjectOfType<Terrain>();
-        this.terrainDim = terrain.terrainData.size;
-        this.terrainPos = transform.position;
         this.parent = !string.IsNullOrEmpty(parentObjectName) ? new GameObject(parentObjectName) : gameObject;
         parent.transform.SetParent(transform);
 
@@ -52,7 +43,7 @@ public abstract class MarineSpawner : MonoBehaviour
     protected virtual void Spawn(int amount) {
         for (int i = 0; i < amount; i++) {
             GameObject instance = RandomlyInstantiate();
-            instance.transform.position = RandomizePosition();
+            instance.transform.position = GeneratePosition();
             instance.transform.SetParent(parent.transform);
             ApplyEmission(instance, emission);
         }
@@ -68,14 +59,6 @@ public abstract class MarineSpawner : MonoBehaviour
             return Instantiate(Prefabs[prefabIndex]);
         }
         else return null;
-    }
-
-    /// <returns>A random position across the terrain</returns>
-    protected virtual Vector3 RandomizePosition() {
-        float x = Random.Range(terrainPos.x, terrainDim.x);
-        float y = Random.Range(HeightRange.x, HeightRange.y);
-        float z = Random.Range(terrainPos.z, terrainDim.z);
-        return new Vector3(x, y, z);
     }
 
     /// <summary>

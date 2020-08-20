@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 95883958317373890}
   - component: {fileID: -4636266548930084079}
   m_Layer: 12
-  m_Name: Arapaima_prefab
+  m_Name: Arapaima
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
@@ -431,6 +430,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: f5af586f9770eba43a8354eb00fed323, type: 2}
+  - {fileID: 2100000, guid: db25e5bca1187d5419819b4a93e92523, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

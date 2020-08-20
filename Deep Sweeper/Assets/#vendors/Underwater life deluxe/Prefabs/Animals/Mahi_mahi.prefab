@@ -236,6 +236,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 9fb1747ddd0764c40834a54f75f40825, type: 2}
+  - {fileID: 2100000, guid: c68e1711bd951e24caad6cfad92bea25, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -329,7 +330,7 @@ GameObject:
   - component: {fileID: 95482793961479280}
   - component: {fileID: 4782977620025270117}
   m_Layer: 12
-  m_Name: Mahi_mahi_prefab
+  m_Name: Mahi_mahi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -384,7 +385,6 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 2, y: 6}
   MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}

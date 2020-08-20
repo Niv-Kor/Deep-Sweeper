@@ -2482,7 +2482,7 @@ GameObject:
   - component: {fileID: 95967527817494840}
   - component: {fileID: -796553170802488903}
   m_Layer: 12
-  m_Name: Octopus_prefab
+  m_Name: Octopus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2535,13 +2535,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.05
-  zigzagIntensityRange: {x: 0.3, y: 1}
+  zigzagIntensityRange: {x: 2, y: 3}
   DepthHabitat: 0
-  HeightRange: {x: 5, y: 10}
   PacksAmountRange: {x: 1, y: 2}
-  PackSizeRange: {x: 2, y: 6}
-  MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
-  MaxIndividualDistance: {x: 4, y: 4, z: 4}
+  PackSizeRange: {x: 1, y: 3}
+  MinIndividualDistance: {x: 5, y: 5, z: 5}
+  MaxIndividualDistance: {x: 10, y: 10, z: 10}
   DepthAffection: 1
   TurbulenceAffection: 2
 --- !u!1 &1745501092681402
@@ -3331,6 +3330,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4ca0f56eb25923f4e9cd9125687637e7, type: 2}
+  - {fileID: 2100000, guid: 058262e63c3e6ff4d90fee4345ce549b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

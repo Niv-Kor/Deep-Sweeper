@@ -12,17 +12,21 @@ public class MarineLifeSpawner : MarineSpawner
 
     private static readonly string INSTANCE_NAME_TAG = "instance";
     private static readonly string CLONE_TAG = "(Clone)";
+    private static readonly float MAX_SPAWN_DISTANCE_OF_RAD = .7f;
 
     protected override void ApplyEmission(GameObject instance, int emission) {
         //insert the source instance to a lower level parent
         GameObject subParent = new GameObject(RemoveCloneTag(instance.name));
+        MarineLife marineLifeComponent = instance.GetComponent<MarineLife>();
+        FishPack pack = subParent.AddComponent<FishPack>();
         subParent.transform.SetParent(instance.transform.parent);
         instance.transform.SetParent(subParent.transform);
         instance.name = RemoveCloneTag(instance.name) + "_" + INSTANCE_NAME_TAG;
+        pack.Join(marineLifeComponent, true);
 
         //emit
         for (int i = 0; i < emission - 1; i++)
-            StartCoroutine(Emit(instance, subParent, 1));
+            StartCoroutine(Emit(instance, subParent, 1, pack));
     }
 
     /// <summary>
@@ -31,16 +35,19 @@ public class MarineLifeSpawner : MarineSpawner
     /// <param name="source">Source prefab to intantiate</param>
     /// <param name="subParent">The parent of the new emitted object</param>
     /// <param name="maxDelayTime">Maximum amount of time [s] until the emission</param>
-    private IEnumerator Emit(GameObject source, GameObject subParent, float maxDelayTime) {
+    /// <param name="pack">The marine life's intended pack</param>
+    private IEnumerator Emit(GameObject source, GameObject subParent, float maxDelayTime, FishPack pack) {
         //wait for x seconds
         float delay = Random.Range(0, maxDelayTime);
         yield return new WaitForSeconds(delay);
 
         //instantiate
         GameObject instance = Instantiate(source);
-        instance.transform.position = RandomizeIndividualDistance(instance.transform.position);
+        MarineLife marineLifeComponent = instance.GetComponent<MarineLife>();
         instance.transform.SetParent(subParent.transform);
+        instance.transform.position = GenerateIndividualDistance(instance.transform.position);
         instance.name = RemoveCloneTag(instance.name);
+        pack.Join(marineLifeComponent);
     }
 
     /// <summary>
@@ -48,7 +55,7 @@ public class MarineLifeSpawner : MarineSpawner
     /// </summary>
     /// <param name="point">The point from which to measure the generated distance</param>
     /// <returns></returns>
-    private Vector3 RandomizeIndividualDistance(Vector3 point) {
+    private Vector3 GenerateIndividualDistance(Vector3 point) {
         float x = Random.Range(MinIndividualDistance.x, MaxIndividualDistance.x);
         float y = Random.Range(MinIndividualDistance.y, MaxIndividualDistance.y);
         float z = Random.Range(MinIndividualDistance.z, MaxIndividualDistance.z);
@@ -62,5 +69,18 @@ public class MarineLifeSpawner : MarineSpawner
     /// <returns>The string without the '(Clone)' suffix.</returns>
     private string RemoveCloneTag(string name) {
         return name.Replace(CLONE_TAG, string.Empty);
+    }
+
+    protected override Vector3 GeneratePosition() {
+        Vector3 pos;
+        float centerDist;
+
+        //don't generate a position that's too close to the edges
+        do {
+            pos = base.GeneratePosition();
+            centerDist = Vector3.Distance(pos, AreaCenter);
+        }
+        while (centerDist > AreaRadius * MAX_SPAWN_DISTANCE_OF_RAD);
+        return pos;
     }
 }

@@ -1,19 +1,11 @@
 ﻿using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
-public class MineField : MonoBehaviour
+public class MineField : ConfinedArea
 {
     [Header("Prefabs")]
     [Tooltip("The grid object.")]
     [SerializeField] private GameObject gridPrefab;
-
-    [Header("Area Definition")]
-    [Tooltip("The field confines' offset.")]
-    [SerializeField] private Vector3 confines;
-
-    [Tooltip("The size of the field area.")]
-    [SerializeField] private Vector2 confinesSize;
 
     [Tooltip("Space between grids.")]
     [SerializeField] private float gridSpace;
@@ -23,7 +15,6 @@ public class MineField : MonoBehaviour
     [SerializeField] private int minesPercent;
 
     private static readonly string GRIDS_PARENT_NAME = "Field";
-    private static readonly Color GIZMOS_COLOR = new Color(0xff, 0x0, 0xe8);
 
     private static int fieldIndex = 0;
     private Terrain terrain;
@@ -50,18 +41,6 @@ public class MineField : MonoBehaviour
         OpenInitial();
     }
 
-    private void OnDrawGizmos() {
-        Vector3 ptA = confines;
-        Vector3 ptB = ptA + new Vector3(0, 0, confinesSize.y);
-        Vector3 ptC = ptB + new Vector3(confinesSize.x, 0, 0);
-        Vector3 ptD = ptA + new Vector3(confinesSize.x, 0, 0);
-
-        Debug.DrawLine(ptA, ptB, GIZMOS_COLOR);
-        Debug.DrawLine(ptB, ptC, GIZMOS_COLOR);
-        Debug.DrawLine(ptC, ptD, GIZMOS_COLOR);
-        Debug.DrawLine(ptD, ptA, GIZMOS_COLOR);
-    }
-
     /// <summary>
     /// Calculate the horizontal and vertical amount of mine grids that
     /// can fit inside the specified field confines.
@@ -73,8 +52,8 @@ public class MineField : MonoBehaviour
     /// that can fit vertically in the field.
     /// </returns>
     private Vector2 CalcMatrixSize() {
-        int xAmount = (int) (confinesSize.x / (gridSize.x + gridSpace));
-        int zAmount = (int) (confinesSize.y / (gridSize.z + gridSpace));
+        int xAmount = (int) (Confine.Size.x / (gridSize.x + gridSpace));
+        int zAmount = (int) (Confine.Size.z / (gridSize.z + gridSpace));
         return new Vector2(zAmount, xAmount);
     }
 
@@ -83,7 +62,7 @@ public class MineField : MonoBehaviour
     /// </summary>
     private void LayoutMatrix() {
         gridSize.y = 0;
-        Vector3 startPoint = terrain.transform.position + confines + gridSize / 2;
+        Vector3 startPoint = terrain.transform.position + Confine.Offset + gridSize / 2;
         string parentObjName = GRIDS_PARENT_NAME + " (" + (fieldIndex++) + ")";
         GameObject gridsObj = new GameObject(parentObjName);
         gridsObj.transform.SetParent(transform);

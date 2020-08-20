@@ -9609,6 +9609,16 @@ PrefabInstance:
       propertyPath: UVModule.timeMode
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1926854635635543141, guid: 548fe1257e73a0b40b1a537d1a32715b,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1926854635635543141, guid: 548fe1257e73a0b40b1a537d1a32715b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: db25e5bca1187d5419819b4a93e92523, type: 2}
     - target: {fileID: 2256675470851520956, guid: 548fe1257e73a0b40b1a537d1a32715b,
         type: 3}
       propertyPath: m_LocalPosition.x
