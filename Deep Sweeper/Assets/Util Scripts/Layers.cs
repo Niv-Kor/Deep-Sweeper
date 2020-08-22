@@ -15,6 +15,7 @@ namespace Constants
         public static readonly string NAME_PARTICLES = "Particles";
         public static readonly string NAME_PLAYER = "Player";
         public static readonly string NAME_FISH_BORDERS = "Fish Borders";
+        public static readonly string NAME_GROUND = "Ground";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -27,6 +28,7 @@ namespace Constants
         public static readonly LayerMask PARTICLES = LayerMask.GetMask(NAME_PARTICLES);
         public static readonly LayerMask PLAYER = LayerMask.GetMask(NAME_PLAYER);
         public static readonly LayerMask FISH_BORDERS = LayerMask.GetMask(NAME_FISH_BORDERS);
+        public static readonly LayerMask GROUND = LayerMask.GetMask(NAME_GROUND);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.

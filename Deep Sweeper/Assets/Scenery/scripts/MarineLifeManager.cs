@@ -29,41 +29,9 @@ public class MarineLifeManager : ConfinedArea
         GameObject borders = new GameObject(BORDERS_OBJ_NAME);
         borders.layer = Constants.Layers.GetLayerValue(borderLayer);
         borders.transform.SetParent(transform);
-        CreateBorders(borders);
+        BordersCreator.Create(this, false, EXCESS_BORDERS_DEPTH, true, borders);
 
         Spawn();
-    }
-
-    /// <summary>
-    /// Create box colliders on the borders child object.
-    /// </summary>
-    /// <param name="parentObj">
-    /// The borders object to which the
-    /// box collider components will be added
-    /// </param>
-    private void CreateBorders(GameObject parentObj) {
-        Vector3[] boxSizes = {
-            new Vector3(Confine.Size.x, Confine.Size.y, EXCESS_BORDERS_DEPTH),
-            new Vector3(EXCESS_BORDERS_DEPTH, Confine.Size.y, Confine.Size.z),
-            new Vector3(Confine.Size.x, Confine.Size.y, EXCESS_BORDERS_DEPTH),
-            new Vector3(EXCESS_BORDERS_DEPTH, Confine.Size.y, Confine.Size.z)
-        };
-
-        Vector3[] centerPointsOffset = {
-            new Vector3(0, 0, -boxSizes[0].z),
-            new Vector3(-boxSizes[1].x, 0, 0),
-            new Vector3(0, 0, Confine.Size.z),
-            new Vector3(Confine.Size.x, 0, 0)
-        };
-
-        for (int i = 0; i < boxSizes.Length; i++) {
-            Vector3 size = boxSizes[i];
-            Vector3 centerOffset = centerPointsOffset[i];
-            BoxCollider edge = parentObj.AddComponent<BoxCollider>();
-            edge.size = size;
-            edge.center = Confine.Offset + size / 2 + centerOffset;
-            edge.isTrigger = true;
-        }
     }
 
     /// <summary>

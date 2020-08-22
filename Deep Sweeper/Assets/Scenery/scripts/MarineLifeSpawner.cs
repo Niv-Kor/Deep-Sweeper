@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MarineLifeSpawner : MarineSpawner
@@ -14,19 +15,54 @@ public class MarineLifeSpawner : MarineSpawner
     private static readonly string CLONE_TAG = "(Clone)";
     private static readonly float MAX_SPAWN_DISTANCE_OF_RAD = .7f;
 
+    private int emissionAmount;
+    private FishPack pack;
+    private Queue<MarineLife> collectedPack;
+
     protected override void ApplyEmission(GameObject instance, int emission) {
+        //spawn tools initialization
+        this.emissionAmount = emission;
+        this.collectedPack = new Queue<MarineLife>();
+
         //insert the source instance to a lower level parent
         GameObject subParent = new GameObject(RemoveCloneTag(instance.name));
         MarineLife marineLifeComponent = instance.GetComponent<MarineLife>();
-        FishPack pack = subParent.AddComponent<FishPack>();
         subParent.transform.SetParent(instance.transform.parent);
+
+        //establish pack connection
+        pack = subParent.AddComponent<FishPack>();
+        pack.PackDeadEvent += OnPackDies;
+
+        //emit leader
         instance.transform.SetParent(subParent.transform);
         instance.name = RemoveCloneTag(instance.name) + "_" + INSTANCE_NAME_TAG;
-        pack.Join(marineLifeComponent, true);
+        OnEmissionFinish(marineLifeComponent);
 
-        //emit
+        //emit pack members
         for (int i = 0; i < emission - 1; i++)
             StartCoroutine(Emit(instance, subParent, 1, pack));
+    }
+
+    protected override Vector3 GeneratePosition() {
+        Vector3 pos;
+        float centerDist;
+
+        //don't generate a position that's too close to the edges
+        do {
+            pos = base.GeneratePosition();
+            centerDist = Vector3.Distance(pos, AreaCenter);
+        }
+        while (centerDist > AreaRadius * MAX_SPAWN_DISTANCE_OF_RAD);
+        return pos;
+    }
+
+    /// <summary>
+    /// Activate when the pack members are dead.
+    /// This function respawns the pack.
+    /// </summary>
+    /// <param name="members">Amount of members in the dead pack</param>
+    private void OnPackDies(int members) {
+        base.Spawn(members);
     }
 
     /// <summary>
@@ -47,7 +83,28 @@ public class MarineLifeSpawner : MarineSpawner
         instance.transform.SetParent(subParent.transform);
         instance.transform.position = GenerateIndividualDistance(instance.transform.position);
         instance.name = RemoveCloneTag(instance.name);
-        pack.Join(marineLifeComponent);
+
+        //report emission finish
+        OnEmissionFinish(marineLifeComponent);
+    }
+
+    /// <summary>
+    /// Activate when each emission process is done.
+    /// When all emissions are done, this function joins together all marine lives into one pack.
+    /// </summary>
+    /// <param name="spawn"></param>
+    private void OnEmissionFinish(MarineLife spawn) {
+        collectedPack.Enqueue(spawn);
+
+        //all emissions are done
+        if (--emissionAmount == 0) {
+            bool joinedLeader = false;
+
+            while (collectedPack.Count > 0) {
+                pack.Join(collectedPack.Dequeue(), !joinedLeader);
+                joinedLeader = true;
+            }
+        }
     }
 
     /// <summary>
@@ -69,18 +126,5 @@ public class MarineLifeSpawner : MarineSpawner
     /// <returns>The string without the '(Clone)' suffix.</returns>
     private string RemoveCloneTag(string name) {
         return name.Replace(CLONE_TAG, string.Empty);
-    }
-
-    protected override Vector3 GeneratePosition() {
-        Vector3 pos;
-        float centerDist;
-
-        //don't generate a position that's too close to the edges
-        do {
-            pos = base.GeneratePosition();
-            centerDist = Vector3.Distance(pos, AreaCenter);
-        }
-        while (centerDist > AreaRadius * MAX_SPAWN_DISTANCE_OF_RAD);
-        return pos;
     }
 }

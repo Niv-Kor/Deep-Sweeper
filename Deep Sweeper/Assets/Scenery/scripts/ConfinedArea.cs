@@ -26,32 +26,8 @@ public class ConfinedArea : MonoBehaviour
     }
 
     protected virtual void OnDrawGizmos() {
-        Vector3 ptA = Confine.Offset;
-        Vector3 ptB = ptA + new Vector3(0, 0, Confine.Size.z);
-        Vector3 ptC = ptB + new Vector3(Confine.Size.x, 0, 0);
-        Vector3 ptD = ptA + new Vector3(Confine.Size.x, 0, 0);
-        Vector3 ptE = ptA + new Vector3(0, Confine.Size.y, 0);
-        Vector3 ptF = ptB + new Vector3(0, Confine.Size.y, 0);
-        Vector3 ptG = ptC + new Vector3(0, Confine.Size.y, 0);
-        Vector3 ptH = ptD + new Vector3(0, Confine.Size.y, 0);
-
-        //upper horizontal
-        Debug.DrawLine(ptA, ptB, GIZMOS_COLOR);
-        Debug.DrawLine(ptB, ptC, GIZMOS_COLOR);
-        Debug.DrawLine(ptC, ptD, GIZMOS_COLOR);
-        Debug.DrawLine(ptD, ptA, GIZMOS_COLOR);
-
-        //bottom horizontal
-        Debug.DrawLine(ptE, ptF, GIZMOS_COLOR);
-        Debug.DrawLine(ptF, ptG, GIZMOS_COLOR);
-        Debug.DrawLine(ptG, ptH, GIZMOS_COLOR);
-        Debug.DrawLine(ptH, ptE, GIZMOS_COLOR);
-
-        //vertical
-        Debug.DrawLine(ptA, ptE, GIZMOS_COLOR);
-        Debug.DrawLine(ptB, ptF, GIZMOS_COLOR);
-        Debug.DrawLine(ptC, ptG, GIZMOS_COLOR);
-        Debug.DrawLine(ptD, ptH, GIZMOS_COLOR);
+        Gizmos.color = GIZMOS_COLOR;
+        Gizmos.DrawWireCube(AreaCenter, Confine.Size);
     }
 
     /// <returns>A random position across the terrain</returns>

@@ -133,7 +133,7 @@ public class MineField : ConfinedArea
         bool lowerStandard = false;
 
         do {
-            if (indicesPool.Count == 0) {
+            if (!lowerStandard && indicesPool.Count <= 0) {
                 //fill pool again and now ignore the mined neighbours condition
                 for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
                 lowerStandard = true;

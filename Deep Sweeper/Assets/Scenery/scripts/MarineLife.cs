@@ -35,45 +35,44 @@ public class MarineLife : MonoBehaviour
 
     private static readonly float TURN_TIME = .7f;
     private static readonly float SINE_TURN_ANGLE = 30f;
+    private static readonly float APPEARANCE_TIME = 3.5f;
 
+    private SkinnedMeshRenderer mesh;
     private FishPack pack;
+    private Vector3 originScale;
     private float zigzagIntensity;
-    private float sineWave, timeFunction;
+    private float timeFunction;
     private bool turning;
 
+    public delegate void AppearnceCallback();
     public delegate void FishTurn(MarineLife fish);
     public event FishTurn FishTurnEvent;
 
-    private void Start() {
-        this.pack = GetComponentInParent<FishPack>();
-        this.zigzagIntensity = 1 / Random.Range(zigzagIntensityRange.x, zigzagIntensityRange.y);
-        this.turning = false;
-        this.timeFunction = 0;
-        this.sineWave = 0;
-
-        pack.YawDirectionChangeEvent += OnYawDirectionChange;
-    }
-
-    private void Update() {
-        if (!turning) {
-            sineWave = Mathf.Sin(timeFunction * zigzagIntensity);
-            timeFunction += Time.deltaTime;
-            Swim(sineWave);
-        }
+    private void Awake() {
+        this.mesh = GetComponentInChildren<SkinnedMeshRenderer>();
+        mesh.enabled = false;
     }
 
     /// <summary>
     /// Make the spawn swim along its defined direction.
     /// </summary>
-    /// <param name="sineWave">A changing sine wave value [-1:1]</param>
-    private void Swim(float sineWave) {
-        Vector3 sideVector = transform.right * sineWave;
-        Vector3 movementVector = (transform.forward + sideVector) * speed;
-        Vector3 currentRot = transform.rotation.eulerAngles;
-        Vector3 nextRot = new Vector3(currentRot.x, pack.YawDirection + sineWave * SINE_TURN_ANGLE, currentRot.z);
+    private IEnumerator Swim() {
+        while (true) {
+            if (!turning) {
+                float sineWave = Mathf.Sin(timeFunction * zigzagIntensity);
+                timeFunction += Time.deltaTime;
 
-        transform.position += movementVector;
-        transform.rotation = Quaternion.Euler(nextRot);
+                Vector3 sideVector = transform.right * sineWave;
+                Vector3 movementVector = (transform.forward + sideVector) * speed;
+                Vector3 currentRot = transform.rotation.eulerAngles;
+                Vector3 nextRot = new Vector3(currentRot.x, pack.YawDirection + sineWave * SINE_TURN_ANGLE, currentRot.z);
+
+                transform.position += movementVector;
+                transform.rotation = Quaternion.Euler(nextRot);
+            }
+
+            yield return null;
+        }
     }
 
     /// <summary>
@@ -105,5 +104,54 @@ public class MarineLife : MonoBehaviour
         Vector3 currentRot = transform.rotation.eulerAngles;
         Vector3 direction = new Vector3(currentRot.x, yaw, currentRot.z);
         StartCoroutine(Turn(direction));
+    }
+
+    /// <summary>
+    /// Make the spawn object appear of disappear.
+    /// </summary>
+    /// <param name="flag">True to appear of false to disappear</param>
+    /// <param name="callback">A callback function to activate on completion (optional)</param>
+    private IEnumerator Appear(bool flag, AppearnceCallback callback = null) {
+        Vector3 sourceScale = transform.localScale;
+        Vector3 targetScale = flag ? originScale : Vector3.zero;
+        float lerpedTime = 0;
+
+        while (lerpedTime < APPEARANCE_TIME) {
+            lerpedTime += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(sourceScale, targetScale, lerpedTime / APPEARANCE_TIME);
+            yield return null;
+        }
+
+        callback?.Invoke();
+    }
+
+    /// <summary>
+    /// Destroy this marine life's object.
+    /// </summary>
+    public void Kill() {
+        AppearnceCallback Callback = delegate () {
+            StopAllCoroutines();
+            Destroy(gameObject);
+        };
+
+        StartCoroutine(Appear(false, Callback));
+    }
+
+    /// <summary>
+    /// Spawn the marine life into the map.
+    /// Calling this function is necessary.
+    /// </summary>
+    public void Spawn() {
+        this.pack = GetComponentInParent<FishPack>();
+        this.zigzagIntensity = 1 / Random.Range(zigzagIntensityRange.x, zigzagIntensityRange.y);
+        this.originScale = transform.localScale;
+        this.turning = false;
+        this.timeFunction = 0;
+
+        pack.YawDirectionChangeEvent += OnYawDirectionChange;
+        StartCoroutine(Swim());
+        transform.localScale = Vector3.zero;
+        mesh.enabled = true;
+        StartCoroutine(Appear(true));
     }
 }

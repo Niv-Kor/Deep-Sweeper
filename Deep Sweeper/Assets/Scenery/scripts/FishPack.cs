@@ -4,14 +4,35 @@ using UnityEngine;
 
 public class FishPack : MonoBehaviour
 {
-    private static readonly float MAX_RAY_DISTANCE = 40f;
-    private static readonly LayerMask BORDERS_MASK_LAYER = Constants.Layers.FISH_BORDERS;
+    private struct FishBorder
+    {
+        public LayerMask BorderLayer;
+        public float SafetyDistance;
+    }
+
+    private static readonly FishBorder[] BORDERS = {
+        new FishBorder {
+            BorderLayer = Constants.Layers.FISH_BORDERS,
+            SafetyDistance = 20f
+        },
+        new FishBorder {
+            BorderLayer = Constants.Layers.GROUND,
+            SafetyDistance = 10f
+        }
+    };
+
+    private static readonly int MAX_ROTATION_ATTEMPTS = 5;
+    private static readonly float ALLOWD_ESCAPE_PERCENT = .3f;
 
     private List<MarineLife> members;
+    private MarineLifeManager marineLifeMngr;
     private float m_yawDirection;
 
     public delegate void YawDirectionChange(float value);
     public event YawDirectionChange YawDirectionChangeEvent;
+
+    public delegate void PackDead(int members);
+    public event PackDead PackDeadEvent;
 
     public float YawDirection {
         get { return m_yawDirection; }
@@ -30,6 +51,7 @@ public class FishPack : MonoBehaviour
     private void Awake() {
         this.members = new List<MarineLife>();
         this.YawDirection = GenerateYawDirection();
+        this.marineLifeMngr = FindObjectOfType<MarineLifeManager>();
     }
 
     /// <summary>
@@ -50,24 +72,9 @@ public class FishPack : MonoBehaviour
                 YawDirection = GenerateYawDirection(leader);
                 break;
             }
-
+            //kill the pack if the leader somehow managed to escape the borders
+            else if (CheckBorderEscape(pos)) KillPack();
             yield return null;
-        }
-    }
-
-    private void OnDrawGizmos() {
-        if (Leader != null) {
-            SkinnedMeshRenderer mesh = Leader.GetComponentInChildren<SkinnedMeshRenderer>();
-            float torso = mesh.bounds.extents.y;
-            Gizmos.color = Color.green;
-            Gizmos.DrawCube(Leader.transform.position, Vector3.one * 1f);
-            Gizmos.color = Color.red;
-            Gizmos.DrawCube(Leader.transform.position + Leader.transform.forward * torso, Vector3.one * 1f);
-
-            Gizmos.color = Color.white;
-            Vector3 pos = Leader.transform.position + Leader.transform.forward * torso;
-            Vector3 dir = Leader.transform.forward * MAX_RAY_DISTANCE;
-            Gizmos.DrawRay(pos, dir);
         }
     }
 
@@ -78,7 +85,27 @@ public class FishPack : MonoBehaviour
     /// <param name="forward">Raycast direction</param>
     /// <returns>True if the raycast hit any of the borders.</returns>
     private bool CheckBorderHit(Vector3 position, Vector3 forward) {
-        return Physics.Raycast(position, forward * MAX_RAY_DISTANCE, MAX_RAY_DISTANCE, BORDERS_MASK_LAYER);
+        foreach (FishBorder border in BORDERS) {
+            LayerMask layer = border.BorderLayer;
+            float dist = border.SafetyDistance;
+            bool hit = Physics.Raycast(position, forward * dist, dist, layer);
+
+            if (hit) return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Check if a point is outside the defined fish borders.
+    /// This function considers a constant allowed distance percent outside the borders.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    private bool CheckBorderEscape(Vector3 position) {
+        float confineRadius = marineLifeMngr.AreaRadius;
+        float centerDistance = Vector3.Distance(position, marineLifeMngr.AreaCenter);
+        return (centerDistance > confineRadius * (1 + ALLOWD_ESCAPE_PERCENT));
     }
 
     /// <summary>
@@ -88,6 +115,7 @@ public class FishPack : MonoBehaviour
     private float GenerateYawDirection(MarineLife leader = null) {
         float yaw;
         bool hit = false;
+        int attempts = MAX_ROTATION_ATTEMPTS;
 
         do {
             yaw = Random.Range(-180f, 180f);
@@ -98,9 +126,28 @@ public class FishPack : MonoBehaviour
                 Vector3 fwd = new Vector3(rot.x, yaw, rot.z);
                 hit = CheckBorderHit(pos, fwd);
             }
+
+            //kill the pack and reaspawn them if they're stuck
+            if (hit && --attempts <= 0) {
+                KillPack();
+                break;
+            }
         }
         while (hit);
         return yaw;
+    }
+
+    /// <summary>
+    /// Kill the entire pack.
+    /// </summary>
+    private void KillPack() {
+        StopAllCoroutines();
+
+        int membersAmount = members.Count;
+        foreach (MarineLife fish in members) fish.Kill();
+
+        members.Clear();
+        PackDeadEvent?.Invoke(membersAmount);
     }
 
     /// <summary>
@@ -128,5 +175,6 @@ public class FishPack : MonoBehaviour
             StartCoroutine(TrackLeader(fish));
         }
         else members.Add(fish);
+        fish.Spawn();
     }
 }
