@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MineSelector : MonoBehaviour
 {
+    [Header("Prefabs")]
+    [Tooltip("The mine's avatar object.")]
+    [SerializeField] private GameObject avatar;
+
     [Header("Materials")]
     [Tooltip("The defaultive mine material.")]
     [SerializeField] private Material defaultMaterial;
@@ -14,7 +18,6 @@ public class MineSelector : MonoBehaviour
     [Tooltip("The time it takes to lerp between one material to another.")]
     [SerializeField] private float applyTime;
 
-    private Material currentMaterial;
     private Material materialComponent;
     private SelectionModes currentMode;
     private float lerpedTime = 0;
@@ -25,10 +28,9 @@ public class MineSelector : MonoBehaviour
     }
 
     private void Awake() {
-        MeshRenderer renderer = GetComponent<MeshRenderer>();
+        MeshRenderer renderer = avatar.GetComponent<MeshRenderer>();
         this.materialComponent = renderer.material;
         this.currentMode = SelectionModes.DEFAULT;
-        this.currentMaterial = GetMaterial(currentMode);
         this.lerpedTime = 0;
     }
 
@@ -68,7 +70,6 @@ public class MineSelector : MonoBehaviour
         if (nextMat != null) {
             StopAllCoroutines();
             StartCoroutine(Lerp(nextMat));
-            currentMaterial = nextMat;
             currentMode = mode;
         }
     }

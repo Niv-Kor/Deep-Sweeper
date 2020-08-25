@@ -16,8 +16,13 @@ public class ChainRoot : MonoBehaviour
     private Vector3 stepVector;
     private float waveSpeed, currentWaveForce;
 
+    private void Awake() {
+        this.rigidBody = GetComponentInChildren<Rigidbody>();
+        rigidBody.gameObject.SetActive(false);
+
+    }
+
     private void Start() {
-        this.rigidBody = GetComponent<Rigidbody>();
         this.waveVector = GenerateBaseVector();
         this.stepVector = GetSignVector(waveVector);
         this.waveSpeed = Random.Range(minWaveSpeed, maxWaveSpeed);
@@ -25,7 +30,6 @@ public class ChainRoot : MonoBehaviour
     }
 
     private void Update() {
-        float avgVectorVal = Mathf.Abs(CalcAverageVector(waveVector));
         bool limit = ReachedVectorLimit(waveVector, currentWaveForce);
 
         //regenerate movement

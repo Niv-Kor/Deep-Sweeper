@@ -27,7 +27,11 @@ public abstract class MarineSpawner : ConfinedArea
     protected int spread, emission;
 
     protected virtual void Start() {
-        this.parent = !string.IsNullOrEmpty(parentObjectName) ? new GameObject(parentObjectName) : gameObject;
+        if (!string.IsNullOrEmpty(parentObjectName)) {
+            GameObject existingParent = transform.Find(parentObjectName)?.gameObject;
+            this.parent = existingParent ?? new GameObject(parentObjectName);
+        }
+        else this.parent = gameObject;
         parent.transform.SetParent(transform);
 
         Vector2Int environmentAffection = CalcVolume();

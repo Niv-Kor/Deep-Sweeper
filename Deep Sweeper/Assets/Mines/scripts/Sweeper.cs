@@ -3,8 +3,11 @@
 public class Sweeper : MonoBehaviour
 {
     [Header("Prefabs")]
-    [Tooltip("The mine's avatar.")]
+    [Tooltip("The mine's shell parent object.")]
     [SerializeField] private GameObject avatar;
+
+    [Tooltip("The mine's shell parent object.")]
+    [SerializeField] private GameObject avatarShell;
 
     [Tooltip("The chain root that holds the mine to the ground.")]
     [SerializeField] private ChainRoot chain;
@@ -15,13 +18,17 @@ public class Sweeper : MonoBehaviour
     private Rigidbody rigidBody;
     private MeshRenderer render;
     private SphereCollider col;
-    private bool vanished;
+
+    public bool IsDismissed { get; set; }
+
+    public delegate void MineDesposal();
+    public event MineDesposal MineDesposalEvent;
 
     private void Awake() {
-        this.rigidBody = GetComponent<Rigidbody>();
+        this.rigidBody = avatarShell.GetComponent<Rigidbody>();
         this.render = avatar.GetComponent<MeshRenderer>();
         this.col = avatar.GetComponent<SphereCollider>();
-        this.vanished = false;
+        this.IsDismissed = false;
     }
 
     /// <summary>
@@ -30,11 +37,12 @@ public class Sweeper : MonoBehaviour
     /// <param name="explosion">True to explode the mine using particle effects</param>
     /// <param name="breakChain">True to break the chain and release the mine</param>
     private void Dismiss(bool explosion, bool breakChain) {
-        if (vanished) return;
+        if (IsDismissed) return;
 
+        MineDesposalEvent?.Invoke();
         render.enabled = breakChain;
         col.enabled = false;
-        vanished = true;
+        IsDismissed = true;
 
         if (explosion)
             foreach (ParticleSystem part in particles) part.Play();

@@ -6,15 +6,15 @@ public class Bullet : MonoBehaviour
     [Tooltip("Hit particles prefab to instantiate.")]
     [SerializeField] private GameObject hitParticlesPrefab;
 
-    [Tooltip("The layers that cause a particle effect when hit by the bullet.")]
-    [SerializeField] private LayerMask damageableSurfaces;
-
     private Transform bulletsParent;
+    private LayerMask damageableSurfaces;
     private List<ParticleCollisionEvent> collisionEvents;
 
     private void Start() {
+        ParticleSystem partSystem = GetComponent<ParticleSystem>();
         this.collisionEvents = new List<ParticleCollisionEvent>();
         this.bulletsParent = FXManager.Instance.gameObject.transform;
+        this.damageableSurfaces = partSystem.collision.collidesWith;
     }
 
     private void OnParticleCollision(GameObject obj) {

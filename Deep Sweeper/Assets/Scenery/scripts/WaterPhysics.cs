@@ -12,6 +12,15 @@ public class WaterPhysics : Singleton<WaterPhysics>
     [Tooltip("The Y axis of the gravitational force when setting gravity direction randomly.")]
     [SerializeField] private float baseFloatForce = 1f;
 
+    [Header("Vision")]
+    [Tooltip("Maximum distance that the camera may display.")]
+    [SerializeField] private float maxVisionDistance = 500f;
+
+    [Tooltip("Maximum distance of clear vision before the cloud of fog.")]
+    [SerializeField] private float fogDistance = 25f;
+
+    private static readonly float MAX_FOG = .03f;
+
     private Vector3 m_direction;
     private float m_intensity;
 
@@ -39,6 +48,10 @@ public class WaterPhysics : Singleton<WaterPhysics>
         }
     }
 
+    public float FogDistance {
+        get { return fogDistance; }
+    }
+
     public delegate void WavesChange(WaveSettings settings);
     public event WavesChange WavesChangeTrigger;
 
@@ -56,6 +69,14 @@ public class WaterPhysics : Singleton<WaterPhysics>
             this.Direction = Vector3.zero;
             this.Intensity = 0;
         }
+    }
+
+    private void OnValidate() {
+        //vision
+        float visionPercent = fogDistance / maxVisionDistance * 100f;
+        float fogDensity = visionPercent * (0 - MAX_FOG) / 100f + MAX_FOG;
+        RenderSettings.fogDensity = fogDensity;
+        Camera.main.farClipPlane = maxVisionDistance;
     }
 
     /// <summary>

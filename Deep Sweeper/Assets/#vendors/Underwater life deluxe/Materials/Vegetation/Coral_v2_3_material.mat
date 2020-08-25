@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Coral_v2_3_material
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  m_ShaderKeywords: NCE_RAMP_TEXTURE _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -21,6 +21,10 @@ Material:
     m_TexEnvs:
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 5349902e44582bb47abc74d7e69384e9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -55,23 +59,56 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RampTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StylizedShadowTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
+    - _DarkSideRange: -1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _ExpandFactor: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0
     - _Parallax: 0.02
+    - _RampSmooth: 0.1
+    - _RampThreshold: 0.5
+    - _RimMax: -0.08
+    - _RimMin: 0.23
+    - _Saturation: 1.54
     - _SmoothnessTextureChannel: 1
+    - _SpecPower: 128
+    - _SpecSmooth: 0.1
     - _SpecularHighlights: 1
+    - _SpecularRotationX: 0
+    - _SpecularRotationY: 0
+    - _SpecularRotationZ: 0
+    - _SpecularScale: 0.01
+    - _SpecularScaleX: 0
+    - _SpecularScaleY: 0
+    - _SpecularSplitX: 0
+    - _SpecularSplitY: 0
+    - _SpecularTranslationX: 0
+    - _SpecularTranslationY: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DarkColor: {r: 0.4245283, g: 0.106132075, b: 0.37249395, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HighlitColor: {r: 1, g: 0, b: 0.7398772, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _RimColor: {r: 0.9433962, g: 0.28034887, b: 0.8839722, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
