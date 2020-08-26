@@ -16,9 +16,9 @@ public class MineGrid : MonoBehaviour
 
     public bool IsMined { get; set; }
     public bool IsFlagged {
-        get { return selector.Mode == SelectionModes.FLAG; }
+        get { return selector.Mode == SelectionMode.FLAG; }
         set {
-            var targetMode = value ? SelectionModes.FLAG : SelectionModes.DEFAULT;
+            var targetMode = value ? SelectionMode.FLAG : SelectionMode.DEFAULT;
             selector.Mode = targetMode;
         }
     }

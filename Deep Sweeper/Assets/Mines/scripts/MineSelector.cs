@@ -19,19 +19,29 @@ public class MineSelector : MonoBehaviour
     [SerializeField] private float applyTime;
 
     private Material materialComponent;
-    private SelectionModes currentMode;
-    private float lerpedTime = 0;
+    private Renderer render;
+    private SelectionMode m_mode;
 
-    public SelectionModes Mode {
-        get { return currentMode; }
-        set { Apply(value); }
+    public delegate void ModeApplication(SelectionMode mode, Material material);
+    public event ModeApplication ModeApplicationEvent;
+
+    public SelectionMode Mode {
+        get { return m_mode; }
+        set {
+            Material nextMat = GetMaterial(value);
+
+            if (nextMat != null) {
+                StopAllCoroutines();
+                StartCoroutine(Lerp(value, nextMat));
+                m_mode = value;
+            }
+        }
     }
 
     private void Awake() {
-        MeshRenderer renderer = avatar.GetComponent<MeshRenderer>();
-        this.materialComponent = renderer.material;
-        this.currentMode = SelectionModes.DEFAULT;
-        this.lerpedTime = 0;
+        this.render = avatar.GetComponent<MeshRenderer>();
+        this.materialComponent = render.material;
+        this.m_mode = SelectionMode.DEFAULT;
     }
 
     /// <summary>
@@ -39,10 +49,10 @@ public class MineSelector : MonoBehaviour
     /// </summary>
     /// <param name="mode">The model that represents the wished material</param>
     /// <returns>The corresponding material.</returns>
-    private Material GetMaterial(SelectionModes mode) {
+    private Material GetMaterial(SelectionMode mode) {
         switch (mode) {
-            case SelectionModes.DEFAULT: return defaultMaterial;
-            case SelectionModes.FLAG: return flagMaterial;
+            case SelectionMode.DEFAULT: return defaultMaterial;
+            case SelectionMode.FLAG: return flagMaterial;
             default: return null;
         }
     }
@@ -50,27 +60,23 @@ public class MineSelector : MonoBehaviour
     /// <summary>
     /// Transit between two of the mine's materials.
     /// </summary>
+    /// <param name="mode">Selection mode to apply</param>
     /// <param name="to">The material into which to transition</param>
-    private IEnumerator Lerp(Material target) {
+    private IEnumerator Lerp(SelectionMode mode, Material target) {
+        float lerpedTime = 0;
+        bool invokedEvent = false;
+
         while (lerpedTime <= applyTime) {
             lerpedTime += Time.deltaTime / applyTime;
             materialComponent.Lerp(materialComponent, target, lerpedTime);
+
+            //invoke an event once after lerping halfway
+            if (!invokedEvent && lerpedTime > applyTime / 2) {
+                ModeApplicationEvent?.Invoke(mode, target);
+                invokedEvent = true;
+            }
+
             yield return null;
-        }
-    }
-
-    /// <summary>
-    /// Apply a selection to the mine.
-    /// </summary>
-    /// <param name="mode">Selection mode to apply</param>
-    private void Apply(SelectionModes mode) {
-        Material nextMat = GetMaterial(mode);
-        lerpedTime = 0;
-
-        if (nextMat != null) {
-            StopAllCoroutines();
-            StartCoroutine(Lerp(nextMat));
-            currentMode = mode;
         }
     }
 }

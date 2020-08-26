@@ -1,4 +1,4 @@
-﻿public enum SelectionModes
+﻿public enum SelectionMode
 {
     DEFAULT,
     FLAG

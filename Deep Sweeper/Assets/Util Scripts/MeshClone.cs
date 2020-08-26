@@ -6,12 +6,14 @@ public class MeshClone : MonoBehaviour
     [Tooltip("Source mesh whose movement will be mimicked.")]
     [SerializeField] protected GameObject source;
 
-    protected Material material;
+    protected Material currentMaterial;
     protected Renderer render;
+    protected bool isShown;
 
     protected virtual void Awake() {
         this.render = GetComponent<Renderer>();
-        this.material = render.material;
+        this.currentMaterial = render.material;
+        this.isShown = true;
     }
 
     protected virtual void Update() {
@@ -26,9 +28,10 @@ public class MeshClone : MonoBehaviour
     /// </summary>
     /// <param name="flag">True to display or false to hide</param>
     public virtual void DisplayMesh(bool flag) {
-        if (!flag || material != null) {
+        if (!flag || currentMaterial != null) {
+            isShown = flag;
             render.materials = new Material[flag ? 1 : 0];
-            if (flag) render.material = material;
+            if (flag) render.material = currentMaterial;
         }
     }
 }
