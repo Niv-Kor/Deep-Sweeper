@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 4329573320410458}
   - component: {fileID: 95345643839182388}
   - component: {fileID: -8558124975726333641}
+  - component: {fileID: -2009923627974524027}
   m_Layer: 12
   m_Name: Great_white_shark
   m_TagString: Untagged
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.2
-  zigzagIntensityRange: {x: 0.3, y: 1}
+  zigzagIntensityRange: {x: 1.8, y: 2.5}
   DepthHabitat: 0
   PacksAmountRange: {x: 1, y: 2}
   PackSizeRange: {x: 1, y: 1}
@@ -166,6 +167,19 @@ MonoBehaviour:
   MaxIndividualDistance: {x: 4, y: 4, z: 4}
   DepthAffection: 1
   TurbulenceAffection: 2
+--- !u!65 &-2009923627974524027
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276205554959560}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7807341, y: 1, z: 5.017866}
+  m_Center: {x: 0.00062558055, y: 0, z: -0.43635273}
 --- !u!1 &1292320182572262
 GameObject:
   m_ObjectHideFlags: 0
