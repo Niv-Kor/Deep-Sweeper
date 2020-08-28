@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MineActivator : MonoBehaviour, IComplexActivator
+public class MineActivator : ObjectActivator
 {
     [Header("Prefabs")]
     [Tooltip("The chain and indicator's parent object.")]
@@ -30,7 +30,7 @@ public class MineActivator : MonoBehaviour, IComplexActivator
         };
     }
 
-    public void Activate(bool flag) {
+    protected override void Enable(bool flag) {
         if (sweeper.IsDismissed) return;
 
         foreach (GameObject obj in affectedObjects) obj.SetActive(flag);

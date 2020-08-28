@@ -7,9 +7,11 @@ public class SightRay : MonoBehaviour
         private GameObject avatar;
 
         public MineGrid Grid { get; private set; }
+        public ObjectActivator Activator { get; private set; }
 
         public MineInfo(GameObject mine) {
             this.avatar = mine;
+            this.Activator = mine.GetComponentInParent<MineActivator>();
             this.Grid = mine.GetComponentInParent<MineGrid>();
         }
 
@@ -49,7 +51,7 @@ public class SightRay : MonoBehaviour
         if (selectedMine != null) {
             if (mouseRight) selectedMine.Grid.ToggleFlag();
             if (mouseLeft) {
-                selectedMine = null;
+                DeselectAll();
                 Crosshair.Instance.Release();
             }
         }
@@ -70,7 +72,7 @@ public class SightRay : MonoBehaviour
             else if (!selectedMine.Equals(mineObj)) SelectMine(mineObj);
         }
         else if (selectedMine != null) {
-            selectedMine = null;
+            DeselectAll();
             Crosshair.Instance.Release();
         }
     }
@@ -81,6 +83,18 @@ public class SightRay : MonoBehaviour
     /// <param name="mine">The object to select</param>
     private void SelectMine(GameObject mine) {
         selectedMine = new MineInfo(mine);
+        selectedMine.Activator.ActivateAndLock(true);
         Crosshair.Instance.Lock();
+    }
+
+    /// <summary>
+    /// Deselect any selected mine.
+    /// If no mine is selected, this method does nothing.
+    /// </summary>
+    private void DeselectAll() {
+        if (selectedMine != null) {
+            selectedMine.Activator.Unlock();
+            selectedMine = null;
+        }
     }
 }

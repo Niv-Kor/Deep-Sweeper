@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Constants;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MineField : ConfinedArea
@@ -15,6 +16,7 @@ public class MineField : ConfinedArea
     [SerializeField] private int minesPercent;
 
     private static readonly string GRIDS_PARENT_NAME = "Field";
+    private static readonly float RAYCAST_FROM_HEIGHT = 900f;
 
     private static int fieldIndex = 0;
     private Terrain terrain;
@@ -69,8 +71,14 @@ public class MineField : ConfinedArea
 
         for (int i = 0; i < matrixSize.x; i++) {
             for (int j = 0; j < matrixSize.y; j++) {
-                Vector3 diffVector3 = new Vector3(gridSize.x + gridSpace, 0, 0);
-                Vector3 point = startPoint + diffVector3 * j;
+                Vector3 diffVector = new Vector3(gridSize.x + gridSpace, 0, 0);
+                Vector3 point = startPoint + diffVector * j;
+
+                //get the terrain height at the specified point
+                Vector3 raycastPos = point + Vector3.up * RAYCAST_FROM_HEIGHT;
+                Physics.Raycast(raycastPos, Vector3.down, out RaycastHit rayHit, RAYCAST_FROM_HEIGHT, Layers.GROUND);
+                point.y = rayHit.point.y;
+
                 GameObject obj = Instantiate(gridPrefab);
                 obj.transform.position = point;
                 obj.transform.SetParent(gridsObj.transform);

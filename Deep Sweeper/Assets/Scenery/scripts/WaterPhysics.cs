@@ -73,9 +73,9 @@ public class WaterPhysics : Singleton<WaterPhysics>
 
     private void OnValidate() {
         //vision
-        float visionPercent = fogDistance / maxVisionDistance * 100f;
-        float fogDensity = visionPercent * (0 - MAX_FOG) / 100f + MAX_FOG;
-        RenderSettings.fogDensity = fogDensity;
+        //float visionPercent = fogDistance / maxVisionDistance * 100f;
+        //float fogDensity = visionPercent * (0 - MAX_FOG) / 100f + MAX_FOG;
+        //RenderSettings.fogDensity = fogDensity;
         Camera.main.farClipPlane = maxVisionDistance;
     }
 
