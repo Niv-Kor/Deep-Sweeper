@@ -5,17 +5,19 @@ namespace Constants
     public static class Layers
     {
         //names
-        public static readonly string NAME_DEFAULT = "Default";
-        public static readonly string NAME_TRANSPARENT_FX = "TransparentFX";
-        public static readonly string NAME_IGNORE_RAYCAST = "Ignore Raycast";
-        public static readonly string NAME_WATER = "Water";
-        public static readonly string NAME_UI = "UI";
-        public static readonly string NAME_MINE = "Mine";
-        public static readonly string NAME_BULLET = "Bullet";
-        public static readonly string NAME_PARTICLES = "Particles";
-        public static readonly string NAME_PLAYER = "Player";
-        public static readonly string NAME_FISH_BORDERS = "Fish Borders";
-        public static readonly string NAME_GROUND = "Ground";
+        private static readonly string NAME_DEFAULT = "Default";
+        private static readonly string NAME_TRANSPARENT_FX = "TransparentFX";
+        private static readonly string NAME_IGNORE_RAYCAST = "Ignore Raycast";
+        private static readonly string NAME_WATER = "Water";
+        private static readonly string NAME_UI = "UI";
+        private static readonly string NAME_PARTICLES = "Particles";
+        private static readonly string NAME_GROUND = "Ground";
+        private static readonly string NAME_PLAYER = "Player";
+        private static readonly string NAME_CREATURE = "Creature";
+        private static readonly string NAME_FISH_BORDERS = "Fish Borders";
+        private static readonly string NAME_BULLET = "Bullet";
+        private static readonly string NAME_MINE = "Mine";
+        private static readonly string NAME_MINE_INDICATION = "Mine Indication";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -23,12 +25,14 @@ namespace Constants
         public static readonly LayerMask IGNORE_RAYCAST = LayerMask.GetMask(NAME_IGNORE_RAYCAST);
         public static readonly LayerMask WATER = LayerMask.GetMask(NAME_WATER);
         public static readonly LayerMask UI = LayerMask.GetMask(NAME_UI);
-        public static readonly LayerMask MINE = LayerMask.GetMask(NAME_MINE);
-        public static readonly LayerMask BULLET = LayerMask.GetMask(NAME_BULLET);
         public static readonly LayerMask PARTICLES = LayerMask.GetMask(NAME_PARTICLES);
-        public static readonly LayerMask PLAYER = LayerMask.GetMask(NAME_PLAYER);
-        public static readonly LayerMask FISH_BORDERS = LayerMask.GetMask(NAME_FISH_BORDERS);
         public static readonly LayerMask GROUND = LayerMask.GetMask(NAME_GROUND);
+        public static readonly LayerMask PLAYER = LayerMask.GetMask(NAME_PLAYER);
+        public static readonly LayerMask CREATURE = LayerMask.GetMask(NAME_CREATURE);
+        public static readonly LayerMask FISH_BORDERS = LayerMask.GetMask(NAME_FISH_BORDERS);
+        public static readonly LayerMask BULLET = LayerMask.GetMask(NAME_BULLET);
+        public static readonly LayerMask MINE = LayerMask.GetMask(NAME_MINE);
+        public static readonly LayerMask MINE_INDICATION = LayerMask.GetMask(NAME_MINE_INDICATION);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.

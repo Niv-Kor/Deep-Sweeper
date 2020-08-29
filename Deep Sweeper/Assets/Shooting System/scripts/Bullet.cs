@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Constants;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -18,8 +19,10 @@ public class Bullet : MonoBehaviour
     }
 
     private void OnParticleCollision(GameObject obj) {
-        if (!Constants.Layers.ContainedInMask(obj.layer, damageableSurfaces)) return;
-        int hits = ParticlePhysicsExtensions.GetCollisionEvents(GetComponent<ParticleSystem>(), obj, collisionEvents);
+        if (!Layers.ContainedInMask(obj.layer, damageableSurfaces)) return;
+
+        ParticleSystem partSystem = GetComponent<ParticleSystem>();
+        int hits = ParticlePhysicsExtensions.GetCollisionEvents(partSystem, obj, collisionEvents);
 
         //instantiate the hit particles
         if (hits > 0) {

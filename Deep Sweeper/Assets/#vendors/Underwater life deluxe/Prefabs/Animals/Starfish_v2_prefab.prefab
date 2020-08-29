@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33820798357813124}
   - component: {fileID: 23631428264772414}
   - component: {fileID: 3625323777144533389}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Starfish_v2_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,3 +94,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
+  DepthHabitat: 0
+  PacksAmountRange: {x: 0, y: 0}
+  PackSizeRange: {x: 0, y: 0}
+  MinIndividualDistance: {x: 0, y: 0, z: 0}
+  MaxIndividualDistance: {x: 0, y: 0, z: 0}
+  DepthAffection: 0
+  TurbulenceAffection: 0

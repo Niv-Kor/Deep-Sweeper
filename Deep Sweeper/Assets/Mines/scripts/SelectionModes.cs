@@ -1,5 +1,7 @@
 ﻿public enum SelectionMode
 {
-    DEFAULT,
-    FLAG
+    Default,
+    Flagged,
+    NeighbourIndication,
+    FlaggedNeighbourIndication
 }

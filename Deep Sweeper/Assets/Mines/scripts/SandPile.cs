@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SandPile : MonoBehaviour
 {
@@ -26,13 +25,7 @@ public class SandPile : MonoBehaviour
     private GameObject mesh;
 
     private void Awake() {
-        if (piles.Length > 0) {
-            this.mesh = CreateMesh();
-            Indicator indicator = GetComponentInParent<Indicator>();
-            indicator.IndicatorRevealEvent += delegate(bool instant) {
-                StartCoroutine(DissolveOut(instant));
-            };
-        }
+        if (piles.Length > 0) this.mesh = CreateMesh();
     }
 
     /// <summary>
@@ -49,27 +42,5 @@ public class SandPile : MonoBehaviour
         instance.transform.localScale = scale;
         instance.name = OBJECT_NAME;
         return instance;
-    }
-
-    /// <summary>
-    /// Dissolve the sand pile away.
-    /// </summary>
-    /// <param name="instant">True to dissolve instantly</param>
-    private IEnumerator DissolveOut(bool instant) {
-        MeshRenderer renderer = mesh.GetComponent<MeshRenderer>();
-        ParticleSystem dust = GetComponentInChildren<ParticleSystem>();
-        float currentShaderVal = renderer.material.GetFloat(DISSOLVE_SHADER_PROPERTY);
-        float lerpedTime = 0;
-
-        //mask with dust
-        if (!instant) dust.Play();
-
-        //dissolve the pile away
-        while (lerpedTime < dissolveTime) {
-            lerpedTime += instant ? dissolveTime : Time.deltaTime;
-            float step = currentShaderVal - lerpedTime / dissolveTime * currentShaderVal;
-            renderer.material.SetFloat(DISSOLVE_SHADER_PROPERTY, step);
-            yield return null;
-        }
     }
 }

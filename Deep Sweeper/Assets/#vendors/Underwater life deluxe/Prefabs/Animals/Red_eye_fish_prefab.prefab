@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4886955180953618}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone021
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4287889558052696}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone012
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4308626369917510}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4799305562090940}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone016
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4294673632273418}
   - component: {fileID: 137378985852671358}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: red_eye_fish_exp9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4635626665453480}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone015
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4330342285714388}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone022
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 4234631516161916}
   - component: {fileID: 95672549826978892}
   - component: {fileID: -325465488845752312}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Red_eye_fish_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,6 +348,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
+  DepthHabitat: 0
+  PacksAmountRange: {x: 0, y: 0}
+  PackSizeRange: {x: 0, y: 0}
+  MinIndividualDistance: {x: 0, y: 0, z: 0}
+  MaxIndividualDistance: {x: 0, y: 0, z: 0}
+  DepthAffection: 0
+  TurbulenceAffection: 0
 --- !u!1 &1690634044463116
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4812236969832592}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone019
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4935252300949186}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone020
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +426,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4211466872770982}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone014
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,7 +456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4834748524449756}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,7 +487,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4628006182418666}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone017
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +518,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4083918873815396}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone013
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,7 +549,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4843746633659652}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Bone018
   m_TagString: Untagged
   m_Icon: {fileID: 0}

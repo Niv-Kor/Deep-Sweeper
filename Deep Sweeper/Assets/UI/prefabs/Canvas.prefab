@@ -188,7 +188,7 @@ MonoBehaviour:
   maxDistance: 700
   hitLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 49152
 --- !u!1 &710018723333846621
 GameObject:
   m_ObjectHideFlags: 0

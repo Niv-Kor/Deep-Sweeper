@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33228276321603416}
   - component: {fileID: 23847430628861332}
   - component: {fileID: -7954782850407046467}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Murex_shellfish
   m_TagString: Untagged
   m_Icon: {fileID: 0}

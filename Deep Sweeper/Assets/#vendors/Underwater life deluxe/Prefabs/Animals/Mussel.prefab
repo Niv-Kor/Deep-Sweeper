@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33100586488404320}
   - component: {fileID: 23017913061795414}
   - component: {fileID: -437459107626788041}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Mussel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

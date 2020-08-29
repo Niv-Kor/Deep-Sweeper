@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Constants;
+using UnityEngine;
 
 public class SightRay : MonoBehaviour
 {
@@ -8,11 +9,40 @@ public class SightRay : MonoBehaviour
 
         public MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
+        public Indicator Indicator { get; private set; }
+        public MineSelector Selector { get; private set; }
 
         public MineInfo(GameObject mine) {
             this.avatar = mine;
             this.Activator = mine.GetComponentInParent<MineActivator>();
             this.Grid = mine.GetComponentInParent<MineGrid>();
+            this.Indicator = Grid.MinesIndicator;
+            this.Selector = Grid.GetComponent<MineSelector>();
+        }
+
+        /// <summary>
+        /// Highlight all neigbours of the selected mine.
+        /// </summary>
+        /// <param name="flag">True to highlight the neighbours or false to cancel</param>
+        public void SelectNeighbours(bool flag) {
+            foreach (MineGrid grid in Grid.Section) {
+                if (grid == null) continue;
+
+                MineSelector gridSelector = grid.GetComponent<MineSelector>();
+                MineActivator gridActivator = grid.GetComponent<MineActivator>();
+
+                //activate or deactivate each of the neighbours
+                if (flag) gridActivator.ActivateAndLock(true);
+                else gridActivator.Unlock();
+
+                //apply the correct selection mode
+                SelectionMode mode;
+
+                if (grid.IsFlagged) mode = flag ? SelectionMode.FlaggedNeighbourIndication : SelectionMode.Flagged;
+                else mode = flag ? SelectionMode.NeighbourIndication : SelectionMode.Default;
+
+                gridSelector.Mode = mode;
+            }
         }
 
         /// <summary>
@@ -32,12 +62,16 @@ public class SightRay : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
 
     private MineInfo selectedMine;
+    private MineInfo selectedIndicator;
     private Transform camTransform;
     private SubmarineGun gun;
+    private int mineLayer, indicatorLayer;
 
     private void Start() {
         this.camTransform = CameraManager.Instance.FPCam.transform;
         this.gun = FindObjectOfType<SubmarineGun>();
+        this.mineLayer = Layers.GetLayerValue(Layers.MINE);
+        this.indicatorLayer = Layers.GetLayerValue(Layers.MINE_INDICATION);
     }
 
     private void Update() {
@@ -51,7 +85,8 @@ public class SightRay : MonoBehaviour
         if (selectedMine != null) {
             if (mouseRight) selectedMine.Grid.ToggleFlag();
             if (mouseLeft) {
-                DeselectAll();
+                DeselectMines();
+                DeselectIndicators();
                 Crosshair.Instance.Release();
             }
         }
@@ -66,13 +101,37 @@ public class SightRay : MonoBehaviour
         bool hit = Physics.Raycast(origin, direction, out RaycastHit raycastHit, maxDistance, hitLayers);
 
         if (hit) {
-            GameObject mineObj = raycastHit.collider.gameObject;
+            GameObject obj = raycastHit.collider.gameObject;
 
-            if (selectedMine == null) SelectMine(mineObj);
-            else if (!selectedMine.Equals(mineObj)) SelectMine(mineObj);
+            //hit a mine
+            if (obj.layer == mineLayer) {
+                DeselectIndicators();
+
+                bool noMine = selectedMine == null;
+                bool sameMine = !noMine && selectedMine.Equals(obj);
+
+                if (noMine || !sameMine) {
+                    DeselectMines();
+                    selectedMine = SelectMine(obj);
+                }
+            }
+            //hit an indicator
+            else if (obj.layer == indicatorLayer) {
+                DeselectMines();
+
+                bool noIndicator = selectedIndicator == null;
+                bool sameIndicator = !noIndicator && selectedIndicator.Equals(obj);
+
+                if (noIndicator || !sameIndicator) {
+                    DeselectIndicators();
+                    selectedIndicator = SelectMine(obj);
+                    selectedIndicator.SelectNeighbours(true);
+                }
+            }
         }
-        else if (selectedMine != null) {
-            DeselectAll();
+        else {
+            DeselectMines();
+            DeselectIndicators();
             Crosshair.Instance.Release();
         }
     }
@@ -81,20 +140,32 @@ public class SightRay : MonoBehaviour
     /// Select a mine object.
     /// </summary>
     /// <param name="mine">The object to select</param>
-    private void SelectMine(GameObject mine) {
-        selectedMine = new MineInfo(mine);
-        selectedMine.Activator.ActivateAndLock(true);
+    private MineInfo SelectMine(GameObject mine) {
+        MineInfo mineInfo = new MineInfo(mine);
+        mineInfo.Activator.ActivateAndLock(true);
         Crosshair.Instance.Lock();
+        return mineInfo;
     }
 
     /// <summary>
     /// Deselect any selected mine.
     /// If no mine is selected, this method does nothing.
     /// </summary>
-    private void DeselectAll() {
+    private void DeselectMines() {
         if (selectedMine != null) {
             selectedMine.Activator.Unlock();
             selectedMine = null;
+        }
+    }
+
+    /// <summary>
+    /// Deselect any selected indicator.
+    /// If no indicator is selected, this method does nothing.
+    /// </summary>
+    private void DeselectIndicators() {
+        if (selectedIndicator != null) {
+            selectedIndicator.SelectNeighbours(false);
+            selectedIndicator = null;
         }
     }
 }

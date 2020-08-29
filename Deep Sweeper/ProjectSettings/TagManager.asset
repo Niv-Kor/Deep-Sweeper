@@ -13,14 +13,14 @@ TagManager:
   - UI
   - 
   - 
-  - Mine
-  - Bullet
   - Particles
+  - Ground
   - Player
   - Creature
   - Fish Borders
-  - Ground
-  - 
+  - Bullet
+  - Mine
+  - Mine Indication
   - 
   - 
   - 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33743679223604754}
   - component: {fileID: 23340285073117424}
   - component: {fileID: 7883735954082261594}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Sea_urchin_v2_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,3 +94,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.05
   zigzagIntensityRange: {x: 0.3, y: 1}
+  DepthHabitat: 0
+  PacksAmountRange: {x: 0, y: 0}
+  PackSizeRange: {x: 0, y: 0}
+  MinIndividualDistance: {x: 0, y: 0, z: 0}
+  MaxIndividualDistance: {x: 0, y: 0, z: 0}
+  DepthAffection: 0
+  TurbulenceAffection: 0

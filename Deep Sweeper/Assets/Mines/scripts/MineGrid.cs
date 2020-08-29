@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Constants;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MineGrid : MonoBehaviour
 {
     private static readonly float EXTERN_RECOIL_SPEED = 30;
     private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
+
+    public delegate void MineHit();
+    public event MineHit MineHitEvent;
 
     private Sweeper sweeper;
     private MineSelector selector;
@@ -13,18 +17,29 @@ public class MineGrid : MonoBehaviour
     public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
     public Vector2 Position { get; set; }
-
     public bool IsMined { get; set; }
+
     public bool IsFlagged {
-        get { return selector.Mode == SelectionMode.FLAG; }
+        get {
+            bool flagged = selector.Mode == SelectionMode.Flagged;
+            bool indicatedFlagged = selector.Mode == SelectionMode.FlaggedNeighbourIndication;
+            return flagged || indicatedFlagged;
+        }
         set {
-            var targetMode = value ? SelectionMode.FLAG : SelectionMode.DEFAULT;
-            selector.Mode = targetMode;
+            if (value != IsFlagged) {
+                var targetMode = value ? SelectionMode.Flagged : SelectionMode.Default;
+                selector.Mode = targetMode;
+            }
         }
     }
 
-    public delegate void MineHit();
-    public event MineHit MineHitTrigger;
+    public List<MineGrid> Section {
+        get {
+            int row = (int) Position.y;
+            int col = (int) Position.x;
+            return Field.GetSection(row, col);
+        }
+    }
 
     private void Awake() {
         this.MinesIndicator = GetComponentInChildren<Indicator>();
@@ -35,7 +50,7 @@ public class MineGrid : MonoBehaviour
     }
 
     private void Start() {
-        MineHitTrigger += delegate() { Reveal(true); };
+        MineHitEvent += delegate() { Reveal(true); };
     }
 
     /// <summary>
@@ -52,16 +67,19 @@ public class MineGrid : MonoBehaviour
         if (MinesIndicator.IsDisplayed()) return;
 
         int neighbours = MinesIndicator.MinedNeighbours;
+        MinesIndicator.AllowRevelation(true);
+        MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
         IsFlagged = false;
+
+        //disable mine layer
+        MineClone mineClone = GetComponentInChildren<MineClone>();
+        mineClone.gameObject.SetActive(false);
 
         if (IsMined) {
             ///TODO explode and lose
         }
         else {
-            int row = (int) Position.y;
-            int col = (int) Position.x;
-            List<MineGrid> section = Field.GetSection(row, col);
-            MinesIndicator.Display(true, !explosion);
+            List<MineGrid> section = Section;
             IsFlagged = false;
 
             if (explosion) sweeper.Explode();
@@ -85,8 +103,12 @@ public class MineGrid : MonoBehaviour
 
     /// <summary>
     /// Trigger the mine's hit.
+    /// A hit of type 'SingleHit' means that the mine itself has been hit with a bullet,
+    /// while a hit type of 'SectionHit' means that the mine's indicator has been hit,
+    /// and the bullet is meant for each of the mine's neighbours.
     /// </summary>
-    public void TriggerHit() {
-        MineHitTrigger?.Invoke();
+    /// <param name="hitType">The type of hit that occured</param>
+    public void TriggerHit(BulletHitType hitType) {
+        MineHitEvent?.Invoke();
     }
 }

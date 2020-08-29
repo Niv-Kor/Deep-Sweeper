@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class IndicatorText : MonoBehaviour
+public class IndicationNumber : MonoBehaviour
 {
     [Serializable]
     private struct OverallColor
@@ -19,15 +19,14 @@ public class IndicatorText : MonoBehaviour
     [SerializeField] private OverallColor[] numberColors;
 
     [Tooltip("The time it takes the number to dissolve in after revelation.")]
-    [SerializeField] private float dissolveInTime;
+    [SerializeField] private float alphaLerpTime;
 
     private static readonly Color TRANSPARENT = new Color(0x0, 0x0, 0x0, 0x0);
     private static readonly Color WHITE = new Color(0xff, 0xff, 0xff);
     private static readonly Color BLACK = new Color(0x0, 0x0, 0x0);
 
     private TextMeshPro textMesh;
-    private MeshRenderer render;
-    private Color m_faceColor, m_outlineColor;
+    private float m_alpha, maxAlpha;
 
     public Color FaceColor {
         get { return textMesh.faceColor; }
@@ -39,9 +38,16 @@ public class IndicatorText : MonoBehaviour
         set { textMesh.outlineColor = value; }
     }
 
-    public bool Enabled {
-        get { return render.enabled; }
-        set { render.enabled = value; }
+    public float Alpha {
+        get { return m_alpha; }
+        set {
+            if (value >= 0 && value <= 1 && maxAlpha > 0) {
+                float opacity = RangeMath.NumberOfRange(value, 0, maxAlpha);
+                m_alpha = opacity;
+                StopAllCoroutines();
+                StartCoroutine(LerpAlpha(m_alpha));
+            }
+        }
     }
 
     public int Value {
@@ -52,38 +58,41 @@ public class IndicatorText : MonoBehaviour
         set {
             textMesh.text = value.ToString();
             bool colorDefined = value >= 0 && value < numberColors.Length;
-            m_faceColor = colorDefined ? numberColors[value].Inner : WHITE;
-            m_outlineColor = colorDefined ? numberColors[value].Outline : BLACK;
+            Color face = colorDefined ? numberColors[value].Inner : WHITE;
+            Color line = colorDefined ? numberColors[value].Outline : BLACK;
+            FaceColor = new Color(face.r, face.g, face.b, Alpha);
+            OutlineColor = new Color(line.r, line.g, line.b, Alpha);
+            maxAlpha = face.a;
         }
     }
 
     private void Awake() {
         this.textMesh = GetComponent<TextMeshPro>();
-        this.render = GetComponent<MeshRenderer>();
         this.FaceColor = TRANSPARENT;
         this.OutlineColor = TRANSPARENT;
-        this.m_faceColor = TRANSPARENT;
-        this.m_outlineColor = TRANSPARENT;
-        this.Enabled = false;
-
-        Indicator indicator = GetComponentInParent<Indicator>();
-        indicator.IndicatorRevealEvent += delegate (bool instant) {
-            StartCoroutine(DissolveIn(instant));
-        };
+        this.maxAlpha = 0;
+        this.Alpha = 0;
     }
-    
-    /// <summary>
-    /// Dissolve the number in (from transparent to opaque).
-    /// </summary>
-    /// <param name="instant">True to dissolve instantly</param>
-    private IEnumerator DissolveIn(bool instant) {
-        float lerpedTime = 0;
 
-        //dissolve the pile away
-        while (lerpedTime < dissolveInTime) {
-            lerpedTime += instant ? dissolveInTime : Time.deltaTime;
-            FaceColor = Color.Lerp(TRANSPARENT, m_faceColor, lerpedTime / dissolveInTime);
-            OutlineColor = Color.Lerp(TRANSPARENT, m_outlineColor, lerpedTime / dissolveInTime);
+    /// <summary>
+    /// Lerp the alpha value of the indication number.
+    /// </summary>
+    /// <param name="alpha">Target alpha value</param>
+    private IEnumerator LerpAlpha(float alpha) {
+        float lerpedTime = 0;
+        Color startFace = FaceColor;
+        Color startOutline = OutlineColor;
+        Color targetFace = FaceColor;
+        Color targetOutline = OutlineColor;
+        targetFace.a = alpha;
+        targetOutline.a = alpha;
+
+        while (lerpedTime < alphaLerpTime) {
+            lerpedTime += Time.deltaTime;
+            Color nextFace = Color.Lerp(startFace, targetFace, lerpedTime / alphaLerpTime);
+            Color nextOutline = Color.Lerp(startOutline, targetOutline, lerpedTime / alphaLerpTime);
+            FaceColor = nextFace;
+            OutlineColor = nextOutline;
             yield return null;
         }
     }

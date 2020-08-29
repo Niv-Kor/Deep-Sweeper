@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SeaMine_neighbour
+  m_Shader: {fileID: 4800000, guid: 60266dd225cdd804696fba6a0852c651, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 93b5cd594ab82604987241524721d6f6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpTex:
+        m_Texture: {fileID: 2800000, guid: 93b5cd594ab82604987241524721d6f6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: c9e85fee4ff00e74295e1de912dae02e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 2800000, guid: a01fc67b371daca46b211a648ad23096, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StylizedShadowTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonShade:
+        m_Texture: {fileID: 8900000, guid: b995d4bd9d11078d11005b9844295342, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DarkSideRange: -0.65
+    - _ExpandFactor: 1
+    - _OutlineWidth: 0.012
+    - _RampSmooth: 1.3
+    - _RampThreshold: 0.31
+    - _RimMax: 0.8
+    - _RimMin: -0.26
+    - _Saturation: 2
+    - _Shininess: 0.078125
+    - _SpecPower: 128
+    - _SpecSmooth: 0.1
+    - _SpecularRotationX: 0
+    - _SpecularRotationY: 0
+    - _SpecularRotationZ: 0
+    - _SpecularScale: 0.01
+    - _SpecularScaleX: 0
+    - _SpecularScaleY: 0
+    - _SpecularSplitX: 0
+    - _SpecularSplitY: 0.007
+    - _SpecularTranslationX: 0
+    - _SpecularTranslationY: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DarkColor: {r: 0.103773594, g: 0.016153438, b: 0.016153438, a: 1}
+    - _HighlitColor: {r: 0, g: 0.61472464, b: 1, a: 1}
+    - _OutlineColor: {r: 0.23584908, g: 0.0769426, b: 0.06786223, a: 1}
+    - _RimColor: {r: 0.4245283, g: 0, b: 0.056111813, a: 0.6}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}

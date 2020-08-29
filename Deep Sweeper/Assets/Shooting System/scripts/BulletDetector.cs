@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Constants;
+using UnityEngine;
 
 public class BulletDetector : MonoBehaviour
 {
-    [Tooltip("The layer of the submarine bullets.")]
-    [SerializeField] private LayerMask bulletsLayer;
+    [Tooltip("The type of hit type that occurs when a bullet hits this object.")]
+    [SerializeField] private BulletHitType hitType;
 
     private MineGrid grid;
 
@@ -12,6 +13,7 @@ public class BulletDetector : MonoBehaviour
     }
 
     private void OnParticleCollision(GameObject obj) {
-        if (Constants.Layers.ContainedInMask(obj.layer, bulletsLayer)) grid.TriggerHit();
+        LayerMask layer = Layers.BULLET;
+        if (Layers.ContainedInMask(obj.layer, layer)) grid.TriggerHit(hitType);
     }
 }
