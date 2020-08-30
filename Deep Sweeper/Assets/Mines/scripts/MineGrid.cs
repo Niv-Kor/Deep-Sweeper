@@ -67,8 +67,6 @@ public class MineGrid : MonoBehaviour
         if (MinesIndicator.IsDisplayed()) return;
 
         int neighbours = MinesIndicator.MinedNeighbours;
-        MinesIndicator.AllowRevelation(true);
-        MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
         IsFlagged = false;
 
         //disable mine layer
@@ -79,6 +77,8 @@ public class MineGrid : MonoBehaviour
             ///TODO explode and lose
         }
         else {
+            MinesIndicator.AllowRevelation(true);
+            MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
             List<MineGrid> section = Section;
             IsFlagged = false;
 
