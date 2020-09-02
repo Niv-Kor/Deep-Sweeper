@@ -19,6 +19,7 @@ public class MarineLifeSpawner : MarineSpawner
     private FishPack pack;
     private Queue<MarineLife> collectedPack;
 
+    /// <inheritdoc/>
     protected override void ApplyEmission(GameObject instance, int emission) {
         //spawn tools initialization
         this.emissionAmount = emission;
@@ -43,6 +44,7 @@ public class MarineLifeSpawner : MarineSpawner
             StartCoroutine(Emit(instance, subParent, 1, pack));
     }
 
+    /// <inheritdoc/>
     protected override Vector3 GeneratePosition() {
         Vector3 pos;
         float centerDist;

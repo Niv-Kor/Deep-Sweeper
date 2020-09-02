@@ -10,8 +10,10 @@ public abstract class ObjectActivator : MonoBehaviour
     /// so it must first be unlocked.
     /// </summary>
     /// <param name="flag">True to enable or false to disable</param>
-    public void Activate(bool flag) {
+    /// <returns>True if the activation is successful.</returns>
+    public bool Activate(bool flag) {
         if (!lockFlag) Enable(flag);
+        return !lockFlag;
     }
 
     /// <summary>
@@ -26,8 +28,7 @@ public abstract class ObjectActivator : MonoBehaviour
     /// Activate or deactivate the object, while also locking this state.
     /// If another 'Activate' method is called after this lock, it will be ignored.
     /// </summary>
-    /// <param name="flag"></param>
-    public virtual void ActivateAndLock(bool flag) {
+    public virtual void ActivateAndLock() {
         lockFlag = true;
         Enable(true);
     }

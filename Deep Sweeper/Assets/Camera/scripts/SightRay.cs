@@ -14,8 +14,8 @@ public class SightRay : MonoBehaviour
 
         public MineInfo(GameObject mine) {
             this.avatar = mine;
-            this.Activator = mine.GetComponentInParent<MineActivator>();
             this.Grid = mine.GetComponentInParent<MineGrid>();
+            this.Activator = Grid.Activator;
             this.Indicator = Grid.MinesIndicator;
             this.Selector = Grid.GetComponent<MineSelector>();
         }
@@ -32,7 +32,7 @@ public class SightRay : MonoBehaviour
                 MineActivator gridActivator = grid.GetComponent<MineActivator>();
 
                 //activate or deactivate each of the neighbours
-                if (flag) gridActivator.ActivateAndLock(true);
+                if (flag) gridActivator.ActivateAndLock();
                 else gridActivator.Unlock();
 
                 //apply the correct selection mode
@@ -142,7 +142,7 @@ public class SightRay : MonoBehaviour
     /// <param name="mine">The object to select</param>
     private MineInfo SelectMine(GameObject mine) {
         MineInfo mineInfo = new MineInfo(mine);
-        mineInfo.Activator.ActivateAndLock(true);
+        mineInfo.Activator.ActivateAndLock();
         Crosshair.Instance.Lock();
         return mineInfo;
     }

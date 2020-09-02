@@ -14,6 +14,7 @@ public class MineGrid : MonoBehaviour
     private MineSelector selector;
     private ChainRoot chain;
 
+    public MineActivator Activator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
     public Vector2 Position { get; set; }
@@ -42,23 +43,21 @@ public class MineGrid : MonoBehaviour
     }
 
     private void Awake() {
+        this.Activator = GetComponent<MineActivator>();
         this.MinesIndicator = GetComponentInChildren<Indicator>();
-        this.sweeper = GetComponentInChildren<Sweeper>();
-        this.selector = GetComponentInChildren<MineSelector>();
+        this.sweeper = GetComponent<Sweeper>();
+        this.selector = GetComponent<MineSelector>();
         this.chain = GetComponentInChildren<ChainRoot>();
         this.IsMined = false;
-    }
 
-    private void Start() {
-        MineHitEvent += delegate() { Reveal(true); };
+        MineHitEvent += delegate () { Reveal(true); };
+        sweeper.MineDisposalEndEvent += Activator.Unlock;
     }
 
     /// <summary>
     /// Put a flag on the mine or dispose it.
     /// </summary>
-    public void ToggleFlag() {
-        IsFlagged = !IsFlagged;
-    }
+    public void ToggleFlag() { IsFlagged = !IsFlagged; }
 
     /// <summary>
     /// Explode the mine.
@@ -67,20 +66,20 @@ public class MineGrid : MonoBehaviour
         if (MinesIndicator.IsDisplayed()) return;
 
         int neighbours = MinesIndicator.MinedNeighbours;
+        MinesIndicator.AllowRevelation(true);
+        MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
         IsFlagged = false;
 
-        //disable mine layer
+        //disable mine layer and activate mine
         MineClone mineClone = GetComponentInChildren<MineClone>();
         mineClone.gameObject.SetActive(false);
+        Activator.ActivateAndLock();
 
         if (IsMined) {
             ///TODO explode and lose
         }
         else {
-            MinesIndicator.AllowRevelation(true);
-            MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
             List<MineGrid> section = Section;
-            IsFlagged = false;
 
             if (explosion) sweeper.Explode();
             else sweeper.Vanish();

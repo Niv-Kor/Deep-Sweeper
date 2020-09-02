@@ -13,12 +13,10 @@ public class ActivationScouter : MonoBehaviour
             bool inRange = InDeciderRange();
 
             if (activated && !inRange) {
-                Activator?.Activate(false);
-                activated = false;
+                activated = !Activator.Activate(false);
             }
             else if (!activated && inRange) {
-                Activator?.Activate(true);
-                activated = true;
+                activated = Activator.Activate(true);
             }
         }
     }

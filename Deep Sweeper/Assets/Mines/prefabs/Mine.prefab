@@ -25,11 +25,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1066997156}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071067, w: 0.7071068}
-  m_LocalPosition: {x: -0.0013074861, y: 0, z: 0}
-  m_LocalScale: {x: 0.18677324, y: 0.18677339, z: 0.18677327}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0017633218, z: 0}
+  m_LocalScale: {x: 0.25188917, y: 0.25188917, z: 0.25188914}
   m_Children: []
-  m_Father: {fileID: 1926854635635543151}
+  m_Father: {fileID: 2790672522099188063}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &1066997159
@@ -4816,10 +4816,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avatar: {fileID: 1926854635635543150}
+  avatarShell: {fileID: 0}
   chain: {fileID: 0}
   particles:
   - {fileID: 1066997159}
-  - {fileID: 2624358347282197097}
+  - {fileID: 0}
   - {fileID: 1191623406501247911}
   - {fileID: 0}
 --- !u!1 &1926854635635543150
@@ -4856,7 +4857,6 @@ Transform:
   m_LocalScale: {x: 5.3540816, y: 5.3540864, z: 5.3540854}
   m_Children:
   - {fileID: 2790672522099188063}
-  - {fileID: 1066997157}
   m_Father: {fileID: 2256675470851520956}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4948,9 +4948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afe1f1f30bf23242a43dd71b27f9967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletsLayer:
-    serializedVersion: 2
-    m_Bits: 512
+  hitType: 0
 --- !u!114 &1466522724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4963,8 +4961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc34785fa66ab4c46bcfe0293c815202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMaterial: {fileID: 2100000, guid: 4edb089904846ca4098b898725551eaf, type: 2}
-  flagMaterial: {fileID: 2100000, guid: 1bf54eb50d580c6418c8d969be325509, type: 2}
+  avatar: {fileID: 0}
+  selections: []
   applyTime: 0.8
 --- !u!1001 &1926854636417205163
 PrefabInstance:
@@ -5159,12 +5157,6 @@ Transform:
 --- !u!198 &1191623406501247911 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 735475669474637836, guid: 66e5834e73d0a4d4dbbc201ae8330070,
-    type: 3}
-  m_PrefabInstance: {fileID: 1926854636417205163}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &2624358347282197097 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4527815366291777986, guid: 66e5834e73d0a4d4dbbc201ae8330070,
     type: 3}
   m_PrefabInstance: {fileID: 1926854636417205163}
   m_PrefabAsset: {fileID: 0}

@@ -16,6 +16,7 @@ public class ChainClone : MeshClone
         this.cylinderLen = render.bounds.size.y;
     }
 
+    /// <inheritdoc/>
     public override void DisplayMesh(bool flag) {
         base.DisplayMesh(flag);
 

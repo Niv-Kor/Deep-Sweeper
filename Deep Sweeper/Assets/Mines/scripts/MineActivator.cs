@@ -16,7 +16,7 @@ public class MineActivator : ObjectActivator
         this.sweeper = GetComponent<Sweeper>();
         this.clones = GetComponentsInChildren<MeshClone>();
         var scouters = GetComponentsInChildren<ActivationScouter>();
-        var player = FindObjectOfType<SubmarineDepthControl>().transform;
+        var player = Submarine.Instance.transform;
 
         foreach (ActivationScouter scouter in scouters) {
             scouter.Activator = this;
@@ -25,11 +25,12 @@ public class MineActivator : ObjectActivator
         }
 
         //deactivate clones when the mine disposes
-        sweeper.MineDesposalEvent += delegate {
+        sweeper.MineDisposalStartEvent += delegate {
             foreach (MeshClone clone in clones) clone.DisplayMesh(false);
         };
     }
 
+    /// <inheritdoc/>
     protected override void Enable(bool flag) {
         if (sweeper.IsDismissed) return;
 
