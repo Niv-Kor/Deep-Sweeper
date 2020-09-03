@@ -3,9 +3,13 @@
 public class MineActivator : ObjectActivator
 {
     [Header("Prefabs")]
-    [Tooltip("The chain and indicator's parent object.")]
-    [SerializeField] private GameObject[] affectedObjects;
+    [Tooltip("A list of object to enable when the mine is activated.")]
+    [SerializeField] private GameObject[] activateOnEnable;
 
+    [Tooltip("A list of object to disable when the mine is activated.")]
+    [SerializeField] private GameObject[] activateOnDisable;
+
+    [Header("Configurations")]
     [Tooltip("Distance from the play within which the mine is activated.")]
     [SerializeField] private float activationRange;
 
@@ -34,7 +38,8 @@ public class MineActivator : ObjectActivator
     protected override void Enable(bool flag) {
         if (sweeper.IsDismissed) return;
 
-        foreach (GameObject obj in affectedObjects) obj.SetActive(flag);
+        foreach (GameObject obj in activateOnEnable) obj.SetActive(flag);
+        foreach (GameObject obj in activateOnDisable) obj.SetActive(!flag);
         foreach (MeshClone clone in clones) clone.DisplayMesh(!flag);
     }
 }

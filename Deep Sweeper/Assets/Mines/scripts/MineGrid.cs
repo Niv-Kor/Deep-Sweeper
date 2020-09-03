@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MineGrid : MonoBehaviour
 {
+    [Tooltip("Mine head avatar.")]
+    [SerializeField] private GameObject avatar;
+
     private static readonly float EXTERN_RECOIL_SPEED = 30;
     private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
 
@@ -13,6 +16,7 @@ public class MineGrid : MonoBehaviour
     private Sweeper sweeper;
     private MineSelector selector;
     private ChainRoot chain;
+    private MineClone mineClone;
 
     public MineActivator Activator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
@@ -48,10 +52,39 @@ public class MineGrid : MonoBehaviour
         this.sweeper = GetComponent<Sweeper>();
         this.selector = GetComponent<MineSelector>();
         this.chain = GetComponentInChildren<ChainRoot>();
+        this.mineClone = GetComponentInChildren<MineClone>();
         this.IsMined = false;
 
-        MineHitEvent += delegate () { Reveal(true); };
+        //bind events
+        MineHitEvent += delegate { Reveal(true); };
         sweeper.MineDisposalEndEvent += Activator.Unlock;
+        selector.ModeApplicationEvent += ChangeMineLayer;
+    }
+
+    /// <summary>
+    /// Change the layer of the mine avatar and mine clone,
+    /// according to their flag state.
+    /// </summary>
+    /// <param name="mode">The next selection mode of the mine</param>
+    private void ChangeMineLayer(SelectionMode mode, Material _ = null) {
+        LayerMask targetLayer;
+
+        switch (mode) {
+            case SelectionMode.Flagged:
+            case SelectionMode.FlaggedNeighbourIndication:
+                targetLayer = Layers.FLAGGED_MINE;
+                break;
+
+            case SelectionMode.Default:
+            case SelectionMode.NeighbourIndication:
+                targetLayer = Layers.MINE;
+                break;
+
+            default: return;
+        }
+
+        avatar.layer = Layers.GetLayerValue(targetLayer);
+        mineClone.gameObject.layer = Layers.GetLayerValue(targetLayer);
     }
 
     /// <summary>

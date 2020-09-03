@@ -7,11 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SeaMine_flagged
+  m_Name: New Terrain Material
   m_Shader: {fileID: 4800000, guid: 60266dd225cdd804696fba6a0852c651, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: NCE_SPECULAR NCE_STYLIZED_SPECULAR
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -19,20 +19,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 93b5cd594ab82604987241524721d6f6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpTex:
-        m_Texture: {fileID: 2800000, guid: 93b5cd594ab82604987241524721d6f6, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: c9e85fee4ff00e74295e1de912dae02e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Ramp:
-        m_Texture: {fileID: 2800000, guid: a01fc67b371daca46b211a648ad23096, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTex:
@@ -43,20 +35,19 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _ToonShade:
-        m_Texture: {fileID: 8900000, guid: b995d4bd9d11078d11005b9844295342, type: 3}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _DarkSideRange: -0.58
+    - _DarkSideRange: 0.1
     - _ExpandFactor: 1
-    - _OutlineWidth: 0.012
-    - _RampSmooth: 2.07
-    - _RampThreshold: 0.36
-    - _RimMax: 0.8
-    - _RimMin: -0.26
-    - _Saturation: 1.57
-    - _Shininess: 0.078125
+    - _OutlineWidth: 0.01
+    - _RampSmooth: 0.1
+    - _RampThreshold: 0.5
+    - _RimMax: 1
+    - _RimMin: 0.5
+    - _Saturation: 0.74
     - _SpecPower: 128
     - _SpecSmooth: 0.1
     - _SpecularRotationX: 0
@@ -66,13 +57,13 @@ Material:
     - _SpecularScaleX: 0
     - _SpecularScaleY: 0
     - _SpecularSplitX: 0
-    - _SpecularSplitY: 0.007
+    - _SpecularSplitY: 0
     - _SpecularTranslationX: 0
     - _SpecularTranslationY: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DarkColor: {r: 0.1792453, g: 0, b: 0, a: 1}
-    - _HighlitColor: {r: 1, g: 0, b: 0.04137945, a: 1}
-    - _OutlineColor: {r: 0.16037738, g: 0.018930022, b: 0.008321469, a: 1}
-    - _RimColor: {r: 0, g: 0, b: 0, a: 0.6313726}
+    - _DarkColor: {r: 0.38679248, g: 0.20160188, b: 0.10034712, a: 1}
+    - _HighlitColor: {r: 0.6320754, g: 0.44449016, b: 0.18187074, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _RimColor: {r: 0, g: 0.41327345, b: 0.5283019, a: 0.6}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}

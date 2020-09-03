@@ -1,7 +1,7 @@
 ﻿using Constants;
 using UnityEngine;
 
-public class SightRay : MonoBehaviour
+public class SightRay : Singleton<SightRay>
 {
     private class MineInfo
     {
@@ -65,13 +65,17 @@ public class SightRay : MonoBehaviour
     private MineInfo selectedIndicator;
     private Transform camTransform;
     private SubmarineGun gun;
-    private int mineLayer, indicatorLayer;
+    private LayerMask mineLayer, indicatorLayer;
+
+    public float MaxDistance { get { return maxDistance; } }
+    public float HitDistance { get; private set; }
 
     private void Start() {
         this.camTransform = CameraManager.Instance.FPCam.transform;
         this.gun = FindObjectOfType<SubmarineGun>();
-        this.mineLayer = Layers.GetLayerValue(Layers.MINE);
-        this.indicatorLayer = Layers.GetLayerValue(Layers.MINE_INDICATION);
+        this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
+        this.indicatorLayer = Layers.MINE_INDICATION;
+        this.HitDistance = Mathf.Infinity;
     }
 
     private void Update() {
@@ -102,9 +106,10 @@ public class SightRay : MonoBehaviour
 
         if (hit) {
             GameObject obj = raycastHit.collider.gameObject;
+            HitDistance = raycastHit.distance;
 
             //hit a mine
-            if (obj.layer == mineLayer) {
+            if (Layers.ContainedInMask(obj.layer, mineLayer)) {
                 DeselectIndicators();
 
                 bool noMine = selectedMine == null;
@@ -116,7 +121,7 @@ public class SightRay : MonoBehaviour
                 }
             }
             //hit an indicator
-            else if (obj.layer == indicatorLayer) {
+            else if (Layers.ContainedInMask(obj.layer, indicatorLayer)) {
                 DeselectMines();
 
                 bool noIndicator = selectedIndicator == null;
@@ -130,6 +135,7 @@ public class SightRay : MonoBehaviour
             }
         }
         else {
+            HitDistance = Mathf.Infinity;
             DeselectMines();
             DeselectIndicators();
             Crosshair.Instance.Release();

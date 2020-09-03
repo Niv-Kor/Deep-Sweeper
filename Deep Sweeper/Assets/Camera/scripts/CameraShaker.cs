@@ -107,12 +107,6 @@ public class CameraShaker : MonoBehaviour
         this.chromaticAberration = new EffectFloatParameter(postProcessMngr.ChromaticAberration?.intensity);
         this.depthOfField = new EffectFloatParameter(postProcessMngr.DepthOfField?.aperture);
         this.bloom = new EffectFloatParameter(postProcessMngr.Bloom?.intensity);
-
-        //set target values
-        ambientOcclusion.TargetValue = ambientIntensity;
-        chromaticAberration.TargetValue = chromaticIntensity;
-        depthOfField.TargetValue = aperture;
-        bloom.TargetValue = bloomIntensity;
     }
 
     /// <summary>
@@ -148,7 +142,16 @@ public class CameraShaker : MonoBehaviour
     /// Activate all adapted post processing effects.
     /// </summary>
     /// <param name="flag">True to activate or false to deactivate</param>
-    private void ActivateFX(bool flag) {
+    /// <param name="intensity">The percentage of effect intensity [0:1]</param>
+    private void ActivateFX(bool flag, float intensity = 1) {
+        //set target values
+        if (flag) {
+            ambientOcclusion.TargetValue = RangeMath.PercentOfRange(intensity, ambientOcclusion.OriginValue, ambientIntensity);
+            chromaticAberration.TargetValue = RangeMath.PercentOfRange(intensity, chromaticAberration.OriginValue, chromaticIntensity);
+            depthOfField.TargetValue = RangeMath.PercentOfRange(intensity, depthOfField.OriginValue, aperture);
+            bloom.TargetValue = RangeMath.PercentOfRange(intensity, bloom.OriginValue, bloomIntensity);
+        }
+
         if (useAmbientOcclusion) StartCoroutine(ambientOcclusion.Lerp(flag, FXDecayTime));
         if (useChromaticAberration) StartCoroutine(chromaticAberration.Lerp(flag, FXDecayTime));
         if (useBloom) StartCoroutine(bloom.Lerp(flag, FXDecayTime));
@@ -162,7 +165,7 @@ public class CameraShaker : MonoBehaviour
     public void Shake(float intensity = 1) {
         transform.localPosition = originPos;
         StopAllCoroutines();
-        ActivateFX(true);
+        ActivateFX(true, intensity);
         StartCoroutine(WaveShake(intensity));
     }
 }

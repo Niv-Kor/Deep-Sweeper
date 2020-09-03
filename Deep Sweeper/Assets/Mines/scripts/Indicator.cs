@@ -14,7 +14,6 @@ public class Indicator : MonoBehaviour
     private Transform textTransform;
     private Submarine player;
     private SphereCollider sphereCol;
-
     private bool allowReveal;
 
     public int MinedNeighbours {
@@ -49,6 +48,7 @@ public class Indicator : MonoBehaviour
     /// </summary>
     /// <param name="flag">True to allow or false to forbid</param>
     public void AllowRevelation(bool flag) {
+        sphereCol.enabled = flag;
         allowReveal = flag;
 
         if (flag) StartCoroutine(Float());

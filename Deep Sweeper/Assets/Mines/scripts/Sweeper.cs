@@ -28,14 +28,21 @@ public class Sweeper : MonoBehaviour
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();
         this.rigidBody = avatarShell.GetComponent<Rigidbody>();
         this.render = avatar.GetComponent<MeshRenderer>();
-        this.col = avatar.GetComponent<SphereCollider>();
+        this.col = avatar.GetComponentInChildren<SphereCollider>();
         this.IsDismissed = false;
     }
 
     private void Start() {
         //assign an event trigger to the main camera
         CameraShaker camShaker = CameraManager.Instance.FPCam.GetComponent<CameraShaker>();
-        if (camShaker != null) MineDisposalStartEvent += delegate() { camShaker.Shake(); };
+        SightRay ray = SightRay.Instance;
+
+        if (camShaker != null) MineDisposalStartEvent += delegate() {
+            float dist = Vector3.Distance(transform.position, camShaker.transform.position);
+            float clampedDist = Mathf.Clamp(dist, 0, ray.MaxDistance);
+            float shakeStrength = 1 - RangeMath.NumberOfRange(clampedDist, 0, ray.MaxDistance);
+            camShaker.Shake(shakeStrength);
+        };
     }
 
     /// <summary>
