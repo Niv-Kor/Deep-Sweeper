@@ -21,7 +21,7 @@ public class MineGrid : MonoBehaviour
     public MineActivator Activator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
-    public Vector2 Position { get; set; }
+    public Vector2Int Position { get; set; }
     public bool IsMined { get; set; }
 
     public bool IsFlagged {
@@ -40,8 +40,8 @@ public class MineGrid : MonoBehaviour
 
     public List<MineGrid> Section {
         get {
-            int row = (int) Position.y;
-            int col = (int) Position.x;
+            int row = (int) Position.x;
+            int col = (int) Position.y;
             return Field.GetSection(row, col);
         }
     }

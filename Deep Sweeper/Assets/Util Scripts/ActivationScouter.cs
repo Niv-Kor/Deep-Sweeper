@@ -2,13 +2,18 @@
 
 public class ActivationScouter : MonoBehaviour
 {
-    private bool visible, activated;
+    protected bool visible, activated;
 
-    public MineActivator Activator { get; set; }
+    public ObjectActivator Activator { get; set; }
     public Transform Decider { get; set; }
     public float ReportRange { get; set; }
 
-    private void Update() {
+    protected virtual void Start() {
+        this.visible = false;
+        this.activated = false;
+    }
+
+    protected virtual void Update() {
         if (visible) {
             bool inRange = InDeciderRange();
 
@@ -21,21 +26,21 @@ public class ActivationScouter : MonoBehaviour
         }
     }
 
-    private void OnBecameVisible() {
+    protected virtual void OnBecameVisible() {
         activated = InDeciderRange();
         if (activated) Activator?.Activate(true);
         activated = true;
         visible = true;
     }
 
-    private void OnBecameInvisible() {
+    protected virtual void OnBecameInvisible() {
         Activator?.Activate(false);
         visible = false;
         activated = false;
     }
 
     /// <returns>True if the scouter's distance from the decider body is within the activation range.</returns>
-    private bool InDeciderRange() {
+    protected virtual bool InDeciderRange() {
         Vector3 deciderPos = Decider.position;
         Vector3 reporterPos = transform.position;
         float dist = Vector3.Distance(reporterPos, deciderPos);

@@ -15,12 +15,10 @@ public class MarineLifeManager : ConfinedArea
     private static readonly string FISH_OBJ_NAME = "Fish";
     private static readonly float EXCESS_BORDERS_DEPTH = 20f;
 
-    private SubmarineDepthControl depthControl;
     private List<MarineLifeSpawner> spawners;
     private GameObject fishParentObj;
 
     private void Start() {
-        this.depthControl = FindObjectOfType<SubmarineDepthControl>();
         this.spawners = new List<MarineLifeSpawner>();
         this.fishParentObj = new GameObject(FISH_OBJ_NAME);
         fishParentObj.transform.SetParent(transform);
@@ -38,7 +36,7 @@ public class MarineLifeManager : ConfinedArea
     /// Create a MarineLifeSpawner script for each of the prefabs in the pool.
     /// </summary>
     private void Spawn() {
-        float depth = depthControl.Depth;
+        float depth = 0; ///TODO
         var pool = new List<MarineLife>();
 
         //find all available prefabs according to the current depth

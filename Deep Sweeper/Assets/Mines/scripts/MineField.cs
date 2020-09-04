@@ -13,16 +13,13 @@ public class MineField : ConfinedArea
 
     [Header("Mines")]
     [Tooltip("Percentage of randomly spreaded mines.")]
-    [SerializeField] private int minesPercent;
+    [SerializeField] public int MinesPercent;
 
-    private static readonly string GRIDS_PARENT_NAME = "Field";
-    private static readonly float RAYCAST_FROM_HEIGHT = 900f;
-
-    private static int fieldIndex = 0;
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
     private Vector3 gridSize;
     private Vector2 matrixSize;
+    private float raycastHeight;
     private int gridsAmount, minesAmount;
 
     public List<MineGrid> Grids { get; private set; }
@@ -35,7 +32,8 @@ public class MineField : ConfinedArea
         this.matrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
         this.gridsAmount = (int) matrixSize.x * (int) matrixSize.y;
-        this.minesAmount = (int) (minesPercent * gridsAmount / 100);
+        this.minesAmount = (int) (MinesPercent * gridsAmount / 100);
+        this.raycastHeight = terrain.terrainData.size.y;
 
         LayoutMatrix();
         SpreadMines(minesAmount);
@@ -65,9 +63,6 @@ public class MineField : ConfinedArea
     private void LayoutMatrix() {
         gridSize.y = 0;
         Vector3 startPoint = terrain.transform.position + Confine.Offset + gridSize / 2;
-        string parentObjName = GRIDS_PARENT_NAME + " (" + (fieldIndex++) + ")";
-        GameObject gridsObj = new GameObject(parentObjName);
-        gridsObj.transform.SetParent(transform);
 
         for (int i = 0; i < matrixSize.x; i++) {
             for (int j = 0; j < matrixSize.y; j++) {
@@ -75,17 +70,17 @@ public class MineField : ConfinedArea
                 Vector3 point = startPoint + diffVector * j;
 
                 //get the terrain height at the specified point
-                Vector3 raycastPos = point + Vector3.up * RAYCAST_FROM_HEIGHT;
-                Physics.Raycast(raycastPos, Vector3.down, out RaycastHit rayHit, RAYCAST_FROM_HEIGHT, Layers.GROUND);
+                Vector3 raycastPos = point + Vector3.up * raycastHeight;
+                Physics.Raycast(raycastPos, Vector3.down, out RaycastHit rayHit, raycastHeight, Layers.GROUND);
                 point.y = rayHit.point.y;
 
                 GameObject obj = Instantiate(gridPrefab);
                 obj.transform.position = point;
-                obj.transform.SetParent(gridsObj.transform);
+                obj.transform.SetParent(transform);
 
                 MineGrid mineGrid = obj.GetComponent<MineGrid>();
                 mineGrid.Field = this;
-                mineGrid.Position = new Vector2(j, i);
+                mineGrid.Position = new Vector2Int(i, j);
                 gridsMatrix[i, j] = mineGrid;
                 Grids.Add(mineGrid);
             }
@@ -194,5 +189,16 @@ public class MineField : ConfinedArea
 
         if (innerRow && innerCol) return gridsMatrix[row, col];
         else return null;
+    }
+
+    /// <summary>
+    /// Check if this mine field contains a certain grid.
+    /// </summary>
+    /// <param name="grid">The grid to check</param>
+    /// <returns>True if this mine field contains the given grid.</returns>
+    public bool ContainsGrid(MineGrid grid) {
+        Vector2Int gridLayout = grid.Position;
+        MineGrid detectedGrid = GetGrid(gridLayout.x, gridLayout.y);
+        return grid != null && detectedGrid == grid;
     }
 }

@@ -14808,6 +14808,7 @@ GameObject:
   - component: {fileID: 5259074597371396918}
   - component: {fileID: 7272221563651479452}
   - component: {fileID: 8288792656685794867}
+  - component: {fileID: 3787011078846715842}
   m_Layer: 14
   m_Name: Mine Clone
   m_TagString: Untagged
@@ -14914,6 +14915,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 918559687}
+--- !u!114 &3787011078846715842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6282828163385945358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0eef2cd3a590e649a4d0a64fbf03544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7603464364828068399
 GameObject:
   m_ObjectHideFlags: 0
