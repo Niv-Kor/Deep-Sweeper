@@ -184,10 +184,10 @@ public class MineField : ConfinedArea
     /// <param name="col">Column index of the grid</param>
     /// <returns>The specified grid.</returns>
     private MineGrid GetGrid(int row, int col) {
-        bool innerRow = row >= 0 && row < matrixSize.x;
-        bool innerCol = col >= 0 && col < matrixSize.y;
+        bool internalRow = row >= 0 && row < matrixSize.x;
+        bool internalCol = col >= 0 && col < matrixSize.y;
 
-        if (innerRow && innerCol) return gridsMatrix[row, col];
+        if (internalRow && internalCol) return gridsMatrix[row, col];
         else return null;
     }
 

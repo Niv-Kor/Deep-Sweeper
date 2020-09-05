@@ -7,13 +7,6 @@ public class Sweeper : MonoBehaviour
     [Tooltip("The mine's shell parent object.")]
     [SerializeField] private GameObject avatar;
 
-    [Tooltip("The mine's shell parent object.")]
-    [SerializeField] private GameObject avatarShell;
-
-    [Tooltip("The chain root that holds the mine to the ground.")]
-    [SerializeField] private ChainRoot chain;
-
-    private Rigidbody rigidBody;
     private MeshRenderer render;
     private SphereCollider col;
     private ParticleSystem[] particles;
@@ -26,7 +19,6 @@ public class Sweeper : MonoBehaviour
 
     private void Awake() {
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();
-        this.rigidBody = avatarShell.GetComponent<Rigidbody>();
         this.render = avatar.GetComponent<MeshRenderer>();
         this.col = avatar.GetComponentInChildren<SphereCollider>();
         this.IsDismissed = false;
@@ -65,12 +57,6 @@ public class Sweeper : MonoBehaviour
                 if (animationTime > vanishTime) vanishTime = animationTime;
                 part.Play();
             }
-        }
-
-        if (breakChain) {
-            rigidBody.constraints = RigidbodyConstraints.None;
-            rigidBody.useGravity = true;
-            chain.gameObject.SetActive(false);
         }
 
         //wait for the animation to finish and then trigger an event

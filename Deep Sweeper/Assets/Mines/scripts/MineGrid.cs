@@ -7,16 +7,12 @@ public class MineGrid : MonoBehaviour
     [Tooltip("Mine head avatar.")]
     [SerializeField] private GameObject avatar;
 
-    private static readonly float EXTERN_RECOIL_SPEED = 30;
-    private static readonly float EXTERN_RECOIL_FORCE = 3.5f;
-
     public delegate void MineHit();
     public event MineHit MineHitEvent;
 
     private Sweeper sweeper;
     private MineSelector selector;
-    private ChainRoot chain;
-    private MineClone mineClone;
+    private MineBouncer mine;
 
     public MineActivator Activator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
@@ -40,8 +36,8 @@ public class MineGrid : MonoBehaviour
 
     public List<MineGrid> Section {
         get {
-            int row = (int) Position.x;
-            int col = (int) Position.y;
+            int row = Position.x;
+            int col = Position.y;
             return Field.GetSection(row, col);
         }
     }
@@ -51,8 +47,7 @@ public class MineGrid : MonoBehaviour
         this.MinesIndicator = GetComponentInChildren<Indicator>();
         this.sweeper = GetComponent<Sweeper>();
         this.selector = GetComponent<MineSelector>();
-        this.chain = GetComponentInChildren<ChainRoot>();
-        this.mineClone = GetComponentInChildren<MineClone>();
+        this.mine = GetComponentInChildren<MineBouncer>();
         this.IsMined = false;
 
         //bind events
@@ -84,13 +79,13 @@ public class MineGrid : MonoBehaviour
         }
 
         avatar.layer = Layers.GetLayerValue(targetLayer);
-        mineClone.gameObject.layer = Layers.GetLayerValue(targetLayer);
+        mine.gameObject.layer = Layers.GetLayerValue(targetLayer);
     }
 
     /// <summary>
     /// Put a flag on the mine or dispose it.
     /// </summary>
-    public void ToggleFlag() { IsFlagged = !IsFlagged; }
+    public void ToggleFlag() { IsFlagged ^= true; }
 
     /// <summary>
     /// Explode the mine.
@@ -98,33 +93,20 @@ public class MineGrid : MonoBehaviour
     public void Reveal(bool explosion) {
         if (MinesIndicator.IsDisplayed()) return;
 
-        int neighbours = MinesIndicator.MinedNeighbours;
         MinesIndicator.AllowRevelation(true);
         MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
-        IsFlagged = false;
-
-        //disable mine layer and activate mine
-        MineClone mineClone = GetComponentInChildren<MineClone>();
-        mineClone.gameObject.SetActive(false);
         Activator.ActivateAndLock();
+        IsFlagged = false;
 
         if (IsMined) {
             ///TODO explode and lose
         }
         else {
+            int neighbours = MinesIndicator.MinedNeighbours;
             List<MineGrid> section = Section;
 
             if (explosion) sweeper.Explode();
             else sweeper.Vanish();
-
-            //push away neighbour mines with recoil
-            foreach (MineGrid mineGrid in section) {
-                if (mineGrid != null) {
-                    Vector3 recoilSource = transform.position;
-                    recoilSource.y = mineGrid.chain.transform.position.y;
-                    mineGrid.chain.PushAwayFrom(recoilSource, EXTERN_RECOIL_SPEED, EXTERN_RECOIL_FORCE);
-                }
-            }
 
             //keep revealing grids recursively
             if (neighbours == 0)

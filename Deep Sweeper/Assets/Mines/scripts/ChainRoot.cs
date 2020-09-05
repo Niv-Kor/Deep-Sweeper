@@ -19,7 +19,6 @@ public class ChainRoot : MonoBehaviour
     private void Awake() {
         this.rigidBody = GetComponentInChildren<Rigidbody>();
         rigidBody.gameObject.SetActive(false);
-
     }
 
     private void Start() {
