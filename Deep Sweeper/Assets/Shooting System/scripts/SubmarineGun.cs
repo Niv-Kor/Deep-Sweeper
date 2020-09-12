@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class SubmarineGun : MonoBehaviour
 {
@@ -21,8 +22,7 @@ public class SubmarineGun : MonoBehaviour
     private float loadingTimer;
     private bool bulletInBarrel;
 
-    public delegate void BulletLoad();
-    public event BulletLoad BulletLoadTrigger;
+    public event UnityAction BulletLoadTrigger;
 
     private void Start() {
         this.particles = GetComponentsInChildren<ParticleSystem>();

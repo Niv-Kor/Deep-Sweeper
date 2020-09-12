@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GateEmblem : MonoBehaviour
@@ -41,7 +42,7 @@ public class GateEmblem : MonoBehaviour
             angle += speed * Time.deltaTime * direction;
             float deltaX = Mathf.Cos(angle) * radius;
             float deltaY = Mathf.Sin(angle) * radius;
-            Vector3 delta = new Vector3(deltaX, deltaY, 0);
+            Vector3 delta = transform.up * deltaY + transform.right * deltaX;
             transform.position += delta;
 
             yield return null;

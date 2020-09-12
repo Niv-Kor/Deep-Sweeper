@@ -1,6 +1,8 @@
 ﻿using Constants;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MineField : ConfinedArea
 {
@@ -22,7 +24,10 @@ public class MineField : ConfinedArea
     private float raycastHeight;
     private int gridsAmount, minesAmount;
 
+    public event UnityAction FieldReadyEvent;
+
     public List<MineGrid> Grids { get; private set; }
+    public bool IsReady { get; private set; }
 
     private void Start() {
         MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
@@ -34,11 +39,15 @@ public class MineField : ConfinedArea
         this.gridsAmount = (int) matrixSize.x * (int) matrixSize.y;
         this.minesAmount = (int) (MinesPercent * gridsAmount / 100);
         this.raycastHeight = terrain.terrainData.size.y;
+        this.IsReady = false;
 
         LayoutMatrix();
         SpreadMines(minesAmount);
         CountNeighbours();
         OpenInitial();
+        CarpetBounce();
+        IsReady = true;
+        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>
@@ -153,6 +162,23 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
+    /// Bounce the mine with a carpet pattern.
+    /// </summary>
+    private void CarpetBounce() {
+        List<MineBouncer> bouncers = new List<MineBouncer>();
+
+        foreach (MineGrid grid in Grids)
+            bouncers.Add(grid.GetComponentInChildren<MineBouncer>());
+
+        //bounce all mines with a fixed delay between them
+        float delay = 0;
+        foreach (MineBouncer mine in bouncers) {
+            mine.Bounce(delay);
+            delay += .1f;
+        }
+    }
+
+    /// <summary>
     /// Get a section of 8 neighbours around a grid.
     /// If a neighbour does not exist, it's replaced with null.
     /// </summary>
@@ -201,4 +227,20 @@ public class MineField : ConfinedArea
         MineGrid detectedGrid = GetGrid(gridLayout.x, gridLayout.y);
         return grid != null && detectedGrid == grid;
     }
+
+    /// <summary>
+    /// Check if the field is clear, and only left with real mines.
+    /// </summary>
+    /// <returns>True if all dismissable mines are indeed dismissed.</returns>
+    public bool IsClear() {
+        foreach (MineGrid grid in Grids)
+            if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Destroy this field object.
+    /// </summary>
+    public void DestroyField() { Destroy(gameObject); }
 }

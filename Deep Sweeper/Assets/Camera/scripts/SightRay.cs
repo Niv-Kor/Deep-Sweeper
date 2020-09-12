@@ -64,7 +64,6 @@ public class SightRay : Singleton<SightRay>
     private MineInfo selectedMine;
     private MineInfo selectedIndicator;
     private Transform camTransform;
-    private SubmarineOriantation submarine;
     private SubmarineGun gun;
     private LayerMask mineLayer, indicatorLayer;
 
@@ -73,7 +72,6 @@ public class SightRay : Singleton<SightRay>
 
     private void Start() {
         this.camTransform = CameraManager.Instance.FPCam.transform;
-        this.submarine = FindObjectOfType<SubmarineOriantation>();
         this.gun = FindObjectOfType<SubmarineGun>();
         this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
         this.indicatorLayer = Layers.MINE_INDICATION;
@@ -109,7 +107,7 @@ public class SightRay : Singleton<SightRay>
         if (hit) {
             GameObject obj = raycastHit.collider.gameObject;
             MineGrid grid = obj.GetComponentInParent<MineGrid>();
-            Phase phase = submarine.CurrentPhase;
+            Phase phase = GameFlow.Instance.CurrentPhase;
             bool allowedGrid = phase != null && phase.Field.ContainsGrid(grid);
             HitDistance = raycastHit.distance;
 

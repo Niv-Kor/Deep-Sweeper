@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using com.ootii.Cameras;
+using System.Collections;
 using UnityEngine;
 
 public class SubmarineMovementController : MonoBehaviour
@@ -31,16 +32,28 @@ public class SubmarineMovementController : MonoBehaviour
 
     private Rigidbody rigidBody;
     private DirectionUnit directionUnit;
+    private CameraController camController;
     private Vector3 startRestingPos;
     private float waveLength;
     private bool resting;
+    private bool m_movementAllowed;
+
+    public bool MovementAllowd {
+        get { return m_movementAllowed; }
+        set {
+            camController.enabled = value;
+            m_movementAllowed = value;
+        }
+    }
 
     private void Start() {
         this.rigidBody = GetComponent<Rigidbody>();
+        this.camController = GetComponentInChildren<CameraController>();
         this.directionUnit = DirectionUnit.Instance;
         this.waveLength = WaterPhysics.Instance.Intensity * (waveLengthRange.y - waveLengthRange.x) / 100f + waveLengthRange.x;
         this.startRestingPos = transform.position;
         this.resting = true;
+        this.MovementAllowd = true;
         if (useFloat) StartCoroutine(Float());
     }
 
@@ -90,8 +103,9 @@ public class SubmarineMovementController : MonoBehaviour
     /// <param name="verInput">Vertical movement power [-1:1]</param>
     /// <param name="heightInput">Ascending or descending movement power [0:1]</param>
     /// <param name="turboInput">Turbo movement power [0:1]</param>
-    /// <returns>The direction to which the user is directing.</returns>
-    private Vector3 Move(float horInput, float verInput, float heightInput, float turboInput) {
+    private void Move(float horInput, float verInput, float heightInput, float turboInput) {
+        if (!MovementAllowd) return;
+
         float turboPercent = turboInput / 1;
         float speedMultiplier = turboPercent * (turboMultiplier - 1) + 1;
         float speed = horizontalSpeed * speedMultiplier;
@@ -105,7 +119,6 @@ public class SubmarineMovementController : MonoBehaviour
 
         //prevent the submarine's velocity from diverging
         rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxVelocity);
-        return direction;
     }
 
     /// <summary>

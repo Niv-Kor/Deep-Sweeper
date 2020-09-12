@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Sweeper : MonoBehaviour
 {
@@ -11,11 +12,10 @@ public class Sweeper : MonoBehaviour
     private SphereCollider col;
     private ParticleSystem[] particles;
 
-    public bool IsDismissed { get; set; }
+    public event UnityAction MineDisposalStartEvent;
+    public event UnityAction MineDisposalEndEvent;
 
-    public delegate void MineDesposal();
-    public event MineDesposal MineDisposalStartEvent;
-    public event MineDesposal MineDisposalEndEvent;
+    public bool IsDismissed { get; private set; }
 
     private void Awake() {
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();

@@ -1,19 +1,20 @@
 ﻿using Constants;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MineGrid : MonoBehaviour
 {
     [Tooltip("Mine head avatar.")]
     [SerializeField] private GameObject avatar;
 
-    public delegate void MineHit();
-    public event MineHit MineHitEvent;
-
-    private Sweeper sweeper;
     private MineSelector selector;
     private MineBouncer mine;
 
+    public event UnityAction MineHitEvent;
+
+    public GameObject Avatar { get { return avatar; } }
+    public Sweeper Sweeper { get; private set; }
     public MineActivator Activator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
@@ -45,14 +46,14 @@ public class MineGrid : MonoBehaviour
     private void Awake() {
         this.Activator = GetComponent<MineActivator>();
         this.MinesIndicator = GetComponentInChildren<Indicator>();
-        this.sweeper = GetComponent<Sweeper>();
+        this.Sweeper = GetComponent<Sweeper>();
         this.selector = GetComponent<MineSelector>();
         this.mine = GetComponentInChildren<MineBouncer>();
         this.IsMined = false;
 
         //bind events
         MineHitEvent += delegate { Reveal(true); };
-        sweeper.MineDisposalEndEvent += Activator.Unlock;
+        Sweeper.MineDisposalEndEvent += Activator.Unlock;
         selector.ModeApplicationEvent += ChangeMineLayer;
     }
 
@@ -105,13 +106,15 @@ public class MineGrid : MonoBehaviour
             int neighbours = MinesIndicator.MinedNeighbours;
             List<MineGrid> section = Section;
 
-            if (explosion) sweeper.Explode();
-            else sweeper.Vanish();
+            if (explosion) Sweeper.Explode();
+            else Sweeper.Vanish();
 
             //keep revealing grids recursively
             if (neighbours == 0)
                 foreach (MineGrid mineGrid in section)
                     if (mineGrid != null) mineGrid.Reveal(explosion);
+
+            GameFlow.Instance.TryNextPhase();
         }
     }
 

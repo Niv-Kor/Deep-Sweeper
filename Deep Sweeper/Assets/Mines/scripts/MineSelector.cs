@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MineSelector : MonoBehaviour
 {
@@ -30,12 +31,11 @@ public class MineSelector : MonoBehaviour
     [Tooltip("The time it takes to lerp between one material to another.")]
     [SerializeField] private float applyTime;
 
-    public delegate void ModeApplication(SelectionMode mode, Material material);
-    public event ModeApplication ModeApplicationEvent;
-
     private Material materialComponent;
     private Renderer render;
     private SelectionMode m_mode;
+
+    public event UnityAction<SelectionMode, Material> ModeApplicationEvent;
 
     public MineMark Mark { get; private set; }
     public SelectionMode Mode {

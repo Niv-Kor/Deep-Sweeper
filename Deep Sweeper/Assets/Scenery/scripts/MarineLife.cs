@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MarineLife : MonoBehaviour
 {
@@ -44,9 +45,7 @@ public class MarineLife : MonoBehaviour
     private float timeFunction;
     private bool turning;
 
-    public delegate void AppearnceCallback();
-    public delegate void FishTurn(MarineLife fish);
-    public event FishTurn FishTurnEvent;
+    public event UnityAction<MarineLife> FishTurnEvent;
 
     private void Awake() {
         this.mesh = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -111,7 +110,7 @@ public class MarineLife : MonoBehaviour
     /// </summary>
     /// <param name="flag">True to appear of false to disappear</param>
     /// <param name="callback">A callback function to activate on completion (optional)</param>
-    private IEnumerator Appear(bool flag, AppearnceCallback callback = null) {
+    private IEnumerator Appear(bool flag, UnityAction callback = null) {
         Vector3 sourceScale = transform.localScale;
         Vector3 targetScale = flag ? originScale : Vector3.zero;
         float lerpedTime = 0;
@@ -129,12 +128,12 @@ public class MarineLife : MonoBehaviour
     /// Destroy this marine life's object.
     /// </summary>
     public void Kill() {
-        AppearnceCallback Callback = delegate () {
+        UnityAction callback = delegate () {
             StopAllCoroutines();
             Destroy(gameObject);
         };
 
-        StartCoroutine(Appear(false, Callback));
+        StartCoroutine(Appear(false, callback));
     }
 
     /// <summary>

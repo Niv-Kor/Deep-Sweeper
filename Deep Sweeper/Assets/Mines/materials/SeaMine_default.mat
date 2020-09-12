@@ -50,7 +50,7 @@ Material:
     m_Floats:
     - _DarkSideRange: -0.66
     - _ExpandFactor: 1
-    - _OutlineWidth: 0.012
+    - _OutlineWidth: 0.013
     - _RampSmooth: 1.3
     - _RampThreshold: 0.31
     - _RimMax: 0.8
@@ -73,6 +73,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkColor: {r: 0.019624429, g: 0.039665755, b: 0.084905684, a: 1}
     - _HighlitColor: {r: 0.52954787, g: 0.62841636, b: 0.6415094, a: 1}
-    - _OutlineColor: {r: 0.10590956, g: 0.17894408, b: 0.26415092, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.6}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}

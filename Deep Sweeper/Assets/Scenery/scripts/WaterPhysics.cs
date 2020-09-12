@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class WaterPhysics : Singleton<WaterPhysics>
 {
@@ -23,6 +24,8 @@ public class WaterPhysics : Singleton<WaterPhysics>
 
     private Vector3 m_direction;
     private float m_intensity;
+
+    public event UnityAction<WaveSettings> WavesChangeTrigger;
 
     public Vector3 Direction {
         get { return m_direction; }
@@ -51,9 +54,6 @@ public class WaterPhysics : Singleton<WaterPhysics>
     public float FogDistance {
         get { return fogDistance; }
     }
-
-    public delegate void WavesChange(WaveSettings settings);
-    public event WavesChange WavesChangeTrigger;
 
     private void Awake() {
         //concatenate gravity event

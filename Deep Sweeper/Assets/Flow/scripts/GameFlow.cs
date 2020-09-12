@@ -1,4 +1,4 @@
-﻿using Boo.Lang;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,11 +18,18 @@ public class GameFlow : Singleton<GameFlow>
     private static readonly string FIELD_NAME = "Field";
     private static readonly Color GIZMOS_COLOR = Color.yellow;
 
+    private int phaseIndex;
+
     public List<Phase> Phases { get; private set; }
+    public Phase CurrentPhase {
+        get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
+    }
 
     private void Start() {
         this.Phases = new List<Phase>();
+        this.phaseIndex = -1;
         InitFields();
+        NextPhase();
     }
 
     private void OnDrawGizmos() {
@@ -58,10 +65,29 @@ public class GameFlow : Singleton<GameFlow>
             mineFieldCmp.MinesPercent = phase.MinesPercent;
 
             //append
-            Phase phaseObj = new Phase(mineFieldCmp, phase.Gate, prevPhase);
+            Phase phaseObj = new Phase(i, mineFieldCmp, phase.Gate, prevPhase);
             if (prevPhase != null) prevPhase.FollowPhase = phaseObj;
             prevPhase = phaseObj;
             Phases.Add(phaseObj);
+        }
+    }
+
+    public void TryNextPhase() {
+        if (CurrentPhase == null) return;
+
+        MineField currentField = CurrentPhase.Field;
+        if (currentField.IsClear()) NextPhase();
+    }
+
+    /// <summary>
+    /// Continue to the next phase of the game.
+    /// </summary>
+    public void NextPhase() {
+        if (phaseIndex < Phases.Count - 1) {
+            if (phaseIndex >= 0) Phases[phaseIndex++].Conclude();
+            else ++phaseIndex; //first phase
+
+            Phases[phaseIndex].InitiateWhenReady();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Dynamic;
 using UnityEngine;
 
 public class MineBouncer : MonoBehaviour
@@ -8,8 +9,8 @@ public class MineBouncer : MonoBehaviour
     [SerializeField] private GameObject baseChainJoint;
 
     [Header("Bounce Settings")]
-    [Tooltip("True to randomly start the bouncing after X miliseconds.")]
-    [SerializeField] private bool randomizeStart = false;
+    [Tooltip("True to randomly start the bouncing after a random amout of miliseconds.")]
+    [SerializeField] private bool autoStart = false;
 
     [Tooltip("The distance the mine makes either up or down while bouncing.")]
     [SerializeField] private float epsilon;
@@ -26,14 +27,26 @@ public class MineBouncer : MonoBehaviour
     private float chainLength;
     private Transform chain;
 
-    private void Start() {
+    public float BouncingSpeed { get { return speed; } }
+    public bool IsBouncing { get; set; }
+
+    private void OnEnable() {
+        if (IsBouncing) Bounce(Random.Range(0, MAX_DELAY));
+    }
+
+    private void Awake() {
         Renderer chainJointRenderer = baseChainJoint.GetComponent<Renderer>();
+        Sweeper sweeper = GetComponentInParent<Sweeper>();
+        sweeper.MineDisposalEndEvent += StopAllCoroutines;
+
         float jointLength = chainJointRenderer.bounds.size.y;
         this.chain = baseChainJoint.transform.parent;
         this.chainLength = chain.childCount * jointLength;
+        this.IsBouncing = false;
+    }
 
-        float delay = randomizeStart ? Random.Range(0, MAX_DELAY) : 0;
-        StartCoroutine(Bounce(delay));
+    private void Start() {
+        if (autoStart) Bounce(Random.Range(0, MAX_DELAY));
     }
 
     private void Update() {
@@ -42,16 +55,16 @@ public class MineBouncer : MonoBehaviour
     }
 
     /// <summary>
-    /// Bounce the mine up and down.
+    /// Lerp the bouncy movement of the mine.
     /// </summary>
     /// <param name="delay">Amount of time to wait before the first bounce.</param>
-    private IEnumerator Bounce(float delay) {
+    private IEnumerator LerpBounce(float delay) {
+        if (delay > 0) yield return new WaitForSeconds(delay);
+
         Vector3 originPos = transform.position;
         Vector3 chainScale = chain.transform.localScale;
         Vector3 chainScaleMask = Vector3.one - Vector3.up;
         float timer = 0;
-
-        if (delay > 0) yield return new WaitForSeconds(delay);
 
         while (true) {
             timer += Time.deltaTime;
@@ -64,5 +77,15 @@ public class MineBouncer : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Bounce the mine up and down.
+    /// </summary>
+    /// <param name="delay">Amount of time to wait before the first bounce.</param>
+    public void Bounce(float delay = 0) {
+        StopAllCoroutines();
+        StartCoroutine(LerpBounce(delay));
+        IsBouncing = true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FishPack : MonoBehaviour
 {
@@ -28,11 +29,8 @@ public class FishPack : MonoBehaviour
     private MarineLifeManager marineLifeMngr;
     private float m_yawDirection;
 
-    public delegate void YawDirectionChange(float value);
-    public event YawDirectionChange YawDirectionChangeEvent;
-
-    public delegate void PackDead(int members);
-    public event PackDead PackDeadEvent;
+    public event UnityAction<float> YawDirectionChangeEvent;
+    public event UnityAction<int> PackDeadEvent;
 
     public float YawDirection {
         get { return m_yawDirection; }

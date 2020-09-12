@@ -21,13 +21,17 @@ public class Indicator : MonoBehaviour
         set { indicationNum.Value = value; }
     }
 
+    private void OnEnable() {
+        StopAllCoroutines();
+        StartCoroutine(Float());
+    }
+
     private void Awake() {
         this.indicationNum = GetComponentInChildren<IndicationNumber>();
         this.textTransform = indicationNum.transform.parent;
         this.player = Submarine.Instance;
         this.sphereCol = GetComponent<SphereCollider>();
         this.allowReveal = false;
-        StartCoroutine(Float());
     }
 
     /// <summary>
@@ -44,7 +48,7 @@ public class Indicator : MonoBehaviour
 
     /// <summary>
     /// Allow or forbid the display of the indicator's text.
-    /// Once forbidded, the text is no longer displayed.
+    /// Once forbidden, the text is no longer displayed.
     /// </summary>
     /// <param name="flag">True to allow or false to forbid</param>
     public void AllowRevelation(bool flag) {
