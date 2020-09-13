@@ -76,6 +76,8 @@ public class GateBuilder : MonoBehaviour
 
     private void OnValidate() {
         rightElectrodePos.y = leftElectrodePos.y;
+        rightElectrodePos.x = -leftElectrodePos.x;
+        rightElectrodePos.z = -leftElectrodePos.z;
     }
 
     private void OnDrawGizmos() {

@@ -20,8 +20,6 @@ public class WaterPhysics : Singleton<WaterPhysics>
     [Tooltip("Maximum distance of clear vision before the cloud of fog.")]
     [SerializeField] private float fogDistance = 25f;
 
-    private static readonly float MAX_FOG = .03f;
-
     private Vector3 m_direction;
     private float m_intensity;
 
@@ -45,10 +43,7 @@ public class WaterPhysics : Singleton<WaterPhysics>
     }
 
     public float IntensityPercentage {
-        get {
-            float intensDiff = intensityRange.y - intensityRange.x;
-            return (Intensity - intensityRange.x) / intensDiff * 100f;
-        }
+        get { return RangeMath.NumberOfRange(Intensity, intensityRange); }
     }
 
     public float FogDistance {
@@ -72,10 +67,6 @@ public class WaterPhysics : Singleton<WaterPhysics>
     }
 
     private void OnValidate() {
-        //vision
-        //float visionPercent = fogDistance / maxVisionDistance * 100f;
-        //float fogDensity = visionPercent * (0 - MAX_FOG) / 100f + MAX_FOG;
-        //RenderSettings.fogDensity = fogDensity;
         Camera.main.farClipPlane = maxVisionDistance;
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using com.ootii.Cameras;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -36,6 +37,7 @@ public class Gate : MonoBehaviour
     private ParticleSystem forceField;
     private Transform emblem;
     private SubmarineMovementController submarine;
+    private CameraController camController;
     private UnityAction onFullyBlankHandler1;
     private UnityAction onFullyBlankHandler2;
     private UnityAction onFullyTransparentHandler1;
@@ -48,6 +50,7 @@ public class Gate : MonoBehaviour
 
     private void Start() {
         this.submarine = FindObjectOfType<SubmarineMovementController>();
+        this.camController = FindObjectOfType<CameraController>();
     }
 
     /// <summary>
@@ -67,12 +70,14 @@ public class Gate : MonoBehaviour
 
         //first time the screen goes blank
         this.onFullyBlankHandler1 = new UnityAction(delegate {
+            camController.enabled = false;
             CameraManager.Instance.Switch(cam);
             BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler1;
         });
 
         //seconds time the screen goes blank
         this.onFullyBlankHandler2 = new UnityAction(delegate {
+            camController.enabled = true;
             CameraManager.Instance.Switch(CameraManager.Instance.FPCam);
             BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler2;
         });

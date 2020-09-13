@@ -2537,7 +2537,7 @@ MonoBehaviour:
   speed: 0.05
   zigzagIntensityRange: {x: 2, y: 3}
   DepthHabitat: 0
-  PacksAmountRange: {x: 1, y: 2}
+  PacksAmountRange: {x: 5, y: 10}
   PackSizeRange: {x: 1, y: 3}
   MinIndividualDistance: {x: 5, y: 5, z: 5}
   MaxIndividualDistance: {x: 10, y: 10, z: 10}

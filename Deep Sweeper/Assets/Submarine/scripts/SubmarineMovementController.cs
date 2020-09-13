@@ -32,25 +32,16 @@ public class SubmarineMovementController : MonoBehaviour
 
     private Rigidbody rigidBody;
     private DirectionUnit directionUnit;
-    private CameraController camController;
     private Vector3 startRestingPos;
     private float waveLength;
     private bool resting;
-    private bool m_movementAllowed;
 
-    public bool MovementAllowd {
-        get { return m_movementAllowed; }
-        set {
-            camController.enabled = value;
-            m_movementAllowed = value;
-        }
-    }
+    public bool MovementAllowd { get; set; }
 
     private void Start() {
         this.rigidBody = GetComponent<Rigidbody>();
-        this.camController = GetComponentInChildren<CameraController>();
         this.directionUnit = DirectionUnit.Instance;
-        this.waveLength = WaterPhysics.Instance.Intensity * (waveLengthRange.y - waveLengthRange.x) / 100f + waveLengthRange.x;
+        this.waveLength = RangeMath.PercentOfRange(WaterPhysics.Instance.IntensityPercentage, waveLengthRange);
         this.startRestingPos = transform.position;
         this.resting = true;
         this.MovementAllowd = true;

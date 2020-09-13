@@ -503,7 +503,7 @@ PrefabInstance:
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 484.6
+      value: 480.48
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -553,17 +553,17 @@ PrefabInstance:
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: rightElectrodePos.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: leftElectrodePos.z
-      value: 59
+      value: 62.9
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: rightElectrodePos.z
-      value: -66
+      value: -62.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2579eac1cda928841bac0fe652017798, type: 3}
@@ -2547,7 +2547,7 @@ PrefabInstance:
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 400.1
+      value: 435.3
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -2557,7 +2557,7 @@ PrefabInstance:
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 755.46
+      value: 742.91
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -2607,17 +2607,17 @@ PrefabInstance:
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: rightElectrodePos.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: leftElectrodePos.z
-      value: -73
+      value: -65.2
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: rightElectrodePos.z
-      value: 64
+      value: 65.2
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -3984,8 +3984,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Confine:
-    Offset: {x: 18.4, y: 30, z: -3.8}
-    Size: {x: 900.9, y: 248.8, z: 888.9}
+    Offset: {x: 18.4, y: 5, z: -3.8}
+    Size: {x: 900.9, y: 200, z: 888.9}
   creaturesPool:
   - {fileID: 1107411160630964, guid: bd52fe591dcea5a4ba689c55c42d29eb, type: 3}
   - {fileID: 1870853889962878, guid: 0885df2fceef3734896156b6c9d699be, type: 3}
@@ -4003,7 +4003,7 @@ MonoBehaviour:
   - {fileID: 1272166223363426, guid: d92e5f6e34b14d74893039690fd790af, type: 3}
   - {fileID: 1536911975133754, guid: c9f75ca7dac948d498ade13b23649ad6, type: 3}
   - {fileID: 1365381192422962, guid: 5469708956414f94797e5470f221a016, type: 3}
-  - {fileID: 1276205554959560, guid: 110b86501fff2414186f46873d54d1ea, type: 3}
+  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
   - {fileID: 1748946944915498, guid: 9b37844427900714bac5b352dbd931d0, type: 3}
   - {fileID: 1502900601577816, guid: 428bbdf30777be043a92558682b7757a, type: 3}
   - {fileID: 1425027144221698, guid: cc9a616fb3be3b74c8674bc0e2da1ff5, type: 3}
@@ -4015,7 +4015,6 @@ MonoBehaviour:
   - {fileID: 1045811944559828, guid: bab1287a00165c34eb228a8dc61d3469, type: 3}
   - {fileID: 1301750832583068, guid: a2fa5a930c613414a9e7c8b729c7caa2, type: 3}
   - {fileID: 1957303125167972, guid: 26be2583b4415674ba8757e8cbcf0a60, type: 3}
-  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
   borderLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -5978,7 +5977,7 @@ PrefabInstance:
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 310.1
+      value: 308.11
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006965, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -6033,12 +6032,12 @@ PrefabInstance:
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: rightElectrodePos.x
-      value: 32.8
+      value: 33
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
       propertyPath: leftElectrodePos.x
-      value: -36
+      value: -33
       objectReference: {fileID: 0}
     - target: {fileID: 2399839787399006968, guid: 2579eac1cda928841bac0fe652017798,
         type: 3}
@@ -6093,6 +6092,11 @@ PrefabInstance:
       propertyPath: _InputSourceOwner
       value: 
       objectReference: {fileID: 894153086}
+    - target: {fileID: 2656385975825565769, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2656385976961513049, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
       propertyPath: m_IsActive
