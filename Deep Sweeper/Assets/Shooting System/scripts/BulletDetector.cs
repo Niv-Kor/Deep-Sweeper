@@ -14,6 +14,6 @@ public class BulletDetector : MonoBehaviour
 
     private void OnParticleCollision(GameObject obj) {
         LayerMask layer = Layers.BULLET;
-        if (Layers.ContainedInMask(obj.layer, layer)) grid.TriggerHit(hitType);
+        if (Layers.ContainedInMask(obj.layer, layer)) grid.TriggerHit(hitType, true);
     }
 }

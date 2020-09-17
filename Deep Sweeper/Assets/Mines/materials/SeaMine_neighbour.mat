@@ -72,7 +72,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkColor: {r: 0.103773594, g: 0.016153438, b: 0.016153438, a: 1}
-    - _HighlitColor: {r: 0, g: 0.61472464, b: 1, a: 1}
+    - _HighlitColor: {r: 1, g: 0.97164285, b: 0, a: 1}
     - _OutlineColor: {r: 0.23584908, g: 0.0769426, b: 0.06786223, a: 1}
     - _RimColor: {r: 0.4245283, g: 0, b: 0.056111813, a: 0.6}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}

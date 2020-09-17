@@ -157,8 +157,7 @@ public class MineField : ConfinedArea
             grid = Grids[gridIndex];
         }
         while (grid.IsMined || (grid.MinesIndicator.MinedNeighbours != 0 && !lowerStandard));
-
-        grid.Reveal(false);
+        grid.TriggerHit(BulletHitType.SingleHit, false);
     }
 
     /// <summary>

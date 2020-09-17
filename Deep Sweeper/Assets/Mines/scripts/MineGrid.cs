@@ -91,28 +91,32 @@ public class MineGrid : MonoBehaviour
     /// <summary>
     /// Explode the mine.
     /// </summary>
-    public void Reveal(bool explosion) {
-        if (MinesIndicator.IsDisplayed()) return;
-
-        MinesIndicator.AllowRevelation(true);
-        MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
-        Activator.ActivateAndLock();
-        IsFlagged = false;
+    /// <param name="explosion">True to activate an explosion effect on revelation</param>
+    /// <param name="ignoreFlagged">True to do nothing if this mine is flagged</param>
+    private void Reveal(bool explosion, bool ignoreFlagged = false) {
+        bool ignored = IsFlagged && ignoreFlagged;
+        if (MinesIndicator.IsDisplayed() || ignored) return;
 
         if (IsMined) {
             ///TODO explode and lose
         }
         else {
+            MinesIndicator.AllowRevelation(true);
+            MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
+            Activator.ActivateAndLock();
+            IsFlagged = false;
+
             int neighbours = MinesIndicator.MinedNeighbours;
             List<MineGrid> section = Section;
 
             if (explosion) Sweeper.Explode();
             else Sweeper.Vanish();
+            MineHitEvent?.Invoke();
 
             //keep revealing grids recursively
             if (neighbours == 0)
                 foreach (MineGrid mineGrid in section)
-                    if (mineGrid != null) mineGrid.Reveal(explosion);
+                    if (mineGrid != null) mineGrid.TriggerHit(BulletHitType.SingleHit, explosion);
 
             GameFlow.Instance.TryNextPhase();
         }
@@ -125,7 +129,27 @@ public class MineGrid : MonoBehaviour
     /// and the bullet is meant for each of the mine's neighbours.
     /// </summary>
     /// <param name="hitType">The type of hit that occured</param>
-    public void TriggerHit(BulletHitType hitType) {
-        MineHitEvent?.Invoke();
+    /// <param name="explosion">True to activate an explosion effect on revelation</param>
+    public void TriggerHit(BulletHitType hitType, bool explosion) {
+        switch (hitType) {
+            case BulletHitType.SingleHit:
+                Reveal(explosion);
+                break;
+
+            case BulletHitType.SectionHit:
+                List<MineGrid> section = Section;
+
+                //check if section consists if the exact amount of flagged mines
+                int flaggedCounter = 0;
+                foreach (MineGrid mineGrid in section)
+                    if (mineGrid != null && mineGrid.IsFlagged) flaggedCounter++;
+
+                //reveal each available grid in the section
+                if (flaggedCounter == MinesIndicator.MinedNeighbours)
+                    foreach (MineGrid mineGrid in section)
+                        if (mineGrid != null) mineGrid.Reveal(explosion, true);
+
+                break;
+        }
     }
 }
