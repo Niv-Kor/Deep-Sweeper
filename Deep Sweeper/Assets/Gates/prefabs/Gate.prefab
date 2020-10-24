@@ -199,7 +199,7 @@ MonoBehaviour:
     type: 3}
   emblem: {fileID: 6550854223576288131, guid: 0680877f27d7b2c42a71de37eebdc8d9, type: 3}
   leftElectrodePos: {x: 0, y: 0, z: 0}
-  rightElectrodePos: {x: 0, y: 0, z: 0}
+  rightElectrodePos: {x: -0, y: 0, z: -0}
   emblemWallOffset: 10
   camWallOffset: 70
   camRotation: {x: -10, y: 0, z: 0}
@@ -217,6 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xScaleMultiplier: 20
+  dollySpeed: 0.03
   upperEdgeShutTime: 2.7
   forceFielsShutTime: 2.7
   emblemShutTime: 0.3

@@ -1,6 +1,7 @@
-﻿using UnityEngine.Rendering.PostProcessing;
+﻿using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
-public class PostProcessingManager : Singleton<PostProcessingManager>
+public class PostProcessingManager : MonoBehaviour
 {
     public ScreenSpaceReflections ScreenSpaceReflections { get; private set; }
     public ChromaticAberration ChromaticAberration { get; private set; }
@@ -15,7 +16,7 @@ public class PostProcessingManager : Singleton<PostProcessingManager>
     public Grain Grain { get; private set; }
 
     private void Start() {
-        PostProcessVolume volume = gameObject.GetComponent<PostProcessVolume>();
+        PostProcessVolume volume = GetComponent<PostProcessVolume>();
 
         //extract settings
         volume.profile.TryGetSettings(out ScreenSpaceReflections screenSpaceReflections);

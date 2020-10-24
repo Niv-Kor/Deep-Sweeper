@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class IndicationNumber : MonoBehaviour
 {
@@ -28,14 +29,25 @@ public class IndicationNumber : MonoBehaviour
     private TextMeshPro textMesh;
     private float m_alpha, maxAlpha;
 
+    public event UnityAction<Color> FaceColorChange;
+    public event UnityAction<Color> OutlineColorChange;
+    public event UnityAction<float> AlphaChange;
+    public event UnityAction<string> ValueChange;
+
     public Color FaceColor {
         get { return textMesh.faceColor; }
-        set { textMesh.faceColor = value; }
+        set {
+            textMesh.faceColor = value;
+            FaceColorChange?.Invoke(value);
+        }
     }
 
     public Color OutlineColor {
         get { return textMesh.outlineColor; }
-        set { textMesh.outlineColor = value; }
+        set {
+            textMesh.outlineColor = value;
+            OutlineColorChange?.Invoke(value);
+        }
     }
 
     public float Alpha {
@@ -44,6 +56,7 @@ public class IndicationNumber : MonoBehaviour
             if (value >= 0 && value <= 1 && maxAlpha > 0) {
                 float opacity = RangeMath.NumberOfRange(value, 0, maxAlpha);
                 m_alpha = opacity;
+                AlphaChange?.Invoke(value);
                 StopAllCoroutines();
                 StartCoroutine(LerpAlpha(m_alpha));
             }
@@ -63,6 +76,7 @@ public class IndicationNumber : MonoBehaviour
             FaceColor = new Color(face.r, face.g, face.b, Alpha);
             OutlineColor = new Color(line.r, line.g, line.b, Alpha);
             maxAlpha = face.a;
+            ValueChange?.Invoke(value.ToString());
         }
     }
 

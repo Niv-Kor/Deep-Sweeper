@@ -61,7 +61,10 @@ public class SubmarineMovementController : MonoBehaviour
 
         //unfreeze position y if ascending or descending
         bool unfreezeCond = ascendInput > 0 || transform.position.y > minHeight;
-        var defaultConstaint = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        var defaultConstaint = RigidbodyConstraints.FreezeRotationX |
+                               RigidbodyConstraints.FreezeRotationY |
+                               RigidbodyConstraints.FreezeRotationZ;
+
         var yFreezeConstaint = defaultConstaint | RigidbodyConstraints.FreezePositionY;
         rigidBody.constraints = unfreezeCond ? defaultConstaint : yFreezeConstaint;
 

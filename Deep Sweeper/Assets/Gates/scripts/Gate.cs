@@ -5,10 +5,14 @@ using UnityEngine.Events;
 
 public class Gate : MonoBehaviour
 {
-    [Header("Settings")]
+    [Header("Emblem")]
     [Tooltip("The scale at which the emblem's x axis widens when the gate opens.\n"
            + "A scale of 1 means that the x axis scales at the same rate as the y axis.")]
     [SerializeField] private float xScaleMultiplier = 0;
+
+    [Header("Dolly")]
+    [Tooltip("The speed of the camera's dolly.")]
+    [SerializeField] private float dollySpeed = 1;
 
     [Header("Timing")]
     [Tooltip("The time it takes the upper edge to disappear when the gate opens.")]
@@ -71,6 +75,7 @@ public class Gate : MonoBehaviour
         //first time the screen goes blank
         this.onFullyBlankHandler1 = new UnityAction(delegate {
             camController.enabled = false;
+            StartCoroutine(MoveDolly());
             CameraManager.Instance.Switch(cam);
             BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler1;
         });
@@ -78,6 +83,7 @@ public class Gate : MonoBehaviour
         //seconds time the screen goes blank
         this.onFullyBlankHandler2 = new UnityAction(delegate {
             camController.enabled = true;
+            StopAllCoroutines();
             CameraManager.Instance.Switch(CameraManager.Instance.FPCam);
             BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler2;
         });
@@ -181,5 +187,25 @@ public class Gate : MonoBehaviour
             upperEdge.colorGradient = gardient;
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Move the camera dolly towards the gate.
+    /// </summary>
+    private IEnumerator MoveDolly() {
+        Transform camTransform = cam.transform;
+        Transform forceTransform = forceField.transform;
+        float camDist = Vector3.Distance(camTransform.position, forceTransform.position);
+        float minimalDist = camDist * .5f;
+
+        do {
+            Vector3 source = camTransform.position;
+            Vector3 dest = forceTransform.position;
+            float speed = Time.deltaTime * dollySpeed;
+            cam.transform.position = Vector3.Lerp(source, dest, speed);
+            camDist = Vector3.Distance(camTransform.position, forceTransform.position);
+            yield return null;
+        }
+        while (camDist > minimalDist);
     }
 }

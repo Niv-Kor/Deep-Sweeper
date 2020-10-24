@@ -10834,7 +10834,7 @@ GameObject:
   - component: {fileID: 8776437339598723638}
   - component: {fileID: 8776437339598723637}
   - component: {fileID: 8776437339598723636}
-  - component: {fileID: 6426008351567335321}
+  - component: {fileID: 8251909031274288524}
   m_Layer: 0
   m_Name: Number
   m_TagString: Untagged
@@ -11028,7 +11028,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
---- !u!114 &6426008351567335321
+--- !u!114 &8251909031274288524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11037,29 +11037,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8776437339598723626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 151238e394ba2fe47af7a3c853d4bef8, type: 3}
+  m_Script: {fileID: 11500000, guid: 1261db732972cfa4db637e191f641c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberColors:
-  - Inner: {r: 0, g: 0, b: 0, a: 0}
-    Outline: {r: 0, g: 0, b: 0, a: 0}
-  - Inner: {r: 0, g: 0.7493696, b: 1, a: 1}
-    Outline: {r: 0, g: 0.2625039, b: 0.3679245, a: 1}
-  - Inner: {r: 0, g: 0.8962264, b: 0.038662508, a: 1}
-    Outline: {r: 0.11278045, g: 0.3584906, b: 0, a: 1}
-  - Inner: {r: 1, g: 0.20461819, b: 0, a: 1}
-    Outline: {r: 0.4811321, g: 0.13493635, b: 0, a: 1}
-  - Inner: {r: 0.30419922, g: 0, b: 1, a: 1}
-    Outline: {r: 0.12294894, g: 0, b: 0.4056604, a: 1}
-  - Inner: {r: 1, g: 0, b: 0.561501, a: 1}
-    Outline: {r: 0.3773585, g: 0.02669989, b: 0.23056124, a: 1}
-  - Inner: {r: 0, g: 1, b: 0.67544794, a: 1}
-    Outline: {r: 0, g: 0.38679248, b: 0.25358367, a: 1}
-  - Inner: {r: 0.8152735, g: 1, b: 0, a: 1}
-    Outline: {r: 0.38459644, g: 0.4811321, b: 0, a: 1}
-  - Inner: {r: 1, g: 0.5476825, b: 0, a: 1}
-    Outline: {r: 0.3962264, g: 0.2516538, b: 0, a: 1}
-  alphaLerpTime: 0.5
+  sprite: {fileID: 0}
+  iconPrefab: {fileID: 7335326019488306011, guid: c35c3c01575c7c446b9c5e38b295796a,
+    type: 3}
+  layer: 1
+  size: 10
 --- !u!1 &8776437339755074214
 GameObject:
   m_ObjectHideFlags: 0
@@ -11245,7 +11230,6 @@ MonoBehaviour:
   iconPrefab: {fileID: 0}
   layer: 1
   size: 10
-  immediateDisplay: 1
   altSprite: {fileID: 21300000, guid: 9bd305550cbfce341b84eb836561746e, type: 3}
 --- !u!1 &8788801433538985177
 GameObject:

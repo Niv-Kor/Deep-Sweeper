@@ -102,7 +102,7 @@ public class CameraShaker : MonoBehaviour
         this.originPos = transform.localPosition;
 
         //post processing effects
-        PostProcessingManager postProcessMngr = PostProcessingManager.Instance;
+        PostProcessingManager postProcessMngr = CameraManager.Instance.FPPostProcess;
         this.ambientOcclusion = new EffectFloatParameter(postProcessMngr.AmbientOcclusion?.intensity);
         this.chromaticAberration = new EffectFloatParameter(postProcessMngr.ChromaticAberration?.intensity);
         this.depthOfField = new EffectFloatParameter(postProcessMngr.DepthOfField?.aperture);
