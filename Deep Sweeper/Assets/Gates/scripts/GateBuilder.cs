@@ -2,6 +2,7 @@
 
 public class GateBuilder : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The gate's electrode prefab.")]
     [SerializeField] private GameObject electrode;
@@ -36,7 +37,9 @@ public class GateBuilder : MonoBehaviour
 
     [Tooltip("The camera's offset from its fixed position in fron of the gate.")]
     [SerializeField] private Vector3 camOffset;
+    #endregion
 
+    #region Constants
     private static readonly float GIZMO_RADIUS = 4;
     private static readonly Color LEFT_GIZMO_COLOR = new Color(0xff, 0xb4, 0x0);
     private static readonly Color RIGHT_GIZMO_COLOR = Color.green;
@@ -44,13 +47,16 @@ public class GateBuilder : MonoBehaviour
     private static readonly string ELECTRODES_PARENT_NAME = "Electrodes";
     private static readonly string LEFT_ELECTRODE_NAME = "Left";
     private static readonly string RIGHT_ELECTRODE_NAME = "Right";
+    #endregion
 
+    #region Public Properties
     public GameObject LeftElectrode { get; private set; }
     public GameObject RightElectrode { get; private set; }
     public GameObject ForceFieldEdge { get; private set; }
     public GameObject ForceField { get; private set; }
     public GameObject Emblem { get; private set; }
     public GameObject Camera { get; private set; }
+    #endregion
 
     private void Start() {
         Vector3 pos = transform.position;

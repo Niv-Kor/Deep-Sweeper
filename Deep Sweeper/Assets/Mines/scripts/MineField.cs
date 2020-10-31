@@ -1,11 +1,11 @@
 ﻿using Constants;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class MineField : ConfinedArea
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The grid object.")]
     [SerializeField] private GameObject gridPrefab;
@@ -16,18 +16,26 @@ public class MineField : ConfinedArea
     [Header("Mines")]
     [Tooltip("Percentage of randomly spreaded mines.")]
     [SerializeField] public int MinesPercent;
+    #endregion
 
+    #region Class Members
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
     private Vector3 gridSize;
     private Vector2 matrixSize;
     private float raycastHeight;
-    private int gridsAmount, minesAmount;
+    private int gridsAmount;
+    #endregion
 
+    #region Events
     public event UnityAction FieldReadyEvent;
+    #endregion
 
+    #region Public Properties
     public List<MineGrid> Grids { get; private set; }
+    public int MinesAmount { get; private set; }
     public bool IsReady { get; private set; }
+    #endregion
 
     private void Start() {
         MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
@@ -37,12 +45,12 @@ public class MineField : ConfinedArea
         this.matrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
         this.gridsAmount = (int) matrixSize.x * (int) matrixSize.y;
-        this.minesAmount = (int) (MinesPercent * gridsAmount / 100);
+        this.MinesAmount = MinesPercent * gridsAmount / 100;
         this.raycastHeight = terrain.terrainData.size.y;
         this.IsReady = false;
 
         LayoutMatrix();
-        SpreadMines(minesAmount);
+        SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
         CarpetBounce();
@@ -135,7 +143,7 @@ public class MineField : ConfinedArea
     /// Intially open a random section of mines-free grids.
     /// </summary>
     private void OpenInitial() {
-        if (gridsAmount == 0 || minesAmount >= gridsAmount) return;
+        if (gridsAmount == 0 || MinesAmount >= gridsAmount) return;
 
         //fill indices pool
         List<int> indicesPool = new List<int>();

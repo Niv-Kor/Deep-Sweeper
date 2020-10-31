@@ -4873,6 +4873,6 @@ MonoBehaviour:
   randomGlitchDelay: {x: 0.5, y: 3}
   glitchIntensity: 4
   glitchTime: 0.001
-  circularTime: 5
-  radius: 0.1
+  speed: 1
+  radius: 5
   clockwise: 0

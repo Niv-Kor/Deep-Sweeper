@@ -5,17 +5,24 @@ using UnityEngine.Events;
 
 public class MineGrid : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Tooltip("Mine head avatar.")]
     [SerializeField] private GameObject avatar;
+    #endregion
 
-    private MineSelector selector;
+    #region Class Members
     private MineBouncer mine;
+    #endregion
 
+    #region Events
     public event UnityAction MineHitEvent;
+    #endregion
 
+    #region Public Properties
     public GameObject Avatar { get { return avatar; } }
     public Sweeper Sweeper { get; private set; }
     public MineActivator Activator { get; private set; }
+    public MineSelector Selector { get; private set; }
     public Indicator MinesIndicator { get; private set; }
     public MineField Field { get; set; }
     public Vector2Int Position { get; set; }
@@ -23,14 +30,14 @@ public class MineGrid : MonoBehaviour
 
     public bool IsFlagged {
         get {
-            bool flagged = selector.Mode == SelectionMode.Flagged;
-            bool indicatedFlagged = selector.Mode == SelectionMode.FlaggedNeighbourIndication;
+            bool flagged = Selector.Mode == SelectionMode.Flagged;
+            bool indicatedFlagged = Selector.Mode == SelectionMode.FlaggedNeighbourIndication;
             return flagged || indicatedFlagged;
         }
         set {
             if (value != IsFlagged) {
                 var targetMode = value ? SelectionMode.Flagged : SelectionMode.Default;
-                selector.Mode = targetMode;
+                Selector.Mode = targetMode;
             }
         }
     }
@@ -42,30 +49,32 @@ public class MineGrid : MonoBehaviour
             return Field.GetSection(row, col);
         }
     }
+    #endregion
 
     private void Awake() {
         this.Activator = GetComponent<MineActivator>();
         this.MinesIndicator = GetComponentInChildren<Indicator>();
         this.Sweeper = GetComponent<Sweeper>();
-        this.selector = GetComponent<MineSelector>();
+        this.Selector = GetComponent<MineSelector>();
         this.mine = GetComponentInChildren<MineBouncer>();
         this.IsMined = false;
 
         //bind events
         MineHitEvent += delegate { Reveal(true); };
         Sweeper.MineDisposalEndEvent += Activator.Unlock;
-        selector.ModeApplicationEvent += ChangeMineLayer;
+        Selector.ModeApplicationHalfwayEvent += ChangeMineLayer;
     }
 
     /// <summary>
     /// Change the layer of the mine avatar and mine clone,
     /// according to their flag state.
     /// </summary>
-    /// <param name="mode">The next selection mode of the mine</param>
-    private void ChangeMineLayer(SelectionMode mode, Material _ = null) {
+    /// <param name="newMode">The previous mine selection mode</param>
+    /// <param name="newMode">The applied mine selection mode</param>
+    private void ChangeMineLayer(SelectionMode oldMode, SelectionMode newMode, Material _ = null) {
         LayerMask targetLayer;
 
-        switch (mode) {
+        switch (newMode) {
             case SelectionMode.Flagged:
             case SelectionMode.FlaggedNeighbourIndication:
                 targetLayer = Layers.FLAGGED_MINE;

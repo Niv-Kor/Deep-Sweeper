@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class GateEmblem : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Glitch")]
     [Tooltip("The range of possible glitch delay values.")]
     [SerializeField] private Vector2 randomGlitchDelay;
@@ -15,16 +15,32 @@ public class GateEmblem : MonoBehaviour
     [SerializeField] private float glitchTime;
 
     [Header("Motion")]
-    [Tooltip("The time it takes to complete a full circular motion.")]
-    [SerializeField] private float circularTime = 1;
+    [Tooltip("The speed of the emblem while circulatin.")]
+    [SerializeField] private float speed = 1;
 
     [Tooltip("The radius of the circle around with the emblem moves.")]
     [SerializeField] private float radius;
 
     [Tooltip("True to move the emblem clockwise around the circle.")]
     [SerializeField] private bool clockwise = true;
+    #endregion
+
+    #region Constants
+    private static readonly float CIRCULAR_DELTA = .1f;
+    #endregion
+
+    #region Class Members
+    private Vector3 initPos;
+    private int direction;
+    #endregion
 
     private void Start() {
+        this.direction = clockwise ? -1 : 1;
+        float initialDeltaX = radius / 2 * direction;
+        float initialDeltaY = radius / 2 * direction * -1;
+        transform.Translate(initialDeltaX, initialDeltaY, 0);
+        this.initPos = transform.position;
+
         StartCoroutine(Move());
         StartCoroutine(Glitch());
     }
@@ -32,18 +48,30 @@ public class GateEmblem : MonoBehaviour
     /// <summary>
     /// Move the emblem in a circular shape.
     /// </summary>
-    /// <returns></returns>
     private IEnumerator Move() {
-        float angle = 0;
-        int direction = clockwise ? -1 : 1;
-        float speed = 2 * Mathf.PI / circularTime;
+        float angle;
+        float timer = 0;
+        float maxAngle = Mathf.PI * 2 * direction;
+        transform.position = initPos;
 
         while (true) {
-            angle += speed * Time.deltaTime * direction;
-            float deltaX = Mathf.Cos(angle) * radius;
-            float deltaY = Mathf.Sin(angle) * radius;
-            Vector3 delta = transform.up * deltaY + transform.right * deltaX;
-            transform.position += delta;
+            //reset circular motion
+            if (timer >= radius) {
+                timer = 0;
+                transform.position = initPos;
+            }
+
+            timer += Time.deltaTime * speed;
+            angle = Mathf.Lerp(0, maxAngle, timer / radius);
+
+            //clamp angle between 0 and 360 degrees
+            if (maxAngle > 0) angle = Mathf.Clamp(angle, 0, maxAngle);
+            else angle = Mathf.Clamp(angle, maxAngle, 0);
+
+            //move
+            float deltaX = Mathf.Cos(angle) * CIRCULAR_DELTA;
+            float deltaY = Mathf.Sin(angle) * CIRCULAR_DELTA;
+            transform.Translate(deltaX, deltaY, 0);
 
             yield return null;
         }

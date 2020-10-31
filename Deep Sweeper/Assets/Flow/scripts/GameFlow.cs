@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameFlow : Singleton<GameFlow>
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The parent object under which all mine fields are instantiated.")]
     [SerializeField] private Transform fieldsParent;
@@ -14,16 +16,28 @@ public class GameFlow : Singleton<GameFlow>
     [Header("Phases")]
     [Tooltip("A list of mine fields.\nEach field represents a level phase.")]
     [SerializeField] private PhaseConfig[] phases;
+    #endregion
 
+    #region Constants
     private static readonly string FIELD_NAME = "Field";
     private static readonly Color GIZMOS_COLOR = Color.yellow;
+    #endregion
 
+    #region Class Members
     private int phaseIndex;
+    #endregion
 
+    #region Events
+    public event UnityAction PhaseChangeEvent;
+    public event UnityAction PhaseUpdatedEvent;
+    #endregion
+
+    #region Public Properties
     public List<Phase> Phases { get; private set; }
     public Phase CurrentPhase {
         get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
     }
+    #endregion
 
     private void Start() {
         this.Phases = new List<Phase>();
@@ -72,6 +86,10 @@ public class GameFlow : Singleton<GameFlow>
         }
     }
 
+    /// <summary>
+    /// Continue to the next phase of the game,
+    /// but only if the current mine field is clear.
+    /// </summary>
     public void TryNextPhase() {
         if (CurrentPhase == null) return;
 
@@ -88,6 +106,14 @@ public class GameFlow : Singleton<GameFlow>
             else ++phaseIndex; //first phase
 
             Phases[phaseIndex].InitiateWhenReady();
+            PhaseChangeEvent?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// Report an initialized phase that finished updating.
+    /// </summary>
+    public void ReportPhaseUpdated() {
+        PhaseUpdatedEvent?.Invoke();
     }
 }

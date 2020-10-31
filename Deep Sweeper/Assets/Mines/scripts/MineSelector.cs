@@ -19,6 +19,7 @@ public class MineSelector : MonoBehaviour
         [SerializeField] public Sprite Sprite;
     }
 
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The mine's avatar object.")]
     [SerializeField] private GameObject avatar;
@@ -30,13 +31,20 @@ public class MineSelector : MonoBehaviour
     [Header("Timing")]
     [Tooltip("The time it takes to lerp between one material to another.")]
     [SerializeField] private float applyTime;
+    #endregion
 
+    #region Class Members
     private Material materialComponent;
     private Renderer render;
     private SelectionMode m_mode;
+    #endregion
 
-    public event UnityAction<SelectionMode, Material> ModeApplicationEvent;
+    #region Events
+    public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationStartEvent;
+    public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationHalfwayEvent;
+    #endregion
 
+    #region Public Properties
     public MineMark Mark { get; private set; }
     public SelectionMode Mode {
         get { return m_mode; }
@@ -48,11 +56,12 @@ public class MineSelector : MonoBehaviour
 
             if (nextMat != null) {
                 StopAllCoroutines();
-                StartCoroutine(Lerp(value, nextMat));
+                StartCoroutine(Lerp(m_mode, value, nextMat));
                 m_mode = value;
             }
         }
     }
+    #endregion
 
     private void Awake() {
         this.render = avatar.GetComponent<MeshRenderer>();
@@ -73,9 +82,12 @@ public class MineSelector : MonoBehaviour
     /// <summary>
     /// Transit between two of the mine's materials.
     /// </summary>
-    /// <param name="mode">Selection mode to apply</param>
-    /// <param name="to">The material into which to transition</param>
-    private IEnumerator Lerp(SelectionMode mode, Material target) {
+    /// <param name="oldMode">Previously applied selection mode</param>
+    /// <param name="newMode">Selection mode to apply</param>
+    /// <param name="target">The material into which to transition</param>
+    private IEnumerator Lerp(SelectionMode oldMode, SelectionMode newMode, Material target) {
+        ModeApplicationStartEvent?.Invoke(oldMode, newMode, target);
+
         float lerpedTime = 0;
         bool invokedEvent = false;
 
@@ -85,11 +97,26 @@ public class MineSelector : MonoBehaviour
 
             //invoke an event once after lerping halfway
             if (!invokedEvent && lerpedTime > applyTime / 2) {
-                ModeApplicationEvent?.Invoke(mode, target);
+                ModeApplicationHalfwayEvent?.Invoke(oldMode, newMode, target);
                 invokedEvent = true;
             }
 
             yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Check if a mode is considered a flagged mode.
+    /// </summary>
+    /// <param name="mode">The selection mode to check</param>
+    /// <returns>True if the specified selection mode is a flagged mode.</returns>
+    public static bool IsFlagMode(SelectionMode mode) {
+        switch (mode) {
+            case SelectionMode.Flagged:
+            case SelectionMode.FlaggedNeighbourIndication:
+                return true;
+
+            default: return false;
         }
     }
 }

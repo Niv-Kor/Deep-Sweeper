@@ -25,7 +25,10 @@
     /// <summary>
     /// Start the phase.
     /// </summary>
-    private void Initiate() { ActivateGrids(true); }
+    private void Initiate() {
+        ActivateGrids(true);
+        GameFlow.Instance.ReportPhaseUpdated();
+    }
 
     /// <summary>
     /// Activate or deactivate the mine field's grids.
