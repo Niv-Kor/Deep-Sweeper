@@ -18,7 +18,7 @@ public class MineGrid : MonoBehaviour
     public event UnityAction MineHitEvent;
     #endregion
 
-    #region Public Properties
+    #region Properties
     public GameObject Avatar { get { return avatar; } }
     public Sweeper Sweeper { get; private set; }
     public MineActivator Activator { get; private set; }
@@ -27,7 +27,6 @@ public class MineGrid : MonoBehaviour
     public MineField Field { get; set; }
     public Vector2Int Position { get; set; }
     public bool IsMined { get; set; }
-
     public bool IsFlagged {
         get {
             bool flagged = Selector.Mode == SelectionMode.Flagged;

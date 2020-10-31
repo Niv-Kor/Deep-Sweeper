@@ -4,18 +4,26 @@ using UnityEngine.Events;
 
 public class Sweeper : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The mine's shell parent object.")]
     [SerializeField] private GameObject avatar;
+    #endregion
 
+    #region Class Members
     private MeshRenderer render;
     private SphereCollider col;
     private ParticleSystem[] particles;
+    #endregion
 
+    #region Events
     public event UnityAction MineDisposalStartEvent;
     public event UnityAction MineDisposalEndEvent;
+    #endregion
 
+    #region Properties
     public bool IsDismissed { get; private set; }
+    #endregion
 
     private void Awake() {
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();

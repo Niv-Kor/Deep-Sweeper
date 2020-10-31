@@ -55,9 +55,22 @@ public class MineSelector : MonoBehaviour
             Mark.Display(sprite != null, applyTime, sprite);
 
             if (nextMat != null) {
-                StopAllCoroutines();
-                StartCoroutine(Lerp(m_mode, value, nextMat));
-                m_mode = value;
+                bool fromFlagged = IsFlagMode(m_mode);
+                bool toFlagged = IsFlagMode(value);
+                bool permit = true;
+
+                //check flags permission
+                if (!fromFlagged && toFlagged)
+                    permit = FlagsManager.Instance.TakeFlag();
+                else if (fromFlagged && !toFlagged)
+                    permit = FlagsManager.Instance.ReturnFlag();
+
+                //apply mode
+                if (permit) {
+                    StopAllCoroutines();
+                    StartCoroutine(Lerp(m_mode, value, nextMat));
+                    m_mode = value;
+                }
             }
         }
     }

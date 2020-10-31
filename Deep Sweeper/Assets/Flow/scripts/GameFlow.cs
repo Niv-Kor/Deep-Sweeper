@@ -39,7 +39,7 @@ public class GameFlow : Singleton<GameFlow>
     }
     #endregion
 
-    private void Start() {
+    private void Awake() {
         this.Phases = new List<Phase>();
         this.phaseIndex = -1;
         InitFields();
