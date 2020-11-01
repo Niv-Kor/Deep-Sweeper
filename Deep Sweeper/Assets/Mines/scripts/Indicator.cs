@@ -3,23 +3,29 @@ using UnityEngine;
 
 public class Indicator : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Float Settings")]
     [Tooltip("The vertical distance of the float.")]
     [SerializeField] private float waveLength = 1;
 
     [Tooltip("The speed of vertically floating.")]
     [SerializeField] private float floatSpeed = 1;
+    #endregion
 
+    #region Class Members
     private IndicationNumber indicationNum;
     private Transform textTransform;
     private Submarine player;
     private SphereCollider sphereCol;
     private bool allowReveal;
+    #endregion
 
+    #region Properties
     public int MinedNeighbours {
         get { return indicationNum.Value; }
         set { indicationNum.Value = value; }
     }
+    #endregion
 
     private void OnEnable() {
         StopAllCoroutines();

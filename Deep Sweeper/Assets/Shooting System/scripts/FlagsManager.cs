@@ -3,8 +3,8 @@
 public class FlagsManager : Singleton<FlagsManager>
 {
     #region Events
-    public event UnityAction FlagTakenEvent;
-    public event UnityAction FlagReturnedEvent;
+    public event UnityAction<bool> FlagTakenEvent;
+    public event UnityAction<bool> FlagReturnedEvent;
     public event UnityAction FlagsAmountUpdateEvent;
     #endregion
 
@@ -32,12 +32,16 @@ public class FlagsManager : Singleton<FlagsManager>
     /// </summary>
     /// <returns>True if there are enough available flags.</returns>
     public bool TakeFlag() {
+        bool success;
+
         if (AvailableFlags > 0) {
             AvailableFlags--;
-            FlagTakenEvent?.Invoke();
-            return true;
+            success = true;
         }
-        else return false;
+        else success = false;
+
+        FlagTakenEvent?.Invoke(success);
+        return success;
     }
 
     /// <summary>
@@ -45,11 +49,15 @@ public class FlagsManager : Singleton<FlagsManager>
     /// </summary>
     /// <returns>True if the pile was not full before returning the flag.</returns>
     public bool ReturnFlag() {
+        bool success;
+
         if (AvailableFlags < MaxFlags) {
             AvailableFlags++;
-            FlagReturnedEvent?.Invoke();
-            return true;
+            success = true;
         }
-        else return false;
+        else success = false;
+
+        FlagReturnedEvent?.Invoke(success);
+        return success;
     }
 }
