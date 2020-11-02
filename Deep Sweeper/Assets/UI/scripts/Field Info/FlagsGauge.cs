@@ -94,7 +94,7 @@ public class FlagsGauge : MonoBehaviour
         float timer = 0;
 
         //scale up
-        while (timer <= pumpTime / 2) {
+        while (timer <= halfTime) {
             timer += Time.deltaTime;
             Vector3 scale = Vector3.Lerp(startingScale, targetScale, timer / halfTime);
             transform.localScale = scale;

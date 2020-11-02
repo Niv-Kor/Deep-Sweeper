@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 public class CameraManager : Singleton<CameraManager>
 {
@@ -46,9 +45,10 @@ public class CameraManager : Singleton<CameraManager>
 
         foreach (Camera iterCam in allCams) {
             AudioListener audio = iterCam.GetComponent<AudioListener>();
+            CameraPreferences camPref = iterCam.GetComponent<CameraPreferences>();
             bool isSelected = iterCam == cam;
             iterCam.tag = isSelected ? CAMERA_TAG : UNTAGGED_TAG;
-            iterCam.enabled = isSelected;
+            iterCam.enabled = (camPref != null && camPref.AlwaysOn) || isSelected;
             if (audio != null) audio.enabled = isSelected;
         }
     }
