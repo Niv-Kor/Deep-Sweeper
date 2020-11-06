@@ -53,8 +53,9 @@ public class Sonar : MonoBehaviour
     }
 
     private void OnValidate() {
-        //clamp signal time <= scanTime
+        //clamp values
         signalFadeTime = Mathf.Min(signalFadeTime, scanTime);
+        scansDelay = Mathf.Max(scansDelay, wavesDelay);
     }
 
     /// <summary>
@@ -64,9 +65,9 @@ public class Sonar : MonoBehaviour
         while (true) {
             for (int i = 0; i < waves.Count; i++) {
                 waves[i].Scan();
-                float extraDelay = (i == waves.Count - 1) ? scanTime : 0;
-                yield return new WaitForSeconds(wavesDelay + extraDelay);
+                yield return new WaitForSeconds(wavesDelay);
             }
+
             yield return new WaitForSeconds(scansDelay);
         }
     }

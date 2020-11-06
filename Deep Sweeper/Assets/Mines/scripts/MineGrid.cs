@@ -24,6 +24,7 @@ public class MineGrid : MonoBehaviour
     public MineActivator Activator { get; private set; }
     public MineSelector Selector { get; private set; }
     public Indicator MinesIndicator { get; private set; }
+    public float ExplosiveChance { get; private set; }
     public MineField Field { get; set; }
     public Vector2Int Position { get; set; }
     public bool IsMined { get; set; }
@@ -62,6 +63,20 @@ public class MineGrid : MonoBehaviour
         MineHitEvent += delegate { Reveal(true); };
         Sweeper.MineDisposalEndEvent += Activator.Unlock;
         Selector.ModeApplicationHalfwayEvent += ChangeMineLayer;
+    }
+
+    private void Start() {
+        //calculate the explosiveness chance every time a change occurs to one of the neighbours
+        foreach (MineGrid neighbour in Section) {
+            if (neighbour == null) continue;
+
+            neighbour.Sweeper.MineDisposalStartEvent += CalcExplosiveChance;
+            FlagsManager.Instance.FlagsAmountUpdateEvent += CalcExplosiveChance;
+            FlagsManager.Instance.FlagReturnedEvent += delegate(bool _) { CalcExplosiveChance(); };
+            FlagsManager.Instance.FlagTakenEvent += delegate(bool _) { CalcExplosiveChance(); };
+        }
+
+        CalcExplosiveChance();
     }
 
     /// <summary>
@@ -159,5 +174,52 @@ public class MineGrid : MonoBehaviour
 
                 break;
         }
+    }
+
+    /// <summary>
+    /// Calculate the chance of this mine being an explosive mine.
+    /// </summary>
+    public void CalcExplosiveChance() {
+        if (Sweeper.IsDismissed) {
+            ExplosiveChance = 0;
+            return;
+        }
+
+        FlagsManager flagsMngr = FlagsManager.Instance;
+        List<float> chances = new List<float>();
+        float defaultChance = 1f / flagsMngr.AvailableFlags;
+        chances.Add(defaultChance);
+
+        foreach (MineGrid neighbour in Section) {
+            if (neighbour == null) continue;
+
+            bool dismissed = neighbour.Sweeper.IsDismissed;
+            int number = neighbour.MinesIndicator.MinedNeighbours;
+
+            if (dismissed && number > 0) {
+                List<MineGrid> neighbourSection = neighbour.Section;
+                int emptyGrids = 0;
+                int flaggedGrids = 0;
+
+                foreach (MineGrid farNeighbour in neighbourSection) {
+                    if (farNeighbour == null) continue;
+                    else if (!farNeighbour.Sweeper.IsDismissed) {
+                        if (farNeighbour.IsFlagged) flaggedGrids++;
+                        else emptyGrids++;
+                    }
+                }
+
+                int unfulfilled = number - flaggedGrids;
+                float neighbourChance = (float) unfulfilled / emptyGrids;
+                chances.Add(neighbourChance);
+            }
+        }
+
+        //find maximum chance
+        float maxChance = defaultChance;
+        foreach (float chance in chances)
+            if (chance > maxChance) maxChance = chance;
+
+        ExplosiveChance = maxChance;
     }
 }

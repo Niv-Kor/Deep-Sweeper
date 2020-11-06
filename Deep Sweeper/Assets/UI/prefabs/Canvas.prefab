@@ -1672,16 +1672,21 @@ PrefabInstance:
     - target: {fileID: 7279605186673511772, guid: b47472b998ce13f429d8e883aace4c05,
         type: 3}
       propertyPath: scanTime
-      value: 2.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7279605186673511772, guid: b47472b998ce13f429d8e883aace4c05,
         type: 3}
       propertyPath: signalFadeTime
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7279605186673511772, guid: b47472b998ce13f429d8e883aace4c05,
         type: 3}
       propertyPath: wavesDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279605186673511772, guid: b47472b998ce13f429d8e883aace4c05,
+        type: 3}
+      propertyPath: scansDelay
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8475580902288988969, guid: b47472b998ce13f429d8e883aace4c05,
