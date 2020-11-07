@@ -34,7 +34,9 @@ public class GateElectrodes : MonoBehaviour
     /// <param name="gateCmp">Parent gate component</param>
     public void Initiate(Gate gateCmp) {
         this.leds = GetComponentsInChildren<Light>();
-        gateCmp.GateOpenEvent += delegate { LedsColor = openLed; };
+        gateCmp.GateOpenEvent += delegate {
+            LedsColor = openLed;
+        };
         LedsColor = closedLed;
     }
 

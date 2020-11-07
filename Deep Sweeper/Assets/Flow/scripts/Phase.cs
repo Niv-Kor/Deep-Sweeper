@@ -5,18 +5,20 @@
     public MineField Field { get; private set; }
     public Gate EnteranceGate { get; private set; }
     public Gate ExitGate { get; private set; }
+    public int TimerSeconds { get; set; }
 
     /// <param name="index">The index of the phase (0 based)</param>
     /// <param name="field">The phase's mine field</param>
     /// <param name="gate">A gate from this phase to the following one</param>
     /// <param name="prevPhase">The previous phase link</param>
-    public Phase(int index, MineField field, Gate gate, Phase prevPhase) {
+    public Phase(int index, MineField field, Phase prevPhase, PhaseConfig config) {
         this.Field = field;
-        this.ExitGate = gate;
+        this.ExitGate = config.Gate;
+        this.TimerSeconds = config.TimerSeconds;
         this.EnteranceGate = prevPhase?.ExitGate;
         this.PreviousPhase = prevPhase;
 
-        if (gate != null) gate.Phase = this;
+        if (config.Gate != null) config.Gate.Phase = this;
 
         //disable field if it's not the first phase
         if (index != 0) Field.FieldReadyEvent += delegate { ActivateGrids(false); };
@@ -53,7 +55,7 @@
     /// </summary>
     public void Conclude() {
         if (ExitGate != null) {
-            ExitGate.Open();
+            ExitGate.RequestOpen(true);
             ActivateGrids(false, true);
         }
         else {

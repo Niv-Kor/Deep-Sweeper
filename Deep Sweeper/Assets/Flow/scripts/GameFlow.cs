@@ -13,6 +13,9 @@ public class GameFlow : Singleton<GameFlow>
     [Tooltip("A prefab of an object with a 'MineField' script attached to it.")]
     [SerializeField] private GameObject mineFieldPrefab;
 
+    [Tooltip("The first gate in the scene, just besides the player's spawn point.")]
+    [SerializeField] private Gate initialGate;
+
     [Header("Phases")]
     [Tooltip("A list of mine fields.\nEach field represents a level phase.")]
     [SerializeField] private PhaseConfig[] phases;
@@ -28,11 +31,11 @@ public class GameFlow : Singleton<GameFlow>
     #endregion
 
     #region Events
-    public event UnityAction PhaseChangeEvent;
-    public event UnityAction PhaseUpdatedEvent;
+    public event UnityAction<int> PhaseChangeEvent;
+    public event UnityAction<int> PhaseUpdatedEvent;
     #endregion
 
-    #region Public Properties
+    #region Properties
     public List<Phase> Phases { get; private set; }
     public Phase CurrentPhase {
         get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
@@ -44,6 +47,7 @@ public class GameFlow : Singleton<GameFlow>
         this.phaseIndex = -1;
         InitFields();
         NextPhase();
+        initialGate.RequestOpen(false);
     }
 
     private void OnDrawGizmos() {
@@ -64,7 +68,7 @@ public class GameFlow : Singleton<GameFlow>
         Phase prevPhase = null;
 
         for (int i = 0; i < phases.Length; i++) {
-            PhaseConfig phase = phases[i];
+            PhaseConfig phaseConfig = phases[i];
 
             //instantiate
             Transform fieldObj = Instantiate(mineFieldPrefab).transform;
@@ -75,11 +79,11 @@ public class GameFlow : Singleton<GameFlow>
 
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
-            mineFieldCmp.Confine = phase.Confine;
-            mineFieldCmp.MinesPercent = phase.MinesPercent;
+            mineFieldCmp.Confine = phaseConfig.Confine;
+            mineFieldCmp.MinesPercent = phaseConfig.MinesPercent;
 
             //append
-            Phase phaseObj = new Phase(i, mineFieldCmp, phase.Gate, prevPhase);
+            Phase phaseObj = new Phase(i, mineFieldCmp, prevPhase, phaseConfig);
             if (prevPhase != null) prevPhase.FollowPhase = phaseObj;
             prevPhase = phaseObj;
             Phases.Add(phaseObj);
@@ -106,7 +110,7 @@ public class GameFlow : Singleton<GameFlow>
             else ++phaseIndex; //first phase
 
             Phases[phaseIndex].InitiateWhenReady();
-            PhaseChangeEvent?.Invoke();
+            PhaseChangeEvent?.Invoke(phaseIndex);
         }
     }
 
@@ -114,6 +118,6 @@ public class GameFlow : Singleton<GameFlow>
     /// Report an initialized phase that finished updating.
     /// </summary>
     public void ReportPhaseUpdated() {
-        PhaseUpdatedEvent?.Invoke();
+        PhaseUpdatedEvent?.Invoke(phaseIndex);
     }
 }

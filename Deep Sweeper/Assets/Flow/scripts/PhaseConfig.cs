@@ -8,8 +8,11 @@ public struct PhaseConfig
     [SerializeField] public Confine Confine;
 
     [Tooltip("Percentage of the mines within the mine fields.")]
-    public int MinesPercent;
+    [SerializeField] public int MinesPercent;
 
     [Tooltip("The exit gate from this phase to the next one.")]
-    public Gate Gate;
+    [SerializeField] public Gate Gate;
+
+    [Tooltip("The amount of time the player gets to finish the phase.")]
+    [SerializeField] public int TimerSeconds;
 }

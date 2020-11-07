@@ -32,7 +32,7 @@ public class GateBuilder : MonoBehaviour
     [Tooltip("The distance of the camera from the force field.")]
     [SerializeField] private float camWallOffset;
 
-    [Tooltip("The camera's rotation.")]
+    [Tooltip("The camera's rotation relative to the gate.")]
     [SerializeField] private Vector3 camRotation;
 
     [Tooltip("The camera's offset from its fixed position in fron of the gate.")]
@@ -49,7 +49,7 @@ public class GateBuilder : MonoBehaviour
     private static readonly string RIGHT_ELECTRODE_NAME = "Right";
     #endregion
 
-    #region Public Properties
+    #region Properties
     public GameObject LeftElectrode { get; private set; }
     public GameObject RightElectrode { get; private set; }
     public GameObject ForceFieldEdge { get; private set; }
@@ -59,15 +59,18 @@ public class GateBuilder : MonoBehaviour
     #endregion
 
     private void Start() {
+        print(gameObject.name);
+
+        Vector3 forward;
         Vector3 pos = transform.position;
         Vector3 leftPos = pos + leftElectrodePos;
         Vector3 rightPos = pos + rightElectrodePos;
         float dist = Vector3.Distance(leftPos, rightPos);
 
         BuildElectrodes(leftPos, rightPos);
-        Vector3 forward = Vector3.Cross(Vector3.up, LeftElectrode.transform.forward);
-        BuildUpperEdge(leftPos);
+        forward = Vector3.Cross(Vector3.up, LeftElectrode.transform.forward);
         BuildForceField(dist, forward);
+        BuildUpperEdge(leftPos);
         BuildEmblem(forward);
         FixCamPosition(forward);
 
@@ -76,8 +79,8 @@ public class GateBuilder : MonoBehaviour
         Transform emblemTransform = Emblem.transform;
         GateElectrodes electrodesCmp = GetComponentInChildren<GateElectrodes>();
         ParticleSystem forceFieldParticles = ForceField.GetComponent<ParticleSystem>();
-        gateCmp.Initiate(forceFieldParticles, emblemTransform);
         electrodesCmp.Initiate(gateCmp);
+        gateCmp.Initiate(forceFieldParticles, emblemTransform);
     }
 
     private void OnValidate() {

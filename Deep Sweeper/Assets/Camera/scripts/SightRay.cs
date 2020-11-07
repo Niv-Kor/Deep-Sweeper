@@ -157,7 +157,7 @@ public class SightRay : Singleton<SightRay>
         mineInfo.Activator.ActivateAndLock();
         Crosshair.Instance.Lock();
 
-        print("Chance: " + mineInfo.Grid.ExplosiveChance);
+        print("Explosive Chance: " + mineInfo.Grid.ExplosiveChance);
 
         return mineInfo;
     }

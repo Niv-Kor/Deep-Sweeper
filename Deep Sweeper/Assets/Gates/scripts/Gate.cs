@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class Gate : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Emblem")]
     [Tooltip("The scale at which the emblem's x axis widens when the gate opens.\n"
            + "A scale of 1 means that the x axis scales at the same rate as the y axis.")]
@@ -32,9 +33,13 @@ public class Gate : MonoBehaviour
 
     [Tooltip("The time it takes to disable the gate camera after it has been opened.")]
     [SerializeField] private float pauseAfterOpen;
+    #endregion
 
+    #region Constants
     private static readonly Color TRANSPARENT = new Color(0xff, 0xff, 0xff, 0x0);
+    #endregion
 
+    #region Class Members
     private Gradient forceFieldGradient;
     private LineRenderer upperEdge;
     private Camera cam;
@@ -46,15 +51,32 @@ public class Gate : MonoBehaviour
     private UnityAction onFullyBlankHandler2;
     private UnityAction onFullyTransparentHandler1;
     private UnityAction onFullyTransparentHandler2;
+    private bool crossedGate;
+    private bool initiated;
+    #endregion
 
+    #region Events
     public event UnityAction GateOpenEvent;
+    public event UnityAction GateCrossEvent;
+    private event UnityAction ReadyForOpenEvent;
+    #endregion
 
+    #region Properties
     public Phase Phase { get; set; }
     public bool IsOpen { get; private set; }
+    #endregion
 
     private void Start() {
         this.submarine = FindObjectOfType<SubmarineMovementController>();
         this.camController = FindObjectOfType<CameraController>();
+        this.crossedGate = false;
+        this.initiated = false;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (!crossedGate) GateCrossEvent?.Invoke();
+        crossedGate = true;
+        print("cross");
     }
 
     /// <summary>
@@ -97,13 +119,32 @@ public class Gate : MonoBehaviour
             submarine.MovementAllowd = true;
             BlankScreen.Instance.FullyTransparentEvent -= onFullyTransparentHandler2;
         });
+
+        initiated = true;
+        ReadyForOpenEvent?.Invoke();
+    }
+
+    /// <summary>
+    /// Request the opening of the gate.
+    /// The gate will open as soon as it's ready and initiated.
+    /// </summary>
+    public void RequestOpen(bool animate) {
+        if (initiated) Open(animate);
+        else ReadyForOpenEvent += delegate { Open(animate); };
     }
 
     /// <summary>
     /// Open the gate.
     /// </summary>
-    public void Open() {
-        StartCoroutine(AnimateGateOpening());
+    private void Open(bool animate) {
+        if (animate) StartCoroutine(AnimateGateOpening());
+        else {
+            DismissForceFieldParticles();
+            TurnColliderTriggerOn();
+            emblem.gameObject.SetActive(false);
+            upperEdge.gameObject.SetActive(false);
+            GateOpenEvent?.Invoke();
+        }
     }
 
     /// <summary>
@@ -137,9 +178,9 @@ public class Gate : MonoBehaviour
     }
 
     /// <summary>
-    /// Dismiss the force field.
+    /// Dismiss the force field's physical particles.
     /// </summary>
-    private IEnumerator ShutForceField() {
+    private void DismissForceFieldParticles() {
         var mainModule = forceField.main;
         var colorModule = forceField.colorOverLifetime;
         colorModule.color = forceFieldGradient;
@@ -147,9 +188,26 @@ public class Gate : MonoBehaviour
         forceField.Clear();
         forceField.Emit(1);
         mainModule.startColor = TRANSPARENT;
+    }
 
+    /// <summary>
+    /// Disable the force field's particle system and change its collider mode to trigger.
+    /// </summary>
+    private void TurnColliderTriggerOn() {
+        //remove particles and turn collider's trigger mode on
+        ParticleSystem particles = forceField.GetComponent<ParticleSystem>();
+        Collider collider = forceField.GetComponent<Collider>();
+        collider.isTrigger = true;
+        Destroy(particles);
+    }
+
+    /// <summary>
+    /// Dismiss the force field.
+    /// </summary>
+    private IEnumerator ShutForceField() {
+        DismissForceFieldParticles();
         yield return new WaitForSeconds(3);
-        forceField.gameObject.SetActive(false);
+        TurnColliderTriggerOn();
     }
 
     /// <summary>
@@ -187,6 +245,8 @@ public class Gate : MonoBehaviour
             upperEdge.colorGradient = gardient;
             yield return null;
         }
+
+        upperEdge.gameObject.SetActive(false);
     }
 
     /// <summary>
