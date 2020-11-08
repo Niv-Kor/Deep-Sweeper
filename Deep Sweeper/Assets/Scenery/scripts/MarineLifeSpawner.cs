@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class MarineLifeSpawner : MarineSpawner
 {
+    #region Exposed Editor Parameters
     [Header("Emission Settings")]
     [Tooltip("The minimum 3D distance between each individual from the center instance.")]
     [SerializeField] public Vector3 MinIndividualDistance;
 
     [Tooltip("The maximum 3D distance between each individual from the center instance.")]
     [SerializeField] public Vector3 MaxIndividualDistance;
+    #endregion
 
+    #region Constants
     private static readonly string INSTANCE_NAME_TAG = "instance";
     private static readonly string CLONE_TAG = "(Clone)";
     private static readonly float MAX_SPAWN_DISTANCE_OF_RAD = .7f;
+    #endregion
 
+    #region Class Members
     private int emissionAmount;
     private FishPack pack;
     private Queue<MarineLife> collectedPack;
+    #endregion
 
     /// <inheritdoc/>
     protected override void ApplyEmission(GameObject instance, int emission) {
@@ -31,7 +37,7 @@ public class MarineLifeSpawner : MarineSpawner
         subParent.transform.SetParent(instance.transform.parent);
 
         //establish pack connection
-        pack = subParent.AddComponent<FishPack>();
+        this.pack = subParent.AddComponent<FishPack>();
         pack.PackDeadEvent += OnPackDies;
 
         //emit leader

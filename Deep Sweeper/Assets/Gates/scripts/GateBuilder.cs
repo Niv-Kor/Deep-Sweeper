@@ -78,9 +78,9 @@ public class GateBuilder : MonoBehaviour
         Gate gateCmp = GetComponent<Gate>();
         Transform emblemTransform = Emblem.transform;
         GateElectrodes electrodesCmp = GetComponentInChildren<GateElectrodes>();
-        ParticleSystem forceFieldParticles = ForceField.GetComponent<ParticleSystem>();
+        ForceField forceField = ForceField.GetComponent<ForceField>();
         electrodesCmp.Initiate(gateCmp);
-        gateCmp.Initiate(forceFieldParticles, emblemTransform);
+        gateCmp.Initiate(forceField, emblemTransform);
     }
 
     private void OnValidate() {

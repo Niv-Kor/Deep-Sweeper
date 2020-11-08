@@ -22,16 +22,27 @@ public class FishPack : MonoBehaviour
         }
     };
 
+    #region Constants
+    private static readonly int ID_SIZE = 8;
     private static readonly int MAX_ROTATION_ATTEMPTS = 5;
     private static readonly float ALLOWD_ESCAPE_PERCENT = .3f;
+    #endregion
 
+    #region Class Members
+    private static int packIdUtilizer = 0;
+    private int packId;
     private List<MarineLife> members;
     private MarineLifeManager marineLifeMngr;
     private float m_yawDirection;
+    #endregion
 
+    #region Events
     public event UnityAction<float> YawDirectionChangeEvent;
     public event UnityAction<int> PackDeadEvent;
+    #endregion
 
+    #region Properties
+    public int PackId { get; private set; }
     public float YawDirection {
         get { return m_yawDirection; }
         set {
@@ -39,17 +50,21 @@ public class FishPack : MonoBehaviour
             YawDirectionChangeEvent?.Invoke(value);
         }
     }
+
     public MarineLife Leader {
         get {
             if (members.Count > 0) return members[0];
             else return null;
         }
     }
+    #endregion
 
     private void Awake() {
         this.members = new List<MarineLife>();
         this.YawDirection = GenerateYawDirection();
         this.marineLifeMngr = FindObjectOfType<MarineLifeManager>();
+        this.PackId = ++packIdUtilizer;
+        gameObject.name = gameObject.name + " " + NumericUtils.PadNumber(PackId, ID_SIZE);
     }
 
     /// <summary>
@@ -146,6 +161,7 @@ public class FishPack : MonoBehaviour
 
         members.Clear();
         PackDeadEvent?.Invoke(membersAmount);
+        Destroy(gameObject);
     }
 
     /// <summary>

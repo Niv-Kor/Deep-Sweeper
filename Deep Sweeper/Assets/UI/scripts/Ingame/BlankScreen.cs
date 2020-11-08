@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class BlankScreen : Singleton<BlankScreen>
 {
+    #region Exposed Editor Parametere
     [Tooltip("The color into which the blank screen transforms on blank application.")]
     [SerializeField] private Color blankColor;
 
@@ -14,12 +15,17 @@ public class BlankScreen : Singleton<BlankScreen>
 
     [Tooltip("The time it takes to start lerping again from fully a blank screen.")]
     [SerializeField] private float defPauseTime = 0;
+    #endregion
 
-    public event UnityAction FullyBlankEvent;
-    public event UnityAction FullyTransparentEvent;
-
+    #region Class Members
     private RawImage image;
     private Color transparent;
+    #endregion
+
+    #region Events
+    public event UnityAction FullyBlankEvent;
+    public event UnityAction FullyTransparentEvent;
+    #endregion
 
     private void Start() {
         this.image = GetComponent<RawImage>();

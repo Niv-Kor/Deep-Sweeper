@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class MarineLife : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Individual Settings")]
     [Tooltip("The creature's movement speed (distance moved per frame).")]
     [SerializeField] private float speed;
@@ -33,21 +34,35 @@ public class MarineLife : MonoBehaviour
 
     [Tooltip("Affection of the waves' turbulence on the volume of spawn.")]
     [SerializeField] public SpawnAffection TurbulenceAffection;
+    #endregion
 
+    #region Constants
     private static readonly float TURN_TIME = .7f;
     private static readonly float SINE_TURN_ANGLE = 30f;
     private static readonly float APPEARANCE_TIME = 3.5f;
+    #endregion
 
+    #region Class Members
+    private static int fishIdUtilizer = 0;
     private SkinnedMeshRenderer mesh;
     private FishPack pack;
     private Vector3 originScale;
     private float zigzagIntensity;
     private float timeFunction;
     private bool turning;
+    #endregion
 
+    #region Events
     public event UnityAction<MarineLife> FishTurnEvent;
+    #endregion
+
+    #region Properties
+    public int FishId { get; private set; }
+    #endregion
 
     private void Awake() {
+        this.FishId = ++fishIdUtilizer;
+        gameObject.name = gameObject.name + " " + NumericUtils.PadNumber(FishId, 8);
         this.mesh = GetComponentInChildren<SkinnedMeshRenderer>();
         mesh.enabled = false;
     }
@@ -128,8 +143,11 @@ public class MarineLife : MonoBehaviour
     /// Destroy this marine life's object.
     /// </summary>
     public void Kill() {
-        UnityAction callback = delegate () {
+        void callback() {
             StopAllCoroutines();
+            FishPack pack = GetComponentInParent<FishPack>();
+            int packId = pack.PackId;
+            int fishId = FishId;
             Destroy(gameObject);
         };
 

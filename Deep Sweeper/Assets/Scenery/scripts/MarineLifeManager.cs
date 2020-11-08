@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MarineLifeManager : ConfinedArea
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("All creture prefabs whose spawn should be managed.")]
     [SerializeField] private List<GameObject> creaturesPool;
@@ -10,13 +11,18 @@ public class MarineLifeManager : ConfinedArea
     [Header("Borders")]
     [Tooltip("The layer mask of the fish borders (must be one layered).")]
     [SerializeField] private LayerMask borderLayer;
+    #endregion
 
+    #region Constants
     private static readonly string BORDERS_OBJ_NAME = "Borders";
     private static readonly string FISH_OBJ_NAME = "Fish";
     private static readonly float EXCESS_BORDERS_DEPTH = 20f;
+    #endregion
 
+    #region Class Members
     private List<MarineLifeSpawner> spawners;
     private GameObject fishParentObj;
+    #endregion
 
     private void Start() {
         this.spawners = new List<MarineLifeSpawner>();

@@ -20,7 +20,7 @@ public class Gate : MonoBehaviour
     [SerializeField] private float upperEdgeShutTime;
 
     [Tooltip("The time it takes the force field to disappear when the gate opens.")]
-    [SerializeField] private float forceFielsShutTime;
+    [SerializeField] private float forceFieldShutTime;
 
     [Tooltip("The time it takes the emblem to disappear when the gate opens.")]
     [SerializeField] private float emblemShutTime;
@@ -35,15 +35,10 @@ public class Gate : MonoBehaviour
     [SerializeField] private float pauseAfterOpen;
     #endregion
 
-    #region Constants
-    private static readonly Color TRANSPARENT = new Color(0xff, 0xff, 0xff, 0x0);
-    #endregion
-
     #region Class Members
-    private Gradient forceFieldGradient;
     private LineRenderer upperEdge;
     private Camera cam;
-    private ParticleSystem forceField;
+    private ForceField forceField;
     private Transform emblem;
     private SubmarineMovementController submarine;
     private CameraController camController;
@@ -73,26 +68,19 @@ public class Gate : MonoBehaviour
         this.initiated = false;
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if (!crossedGate) GateCrossEvent?.Invoke();
-        crossedGate = true;
-        print("cross");
-    }
-
     /// <summary>
     /// Initialize the component.
     /// </summary>
     /// <param name="forceField">The force field's particle system</param>
     /// <param name="emblem">The emblems transform</param>
-    public void Initiate(ParticleSystem forceField, Transform emblem) {
+    public void Initiate(ForceField forceField, Transform emblem) {
         this.forceField = forceField;
         this.emblem = emblem;
         this.cam = GetComponentInChildren<Camera>();
         this.upperEdge = GetComponentInChildren<LineRenderer>();
-        this.forceFieldGradient = new Gradient();
-        GradientColorKey[] shades = { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) };
-        GradientAlphaKey[] alpha = { new GradientAlphaKey(1, 0f), new GradientAlphaKey(0, 1f) };
-        forceFieldGradient.SetKeys(shades, alpha);
+
+        //bind gate cross event
+        forceField.CrossEvent += OnGateCrossed;
 
         //first time the screen goes blank
         this.onFullyBlankHandler1 = new UnityAction(delegate {
@@ -125,6 +113,15 @@ public class Gate : MonoBehaviour
     }
 
     /// <summary>
+    /// Activate when the gate is crossed for the first time.
+    /// </summary>
+    private void OnGateCrossed() {
+        print("Boom");
+        GateCrossEvent?.Invoke();
+        forceField.CrossEvent -= OnGateCrossed;
+    }
+
+    /// <summary>
     /// Request the opening of the gate.
     /// The gate will open as soon as it's ready and initiated.
     /// </summary>
@@ -139,8 +136,8 @@ public class Gate : MonoBehaviour
     private void Open(bool animate) {
         if (animate) StartCoroutine(AnimateGateOpening());
         else {
-            DismissForceFieldParticles();
-            TurnColliderTriggerOn();
+            forceField.ShutFieldEmission(forceFieldShutTime);
+            forceField.Collider.isTrigger = true;
             emblem.gameObject.SetActive(false);
             upperEdge.gameObject.SetActive(false);
             GateOpenEvent?.Invoke();
@@ -168,7 +165,7 @@ public class Gate : MonoBehaviour
         StartCoroutine(ShutForceField());
         StartCoroutine(ShutEmblem());
         StartCoroutine(ShutUpperEdge());
-        float openTime = Mathf.Max(forceFielsShutTime, emblemShutTime, upperEdgeShutTime);
+        float openTime = Mathf.Max(forceFieldShutTime, emblemShutTime, upperEdgeShutTime);
         GateOpenEvent?.Invoke();
         yield return new WaitForSeconds(openTime + pauseAfterOpen);
 
@@ -178,36 +175,13 @@ public class Gate : MonoBehaviour
     }
 
     /// <summary>
-    /// Dismiss the force field's physical particles.
-    /// </summary>
-    private void DismissForceFieldParticles() {
-        var mainModule = forceField.main;
-        var colorModule = forceField.colorOverLifetime;
-        colorModule.color = forceFieldGradient;
-        mainModule.startLifetime = forceFielsShutTime;
-        forceField.Clear();
-        forceField.Emit(1);
-        mainModule.startColor = TRANSPARENT;
-    }
-
-    /// <summary>
-    /// Disable the force field's particle system and change its collider mode to trigger.
-    /// </summary>
-    private void TurnColliderTriggerOn() {
-        //remove particles and turn collider's trigger mode on
-        ParticleSystem particles = forceField.GetComponent<ParticleSystem>();
-        Collider collider = forceField.GetComponent<Collider>();
-        collider.isTrigger = true;
-        Destroy(particles);
-    }
-
-    /// <summary>
     /// Dismiss the force field.
     /// </summary>
     private IEnumerator ShutForceField() {
-        DismissForceFieldParticles();
+        forceField.ShutFieldEmission(forceFieldShutTime);
         yield return new WaitForSeconds(3);
-        TurnColliderTriggerOn();
+        Destroy(forceField.ParticleSystem);
+        forceField.Collider.isTrigger = true;
     }
 
     /// <summary>
