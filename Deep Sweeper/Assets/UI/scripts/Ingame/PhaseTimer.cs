@@ -29,25 +29,17 @@ public class PhaseTimer : MonoBehaviour
 
     private IEnumerator Countdown(float seconds) {
         text.text = seconds + ":00";
-        int maxDigits = seconds.ToString().Length;
-        string zeroPad = "";
-        for (int i = 0; i < maxDigits; i++) zeroPad += "0";
 
         while (seconds > 0) {
             seconds -= Time.deltaTime;
-
             float integer = Mathf.Max((int) seconds, 0);
-            int actualIntDigits = integer.ToString().Length;
-            string intPrefix = zeroPad.Substring(0, maxDigits - actualIntDigits);
 
             if (integer < DECIMALS_THRESHOLD) {
                 float decimals = (int) (Mathf.Max(seconds % 1f, 0) * 100);
                 string decPrefix = (decimals < 10) ? "0" : "";
-                text.text = intPrefix + integer + ":" + decPrefix + decimals;
+                text.text = integer + ":" + decPrefix + decimals;
             }
             else text.text = integer.ToString();
-
-
             yield return null;
         }
 

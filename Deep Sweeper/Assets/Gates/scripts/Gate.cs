@@ -116,7 +116,6 @@ public class Gate : MonoBehaviour
     /// Activate when the gate is crossed for the first time.
     /// </summary>
     private void OnGateCrossed() {
-        print("Boom");
         GateCrossEvent?.Invoke();
         forceField.CrossEvent -= OnGateCrossed;
     }

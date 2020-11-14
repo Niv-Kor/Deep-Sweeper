@@ -45,9 +45,9 @@ public class GameFlow : Singleton<GameFlow>
     private void Awake() {
         this.Phases = new List<Phase>();
         this.phaseIndex = -1;
+        initialGate.RequestOpen(false);
         InitFields();
         NextPhase();
-        initialGate.RequestOpen(false);
     }
 
     private void OnDrawGizmos() {
@@ -83,7 +83,11 @@ public class GameFlow : Singleton<GameFlow>
             mineFieldCmp.MinesPercent = phaseConfig.MinesPercent;
 
             //append
-            Phase phaseObj = new Phase(i, mineFieldCmp, prevPhase, phaseConfig);
+            Phase phaseObj;
+            
+            if (i == 0) phaseObj = new Phase(i, mineFieldCmp, initialGate, phaseConfig);
+            else phaseObj = new Phase(i, mineFieldCmp, prevPhase, phaseConfig);
+            
             if (prevPhase != null) prevPhase.FollowPhase = phaseObj;
             prevPhase = phaseObj;
             Phases.Add(phaseObj);

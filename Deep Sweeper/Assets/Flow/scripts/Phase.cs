@@ -1,17 +1,29 @@
-﻿public class Phase
+﻿using System;
+
+public class Phase
 {
+    #region Class Members
     public Phase PreviousPhase { get; private set; }
     public Phase FollowPhase { get; set; }
     public MineField Field { get; private set; }
     public Gate EnteranceGate { get; private set; }
     public Gate ExitGate { get; private set; }
     public int TimerSeconds { get; set; }
+    #endregion
+
+    #region Properties
+    public int Index { get; private set; }
+    #endregion
 
     /// <param name="index">The index of the phase (0 based)</param>
     /// <param name="field">The phase's mine field</param>
-    /// <param name="gate">A gate from this phase to the following one</param>
+    /// <param name="prevPhase">
+    /// The phase that comes before this one
+    /// (can be null if it's the first phase)
+    /// </param>
     /// <param name="prevPhase">The previous phase link</param>
     public Phase(int index, MineField field, Phase prevPhase, PhaseConfig config) {
+        this.Index = index;
         this.Field = field;
         this.ExitGate = config.Gate;
         this.TimerSeconds = config.TimerSeconds;
@@ -21,15 +33,32 @@
         if (config.Gate != null) config.Gate.Phase = this;
 
         //disable field if it's not the first phase
-        if (index != 0) Field.FieldReadyEvent += delegate { ActivateGrids(false); };
+        Field.FieldReadyEvent += delegate { ActivateGrids(false); };
+    }
+
+    /// <param name="index">The index of the phase (0 based)</param>
+    /// <param name="field">The phase's mine field</param>
+    /// <param name="leadGate">The gate that leads to this phase</param>
+    /// <param name="prevPhase">The previous phase link</param>
+    public Phase(int index, MineField field, Gate leadGate, PhaseConfig config) : this(index, field, (Phase) null, config) {
+        this.EnteranceGate = leadGate;
     }
 
     /// <summary>
-    /// Start the phase.
+    /// Initiate the phase's components.
     /// </summary>
     private void Initiate() {
         ActivateGrids(true);
+        EnteranceGate.GateCrossEvent += Begin;
         GameFlow.Instance.ReportPhaseUpdated();
+    }
+
+    /// <summary>
+    /// Begin the phase's timer and game mechanics.
+    /// The phase must first be initialized.
+    /// </summary>
+    public void Begin() {
+        ///TODO
     }
 
     /// <summary>

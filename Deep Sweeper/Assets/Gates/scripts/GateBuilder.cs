@@ -59,8 +59,6 @@ public class GateBuilder : MonoBehaviour
     #endregion
 
     private void Start() {
-        print(gameObject.name);
-
         Vector3 forward;
         Vector3 pos = transform.position;
         Vector3 leftPos = pos + leftElectrodePos;
