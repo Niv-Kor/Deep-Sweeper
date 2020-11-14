@@ -20,7 +20,9 @@ public class PhaseTimer : MonoBehaviour
     private void Start() {
         this.text = GetComponent<TextMeshProUGUI>();
         GameFlow.Instance.PhaseUpdatedEvent += delegate(int _) {
-            int seconds = GameFlow.Instance.CurrentPhase.TimerSeconds;
+            /// ===================================================================
+            int seconds = 360;/// TODO GameFlow.Instance.CurrentPhase.TimerSeconds;
+            /// ===================================================================
             print("TIMER " + seconds);
             StopAllCoroutines();
             StartCoroutine(Countdown(seconds));

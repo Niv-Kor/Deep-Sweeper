@@ -8,11 +8,12 @@ public class Phase
     public MineField Field { get; private set; }
     public Gate EnteranceGate { get; private set; }
     public Gate ExitGate { get; private set; }
-    public int TimerSeconds { get; set; }
     #endregion
 
     #region Properties
+    public string MapName { get; private set; }
     public int Index { get; private set; }
+    public PhaseConfig Config { get; private set; }
     #endregion
 
     /// <param name="index">The index of the phase (0 based)</param>
@@ -25,8 +26,9 @@ public class Phase
     public Phase(int index, MineField field, Phase prevPhase, PhaseConfig config) {
         this.Index = index;
         this.Field = field;
+        this.Config = config;
+        this.MapName = config.MapName;
         this.ExitGate = config.Gate;
-        this.TimerSeconds = config.TimerSeconds;
         this.EnteranceGate = prevPhase?.ExitGate;
         this.PreviousPhase = prevPhase;
 

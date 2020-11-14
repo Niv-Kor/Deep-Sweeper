@@ -2,8 +2,10 @@
 
 public class CursorViewer : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Tooltip("View the cursor regularly during gameplay.")]
     [SerializeField] public bool showCursor = true;
+    #endregion
 
     void Update() {
         bool pressEsc = Input.GetKeyDown(KeyCode.Escape);

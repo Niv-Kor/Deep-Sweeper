@@ -22,7 +22,6 @@ public class MineField : ConfinedArea
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
     private Vector3 gridSize;
-    private Vector2 matrixSize;
     private float raycastHeight;
     private int gridsAmount;
     #endregion
@@ -35,6 +34,7 @@ public class MineField : ConfinedArea
     public List<MineGrid> Grids { get; private set; }
     public int MinesAmount { get; private set; }
     public bool IsReady { get; private set; }
+    public Vector2Int MatrixSize { get; private set; }
     #endregion
 
     private void Start() {
@@ -42,9 +42,9 @@ public class MineField : ConfinedArea
         this.gridSize = gridRenderer.bounds.size;
         this.terrain = FindObjectOfType<Terrain>();
         this.Grids = new List<MineGrid>();
-        this.matrixSize = CalcMatrixSize();
-        this.gridsMatrix = new MineGrid[(int) matrixSize.x ,(int) matrixSize.y];
-        this.gridsAmount = (int) matrixSize.x * (int) matrixSize.y;
+        this.MatrixSize = CalcMatrixSize();
+        this.gridsMatrix = new MineGrid[MatrixSize.x ,MatrixSize.y];
+        this.gridsAmount = MatrixSize.x * MatrixSize.y;
         this.MinesAmount = MinesPercent * gridsAmount / 100;
         this.raycastHeight = terrain.terrainData.size.y;
         this.IsReady = false;
@@ -68,10 +68,10 @@ public class MineField : ConfinedArea
     /// and the y coordinates represent the amount of grids
     /// that can fit vertically in the field.
     /// </returns>
-    private Vector2 CalcMatrixSize() {
+    private Vector2Int CalcMatrixSize() {
         int xAmount = (int) (Confine.Size.x / (gridSize.x + gridSpace));
         int zAmount = (int) (Confine.Size.z / (gridSize.z + gridSpace));
-        return new Vector2(zAmount, xAmount);
+        return new Vector2Int(zAmount, xAmount);
     }
 
     /// <summary>
@@ -81,8 +81,8 @@ public class MineField : ConfinedArea
         gridSize.y = 0;
         Vector3 startPoint = terrain.transform.position + Confine.Offset + gridSize / 2;
 
-        for (int i = 0; i < matrixSize.x; i++) {
-            for (int j = 0; j < matrixSize.y; j++) {
+        for (int i = 0; i < MatrixSize.x; i++) {
+            for (int j = 0; j < MatrixSize.y; j++) {
                 Vector3 diffVector = new Vector3(gridSize.x + gridSpace, 0, 0);
                 Vector3 point = startPoint + diffVector * j;
 
@@ -129,8 +129,8 @@ public class MineField : ConfinedArea
     /// Count the mined neighbours of each grid.
     /// </summary>
     private void CountNeighbours() {
-        for (int i = 0; i < matrixSize.x; i++) {
-            for (int j = 0; j < matrixSize.y; j++) {
+        for (int i = 0; i < MatrixSize.x; i++) {
+            for (int j = 0; j < MatrixSize.y; j++) {
                 MineGrid grid = gridsMatrix[i, j];
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
@@ -217,8 +217,8 @@ public class MineField : ConfinedArea
     /// <param name="col">Column index of the grid</param>
     /// <returns>The specified grid.</returns>
     private MineGrid GetGrid(int row, int col) {
-        bool internalRow = row >= 0 && row < matrixSize.x;
-        bool internalCol = col >= 0 && col < matrixSize.y;
+        bool internalRow = row >= 0 && row < MatrixSize.x;
+        bool internalCol = col >= 0 && col < MatrixSize.y;
 
         if (internalRow && internalCol) return gridsMatrix[row, col];
         else return null;

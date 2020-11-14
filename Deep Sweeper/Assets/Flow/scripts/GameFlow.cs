@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,6 +7,10 @@ using UnityEngine.Events;
 public class GameFlow : Singleton<GameFlow>
 {
     #region Exposed Editor Parameters
+    [Header("Level Settings")]
+    [Tooltip("The region to which this map belongs.")]
+    [SerializeField] private Region region;
+
     [Header("Prefabs")]
     [Tooltip("The parent object under which all mine fields are instantiated.")]
     [SerializeField] private Transform fieldsParent;
@@ -40,6 +45,10 @@ public class GameFlow : Singleton<GameFlow>
     public Phase CurrentPhase {
         get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
     }
+
+    public string RegionName {
+        get { return region.ToString().Replace('_', ' '); }
+    }
     #endregion
 
     private void Awake() {
@@ -48,6 +57,31 @@ public class GameFlow : Singleton<GameFlow>
         initialGate.RequestOpen(false);
         InitFields();
         NextPhase();
+    }
+
+    private void OnValidate() {
+        //check that each phase config contains the entire difficulty configurations set
+        for (int i = 0; i < phases.Length; i++) {
+            PhaseConfig phaseConfig = phases[i];
+
+            if (phaseConfig.Levels.Count != 3) {
+                List<DifficultyConfig> configList = new List<DifficultyConfig>();
+                var levels = Enum.GetValues(typeof(DifficultyLevel));
+
+                foreach (DifficultyLevel level in levels) {
+                    DifficultyConfig config = new DifficultyConfig {
+                        Difficulty = level,
+                        MinesPercent = 0,
+                        PhaseReward = 0,
+                        Clock = 999
+                    };
+
+                    configList.Add(config);
+                }
+
+                phases[i].Levels = configList;
+            }
+        }
     }
 
     private void OnDrawGizmos() {
@@ -80,7 +114,9 @@ public class GameFlow : Singleton<GameFlow>
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
             mineFieldCmp.Confine = phaseConfig.Confine;
-            mineFieldCmp.MinesPercent = phaseConfig.MinesPercent;
+            /// =====================================
+            mineFieldCmp.MinesPercent = 20; ///TODO
+            /// =====================================
 
             //append
             Phase phaseObj;

@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public struct PhaseConfig
 {
+    [Tooltip("The unique name of this map within the region.")]
+    [SerializeField] public string MapName;
+
     [Tooltip("The phase's boundaries.")]
     [SerializeField] public Confine Confine;
-
-    [Tooltip("Percentage of the mines within the mine fields.")]
-    [SerializeField] public int MinesPercent;
 
     [Tooltip("The exit gate from this phase to the next one.")]
     [SerializeField] public Gate Gate;
 
-    [Tooltip("The amount of time the player gets to finish the phase.")]
-    [SerializeField] public int TimerSeconds;
+    [Tooltip("A list of configurations for each difficulty level.")]
+    [SerializeField] public List<DifficultyConfig> Levels;
 }
