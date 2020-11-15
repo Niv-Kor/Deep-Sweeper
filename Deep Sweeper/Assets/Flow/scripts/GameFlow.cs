@@ -55,7 +55,7 @@ public class GameFlow : Singleton<GameFlow>
         this.Phases = new List<Phase>();
         this.phaseIndex = -1;
         initialGate.RequestOpen(false);
-        InitFields();
+        InitTerritories();
         NextPhase();
     }
 
@@ -98,7 +98,7 @@ public class GameFlow : Singleton<GameFlow>
     /// <summary>
     /// Instantiate and initialize all pre-defined mine fields.
     /// </summary>
-    private void InitFields() {
+    private void InitTerritories() {
         Phase prevPhase = null;
 
         for (int i = 0; i < phases.Length; i++) {
@@ -114,15 +114,20 @@ public class GameFlow : Singleton<GameFlow>
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
             mineFieldCmp.Confine = phaseConfig.Confine;
-            /// =====================================
-            mineFieldCmp.MinesPercent = 20; ///TODO
-            /// =====================================
 
             //append
             Phase phaseObj;
             
             if (i == 0) phaseObj = new Phase(i, mineFieldCmp, initialGate, phaseConfig);
             else phaseObj = new Phase(i, mineFieldCmp, prevPhase, phaseConfig);
+
+            //pop a window promt when the entrance gate is crossed.
+            void openPromt() {
+                PromtWindow window = IngameWindowManager.Instance.Pop(PromtTypes.FieldMeta);
+                window.windowConfirmedEvent += phaseObj.Begin;
+                phaseObj.EntranceGate.GateCrossEvent -= openPromt;
+            }
+            phaseObj.EntranceGate.GateCrossEvent += openPromt;
             
             if (prevPhase != null) prevPhase.FollowPhase = phaseObj;
             prevPhase = phaseObj;
@@ -149,7 +154,7 @@ public class GameFlow : Singleton<GameFlow>
             if (phaseIndex >= 0) Phases[phaseIndex++].Conclude();
             else ++phaseIndex; //first phase
 
-            Phases[phaseIndex].InitiateWhenReady();
+            ///Phases[phaseIndex].Initiate(); ///TODO MAYBE DELETE
             PhaseChangeEvent?.Invoke(phaseIndex);
         }
     }

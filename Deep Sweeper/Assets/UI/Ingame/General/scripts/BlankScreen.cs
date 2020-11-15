@@ -35,8 +35,10 @@ public class BlankScreen : Singleton<BlankScreen>
     /// <summary>
     /// Apply a temporary blank screen.
     /// </summary>
-    public void Apply() {
-        Apply(defOneWayLerpTime, defPauseTime);
+    /// <param name="fullyBlankCallback">An action to invoke when the screen is fully blank</param>
+    /// <param name="fullyTransparentCallback">An action to invoke when the screen is fully transparent again</param>
+    public void Apply(UnityAction fullyBlankCallback = null, UnityAction fullyTransparentCallback = null) {
+        Apply(defOneWayLerpTime, defPauseTime, fullyBlankCallback, fullyTransparentCallback);
     }
 
     /// <summary>
@@ -50,7 +52,16 @@ public class BlankScreen : Singleton<BlankScreen>
     /// The time it takes to start lerping again from a fully blank screen
     /// towards a transparent one.
     /// </param>
-    public void Apply(float oneWayTime, float pauseTime) {
+    /// <param name="fullyBlankCallback">An action to invoke when the screen is fully blank</param>
+    /// <param name="fullyTransparentCallback">An action to invoke when the screen is fully transparent again</param>
+    public void Apply(float oneWayTime, float pauseTime, UnityAction fullyBlankCallback = null, UnityAction fullyTransparentCallback = null) {
+        void fullyTransparentFunc() {
+            fullyTransparentCallback?.Invoke();
+            FullyTransparentEvent -= fullyTransparentFunc;
+        };
+
+        FullyBlankEvent += fullyBlankCallback;
+        FullyTransparentEvent += fullyTransparentFunc;
         StartCoroutine(LerpScreen(oneWayTime, pauseTime));
     }
 

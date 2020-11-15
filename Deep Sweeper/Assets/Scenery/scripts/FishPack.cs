@@ -30,7 +30,6 @@ public class FishPack : MonoBehaviour
 
     #region Class Members
     private static int packIdUtilizer = 0;
-    private int packId;
     private List<MarineLife> members;
     private MarineLifeManager marineLifeMngr;
     private float m_yawDirection;
@@ -42,7 +41,6 @@ public class FishPack : MonoBehaviour
     #endregion
 
     #region Properties
-    public int PackId { get; private set; }
     public float YawDirection {
         get { return m_yawDirection; }
         set {
@@ -63,8 +61,11 @@ public class FishPack : MonoBehaviour
         this.members = new List<MarineLife>();
         this.YawDirection = GenerateYawDirection();
         this.marineLifeMngr = FindObjectOfType<MarineLifeManager>();
-        this.PackId = ++packIdUtilizer;
-        gameObject.name = gameObject.name + " " + NumericUtils.PadNumber(PackId, ID_SIZE);
+    }
+
+    private void Start() {
+        MarineLifeSpawnControl spawnControl = GetComponentInParent<MarineLifeSpawnControl>();
+        if (spawnControl != null) spawnControl.SubmitPack(this);
     }
 
     /// <summary>

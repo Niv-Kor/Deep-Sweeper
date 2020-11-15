@@ -56,13 +56,7 @@ public class MarineLife : MonoBehaviour
     public event UnityAction<MarineLife> FishTurnEvent;
     #endregion
 
-    #region Properties
-    public int FishId { get; private set; }
-    #endregion
-
     private void Awake() {
-        this.FishId = ++fishIdUtilizer;
-        gameObject.name = gameObject.name + " " + NumericUtils.PadNumber(FishId, 8);
         this.mesh = GetComponentInChildren<SkinnedMeshRenderer>();
         mesh.enabled = false;
     }
@@ -146,8 +140,6 @@ public class MarineLife : MonoBehaviour
         void callback() {
             StopAllCoroutines();
             FishPack pack = GetComponentInParent<FishPack>();
-            int packId = pack.PackId;
-            int fishId = FishId;
             Destroy(gameObject);
         };
 

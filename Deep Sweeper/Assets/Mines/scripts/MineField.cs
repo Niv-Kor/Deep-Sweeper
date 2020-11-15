@@ -12,10 +12,6 @@ public class MineField : ConfinedArea
 
     [Tooltip("Space between grids.")]
     [SerializeField] private float gridSpace;
-
-    [Header("Mines")]
-    [Tooltip("Percentage of randomly spreaded mines.")]
-    [SerializeField] public int MinesPercent;
     #endregion
 
     #region Class Members
@@ -33,6 +29,7 @@ public class MineField : ConfinedArea
     #region Public Properties
     public List<MineGrid> Grids { get; private set; }
     public int MinesAmount { get; private set; }
+    public long TotalReward { get; private set; }
     public bool IsReady { get; private set; }
     public Vector2Int MatrixSize { get; private set; }
     #endregion
@@ -45,17 +42,8 @@ public class MineField : ConfinedArea
         this.MatrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[MatrixSize.x ,MatrixSize.y];
         this.gridsAmount = MatrixSize.x * MatrixSize.y;
-        this.MinesAmount = MinesPercent * gridsAmount / 100;
         this.raycastHeight = terrain.terrainData.size.y;
         this.IsReady = false;
-
-        LayoutMatrix();
-        SpreadMines(MinesAmount);
-        CountNeighbours();
-        OpenInitial();
-        CarpetBounce();
-        IsReady = true;
-        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>
@@ -169,7 +157,7 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Bounce the mine with a carpet pattern.
+    /// Bounce the mine using a carpet pattern.
     /// </summary>
     private void CarpetBounce() {
         List<MineBouncer> bouncers = new List<MineBouncer>();
@@ -244,6 +232,21 @@ public class MineField : ConfinedArea
             if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
 
         return true;
+    }
+
+    /// <summary>
+    /// Initialize all field components.
+    /// </summary>
+    public void Init(int minesAmount, long totalReward) {
+        MinesAmount = minesAmount; //(int) (minesPercent * gridsAmount / 100);
+        TotalReward = totalReward;
+        LayoutMatrix();
+        SpreadMines(MinesAmount);
+        CountNeighbours();
+        OpenInitial();
+        CarpetBounce();
+        IsReady = true;
+        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>

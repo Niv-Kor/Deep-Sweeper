@@ -27,16 +27,17 @@ namespace FieldMeta
         #endregion
 
         #region Constants
-        private static readonly Color COLOR_ERROR = Color.white;
+        private static readonly Color TEXT_COLOR = Color.white;
         #endregion
 
         #region Class Members
         protected Image icon;
         protected MineField field;
+        protected Color defaultIconColor;
         #endregion
 
         #region Properties
-        protected string Value {
+        public string Value {
             get { return value.text; }
             set { this.value.text = value; }
         }
@@ -44,6 +45,7 @@ namespace FieldMeta
 
         protected virtual void Start() {
             this.icon = GetComponent<Image>();
+            this.defaultIconColor = icon.color;
             this.field = GameFlow.Instance.CurrentPhase.Field;
             field.FieldReadyEvent += delegate { UpdateValue(DifficultyLevel.Easy); };
         }
@@ -65,9 +67,9 @@ namespace FieldMeta
         public void UpdateValue(DifficultyLevel difficulty) {
             Value = GetFieldValue(difficulty);
             FieldMetaIconColor colorConfig = iconColors.Find(x => x.Difficulty == difficulty);
-            Color color = (colorConfig.Difficulty == difficulty) ? colorConfig.Color : COLOR_ERROR;
+            Color color = (colorConfig.Difficulty == difficulty) ? colorConfig.Color : defaultIconColor;
+            value.color = TEXT_COLOR;
             icon.color = color;
-            value.color = COLOR_ERROR;
         }
     }
 }

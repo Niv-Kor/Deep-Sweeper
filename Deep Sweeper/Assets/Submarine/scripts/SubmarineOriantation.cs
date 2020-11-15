@@ -7,7 +7,7 @@ public class SubmarineOriantation : MonoBehaviour
     public Phase CurrentPhase {
         get {
             foreach (Phase phase in flow.Phases) {
-                bool entranceOpen = phase.EnteranceGate == null || phase.EnteranceGate.IsOpen;
+                bool entranceOpen = phase.EntranceGate == null || phase.EntranceGate.IsOpen;
                 bool exitOpen = phase.ExitGate != null && phase.ExitGate.IsOpen;
                 if (entranceOpen && !exitOpen) return phase;
             }

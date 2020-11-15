@@ -6,7 +6,7 @@ public class Phase
     public Phase PreviousPhase { get; private set; }
     public Phase FollowPhase { get; set; }
     public MineField Field { get; private set; }
-    public Gate EnteranceGate { get; private set; }
+    public Gate EntranceGate { get; private set; }
     public Gate ExitGate { get; private set; }
     #endregion
 
@@ -29,7 +29,7 @@ public class Phase
         this.Config = config;
         this.MapName = config.MapName;
         this.ExitGate = config.Gate;
-        this.EnteranceGate = prevPhase?.ExitGate;
+        this.EntranceGate = prevPhase?.ExitGate;
         this.PreviousPhase = prevPhase;
 
         if (config.Gate != null) config.Gate.Phase = this;
@@ -43,16 +43,7 @@ public class Phase
     /// <param name="leadGate">The gate that leads to this phase</param>
     /// <param name="prevPhase">The previous phase link</param>
     public Phase(int index, MineField field, Gate leadGate, PhaseConfig config) : this(index, field, (Phase) null, config) {
-        this.EnteranceGate = leadGate;
-    }
-
-    /// <summary>
-    /// Initiate the phase's components.
-    /// </summary>
-    private void Initiate() {
-        ActivateGrids(true);
-        EnteranceGate.GateCrossEvent += Begin;
-        GameFlow.Instance.ReportPhaseUpdated();
+        this.EntranceGate = leadGate;
     }
 
     /// <summary>
@@ -60,7 +51,11 @@ public class Phase
     /// The phase must first be initialized.
     /// </summary>
     public void Begin() {
-        ///TODO
+        ActivateGrids(true);
+        GameFlow.Instance.ReportPhaseUpdated();
+        /// =====================================
+        ///TODO activate timer and flags spatial
+        /// =====================================
     }
 
     /// <summary>
@@ -73,13 +68,13 @@ public class Phase
         else Field.gameObject.SetActive(flag);
     }
 
-    /// <summary>
+    /*/// <summary>
     /// Wait until the field is ready and then initiate the phase.
     /// </summary>
     public void InitiateWhenReady() {
         if (!Field.IsReady) Field.FieldReadyEvent += Initiate;
         else Initiate();
-    }
+    }*/
 
     /// <summary>
     /// Finish the phase.
