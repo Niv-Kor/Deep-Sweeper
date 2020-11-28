@@ -523,6 +523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47884db009d08f243bff1a70b084a4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  confirmButton: {fileID: 9099859371680647300}
+  cancelButton: {fileID: 0}
   buttons:
   - Difficulty: 0
     ButtonObject: {fileID: 9099859371913246303}
@@ -798,7 +800,6 @@ GameObject:
   - component: {fileID: 9099859371680647303}
   - component: {fileID: 9099859371680647300}
   - component: {fileID: 9099859371680647301}
-  - component: {fileID: 9099859371680647305}
   m_Layer: 5
   m_Name: Enter Button
   m_TagString: Untagged
@@ -927,20 +928,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &9099859371680647305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9099859371680647299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fd11a2f14cd9794ba3e57555226b6b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minesValueCmp: {fileID: 9099859371468077177}
-  rewardValueCmp: {fileID: 9099859370976680243}
 --- !u!1 &9099859371775307816
 GameObject:
   m_ObjectHideFlags: 0

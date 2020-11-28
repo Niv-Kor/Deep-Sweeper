@@ -70,7 +70,7 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
         terrain.gameObject.SetActive(true);
 
         //destroy unnecessary components
-        TerrainCollider collider = terrain.GetComponent<TerrainCollider>();
+        TerrainCollider collider = terrainCopy.GetComponent<TerrainCollider>();
         Destroy(collider);
 
         //destroy all children objects

@@ -34,32 +34,53 @@ public class MineField : ConfinedArea
     public Vector2Int MatrixSize { get; private set; }
     #endregion
 
-    private void Start() {
+    private void Awake() {
         MeshRenderer gridRenderer = gridPrefab.GetComponent<MeshRenderer>();
         this.gridSize = gridRenderer.bounds.size;
-        this.terrain = FindObjectOfType<Terrain>();
+        this.terrain = WaterPhysics.Instance.Terrain;
         this.Grids = new List<MineGrid>();
-        this.MatrixSize = CalcMatrixSize();
-        this.gridsMatrix = new MineGrid[MatrixSize.x ,MatrixSize.y];
-        this.gridsAmount = MatrixSize.x * MatrixSize.y;
         this.raycastHeight = terrain.terrainData.size.y;
         this.IsReady = false;
-        Init(2, 100);
+    }
+
+    /// <summary>
+    /// Set the usable area of the field.
+    /// </summary>
+    /// <param name="area">A confined area that can be used by the field</param>
+    public void DefineArea(Confine area) {
+        this.Confine = area;
+        this.MatrixSize = CalcMatrixSize();
+        this.gridsMatrix = new MineGrid[MatrixSize.x, MatrixSize.y];
+        this.gridsAmount = MatrixSize.x * MatrixSize.y;
+        IsReady = true;
+        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>
     /// Initialize all field components.
+    /// This method only works after defining the field's area.
+    /// <see cref="DefineArea(Confine)"/>
     /// </summary>
-    public void Init(int minesAmount, long totalReward) {
+    /// <param name="minesAmount">Amount of real mines in the field</param>
+    /// <param name="totalReward">Total reward value for the entire field</param>
+    /// <returns>True if the field has initiated successfully.</returns>
+    public bool Init(int minesAmount, long totalReward) {
+        if (!IsReady) return false;
+
         MinesAmount = minesAmount;
         TotalReward = totalReward;
         LayoutMatrix();
         SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
-        CarpetBounce();
-        IsReady = true;
-        FieldReadyEvent?.Invoke();
+        return true;
+    }
+
+    /// <summary>
+    /// Begin mines animation and ingame events.
+    /// </summary>
+    public void Begin() {
+        if (IsReady) CarpetBounce();
     }
 
     /// <summary>
@@ -92,7 +113,7 @@ public class MineField : ConfinedArea
 
                 //get the terrain height at the specified point
                 Vector3 raycastPos = point + Vector3.up * raycastHeight;
-                Physics.Raycast(raycastPos, Vector3.down, out RaycastHit rayHit, raycastHeight, Layers.GROUND);
+                Physics.Raycast(raycastPos, Vector3.down, out RaycastHit rayHit, raycastHeight * 1.2f, Layers.GROUND);
                 point.y = rayHit.point.y;
 
                 GameObject obj = Instantiate(gridPrefab);
@@ -244,6 +265,8 @@ public class MineField : ConfinedArea
     /// </summary>
     /// <returns>True if all dismissable mines are indeed dismissed.</returns>
     public bool IsClear() {
+        if (!IsReady) return false;
+
         foreach (MineGrid grid in Grids)
             if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
 

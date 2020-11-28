@@ -3,6 +3,11 @@ using UnityEngine.Events;
 
 public class WaterPhysics : Singleton<WaterPhysics>
 {
+    #region Exposed Editor Parameters
+    [Header("Prefabs")]
+    [Tooltip("The main terrain of the scene.")]
+    [SerializeField] private Terrain terrain;
+
     [Header("Turbulence")]
     [Tooltip("Set waves' intensity and direction randomly on awake.")]
     [SerializeField] private bool setRandom;
@@ -19,12 +24,19 @@ public class WaterPhysics : Singleton<WaterPhysics>
 
     [Tooltip("Maximum distance of clear vision before the cloud of fog.")]
     [SerializeField] private float fogDistance = 25f;
+    #endregion
 
+    #region Class Members
     private Vector3 m_direction;
     private float m_intensity;
+    #endregion
 
+    #region Events
     public event UnityAction<WaveSettings> WavesChangeTrigger;
+    #endregion
 
+    #region Properties
+    public Terrain Terrain { get { return terrain; } }
     public Vector3 Direction {
         get { return m_direction; }
         private set {
@@ -49,6 +61,7 @@ public class WaterPhysics : Singleton<WaterPhysics>
     public float FogDistance {
         get { return fogDistance; }
     }
+    #endregion
 
     private void Awake() {
         //concatenate gravity event

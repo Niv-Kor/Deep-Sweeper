@@ -31,11 +31,9 @@ public class Phase
         this.ExitGate = config.Gate;
         this.EntranceGate = prevPhase?.ExitGate;
         this.PreviousPhase = prevPhase;
+        ActivateField(false);
 
         if (config.Gate != null) config.Gate.Phase = this;
-
-        //disable field if it's not the first phase
-        Field.FieldReadyEvent += delegate { ActivateGrids(false); };
     }
 
     /// <param name="index">The index of the phase (0 based)</param>
@@ -51,30 +49,22 @@ public class Phase
     /// The phase must first be initialized.
     /// </summary>
     public void Begin() {
-        ActivateGrids(true);
+        ActivateField(true);
         GameFlow.Instance.ReportPhaseUpdated();
-        /// =====================================
-        ///TODO activate timer and flags spatial
-        /// =====================================
     }
 
     /// <summary>
-    /// Activate or deactivate the mine field's grids.
+    /// Activate or deactivate the phase's field.
     /// </summary>
     /// <param name="flag">True to activate or false to deactivate</param>
     /// <param name="destoryField">True to permanently destory the mine field object</param>
-    public void ActivateGrids(bool flag, bool destoryField = false) {
+    public void ActivateField(bool flag, bool destoryField = false) {
         if (!flag && destoryField) Field.DestroyField();
-        else Field.gameObject.SetActive(flag);
+        else {
+            Field.gameObject.SetActive(flag);
+            if (flag) Field.Begin();
+        }
     }
-
-    /*/// <summary>
-    /// Wait until the field is ready and then initiate the phase.
-    /// </summary>
-    public void InitiateWhenReady() {
-        if (!Field.IsReady) Field.FieldReadyEvent += Initiate;
-        else Initiate();
-    }*/
 
     /// <summary>
     /// Finish the phase.
@@ -82,7 +72,7 @@ public class Phase
     public void Conclude() {
         if (ExitGate != null) {
             ExitGate.RequestOpen(true);
-            ActivateGrids(false, true);
+            ActivateField(false, true);
         }
         else {
             ///TODO win

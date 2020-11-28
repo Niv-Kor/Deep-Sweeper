@@ -43,11 +43,10 @@ namespace FieldMeta
         }
         #endregion
 
-        protected virtual void Start() {
+        protected virtual void Awake() {
             this.icon = GetComponent<Image>();
             this.defaultIconColor = icon.color;
             this.field = GameFlow.Instance.CurrentPhase.Field;
-            field.FieldReadyEvent += delegate { UpdateValue(DifficultyLevel.Easy); };
         }
 
         /// <param name="difficulty">Selected difficulty</param>

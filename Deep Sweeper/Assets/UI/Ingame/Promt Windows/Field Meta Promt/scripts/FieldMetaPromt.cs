@@ -23,6 +23,10 @@ namespace FieldMeta
         [Tooltip("The promt's entry buttons.")]
         [SerializeField] private List<DifficultyEntryButton> buttons;
 
+        [Header("Settings")]
+        [Tooltip("The difficulty that is initially selected.")]
+        [SerializeField] private DifficultyLevel defaultDifficulty = DifficultyLevel.Easy;
+
         [Header("Blank Screen")]
         [Tooltip("The time it takes to display a fully blank screen after pressing the start button.")]
         [SerializeField] private float blankScreenTime;
@@ -32,20 +36,42 @@ namespace FieldMeta
         #endregion
 
         #region Class Members
-        private FieldMetaValue[] values;
+        private List<FieldMetaValue> values;
         #endregion
 
-        #region Events
-        public event UnityAction PromtClosedEvent;
-        #endregion
+        protected override void Awake() {
+            base.Awake();
+
+            FieldMetaValue[] valuesCmpArr = GetComponentsInChildren<FieldMetaValue>();
+            this.values = new List<FieldMetaValue>(valuesCmpArr);
+        }
 
         private void Start() {
-            this.values = GetComponentsInChildren<FieldMetaValue>();
-
             foreach (DifficultyEntryButton button in buttons) {
                 Button buttonCmp = button.ButtonObject.GetComponent<Button>();
                 buttonCmp.onClick.AddListener(delegate { UpdatePromtValues(button.Difficulty); });
             }
+
+            //set the action being triggered by the prompt's confirmation
+            FieldMinesMeta minesValueCmp = (FieldMinesMeta) values.Find(x => x is FieldMinesMeta);
+            FieldRewardMeta rewardValueCmp = (FieldRewardMeta) values.Find(x => x is FieldRewardMeta);
+
+            WindowConfirmedEvent += delegate {
+                int minesAmount = int.Parse(minesValueCmp.Value);
+                long reward = long.Parse(rewardValueCmp.Value);
+
+                BlankScreen.Instance.Apply(blankScreenTime, blankScreenPause, delegate {
+                    GameFlow.Instance.CurrentPhase.Field.gameObject.SetActive(true);
+                    GameFlow.Instance.CurrentPhase.Field.Init(minesAmount, reward);
+                    GameFlow.Instance.CurrentPhase.Begin();
+                });
+            };
+
+            //initially select one of the difficulties
+            UpdatePromtValues(DifficultyLevel.Easy);
+            GameObject defButtonObj = buttons.Find(x => x.Difficulty == defaultDifficulty).ButtonObject;
+            Button defButton = defButtonObj?.GetComponent<Button>();
+            defButton?.onClick.Invoke();
         }
 
         /// <summary>
@@ -61,10 +87,15 @@ namespace FieldMeta
         /// Start the phase and close the window.
         /// </summary>
         public void StartPhase() {
-            PromtClosedEvent?.Invoke();
-            void blankAction() { base.Close(); }
-            BlankScreen.Instance.Apply(blankScreenTime, blankScreenPause, blankAction);
-            OnConfirm();
+            FieldMinesMeta minesValueCmp = (FieldMinesMeta) values.Find(x => x is FieldMinesMeta);
+            FieldRewardMeta rewardValueCmp = (FieldRewardMeta) values.Find(x => x is FieldRewardMeta);
+
+            if (minesValueCmp != null && rewardValueCmp != null) {
+                int minesAmount = int.Parse(minesValueCmp.Value);
+                long reward = long.Parse(rewardValueCmp.Value);
+                GameFlow.Instance.CurrentPhase.Field.Init(minesAmount, reward);
+                GameFlow.Instance.CurrentPhase.Begin();
+            }
         }
     }
 }

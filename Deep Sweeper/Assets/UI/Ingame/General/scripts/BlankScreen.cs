@@ -55,12 +55,17 @@ public class BlankScreen : Singleton<BlankScreen>
     /// <param name="fullyBlankCallback">An action to invoke when the screen is fully blank</param>
     /// <param name="fullyTransparentCallback">An action to invoke when the screen is fully transparent again</param>
     public void Apply(float oneWayTime, float pauseTime, UnityAction fullyBlankCallback = null, UnityAction fullyTransparentCallback = null) {
+        void fullyBlankFunc() {
+            fullyBlankCallback?.Invoke();
+            FullyBlankEvent -= fullyBlankFunc;
+        };
+
         void fullyTransparentFunc() {
             fullyTransparentCallback?.Invoke();
             FullyTransparentEvent -= fullyTransparentFunc;
         };
 
-        FullyBlankEvent += fullyBlankCallback;
+        FullyBlankEvent += fullyBlankFunc;
         FullyTransparentEvent += fullyTransparentFunc;
         StartCoroutine(LerpScreen(oneWayTime, pauseTime));
     }

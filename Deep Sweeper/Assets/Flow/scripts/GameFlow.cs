@@ -55,6 +55,9 @@ public class GameFlow : Singleton<GameFlow>
         this.Phases = new List<Phase>();
         this.phaseIndex = -1;
         initialGate.RequestOpen(false);
+    }
+
+    private void Start() {
         InitTerritories();
         NextPhase();
     }
@@ -113,7 +116,7 @@ public class GameFlow : Singleton<GameFlow>
 
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
-            mineFieldCmp.Confine = phaseConfig.Confine;
+            mineFieldCmp.DefineArea(phaseConfig.Confine);
 
             //append
             Phase phaseObj;
@@ -123,8 +126,7 @@ public class GameFlow : Singleton<GameFlow>
 
             //pop a window promt when the entrance gate is crossed.
             void openPromt() {
-                PromtWindow window = IngameWindowManager.Instance.Pop(PromtTypes.FieldMeta);
-                window.windowConfirmedEvent += phaseObj.Begin;
+                IngameWindowManager.Instance.Pop(PromtTypes.FieldMeta);
                 phaseObj.EntranceGate.GateCrossEvent -= openPromt;
             }
             phaseObj.EntranceGate.GateCrossEvent += openPromt;
