@@ -44,6 +44,22 @@ public class MineField : ConfinedArea
         this.gridsAmount = MatrixSize.x * MatrixSize.y;
         this.raycastHeight = terrain.terrainData.size.y;
         this.IsReady = false;
+        Init(2, 100);
+    }
+
+    /// <summary>
+    /// Initialize all field components.
+    /// </summary>
+    public void Init(int minesAmount, long totalReward) {
+        MinesAmount = minesAmount;
+        TotalReward = totalReward;
+        LayoutMatrix();
+        SpreadMines(MinesAmount);
+        CountNeighbours();
+        OpenInitial();
+        CarpetBounce();
+        IsReady = true;
+        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>
@@ -232,21 +248,6 @@ public class MineField : ConfinedArea
             if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
 
         return true;
-    }
-
-    /// <summary>
-    /// Initialize all field components.
-    /// </summary>
-    public void Init(int minesAmount, long totalReward) {
-        MinesAmount = minesAmount; //(int) (minesPercent * gridsAmount / 100);
-        TotalReward = totalReward;
-        LayoutMatrix();
-        SpreadMines(MinesAmount);
-        CountNeighbours();
-        OpenInitial();
-        CarpetBounce();
-        IsReady = true;
-        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>

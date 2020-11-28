@@ -29,7 +29,14 @@ public class IngameWindowManager : Singleton<IngameWindowManager>
 
         if (windows.Count > 0 && config.Type == promtType) {
             PromtWindow window = Instantiate(config.WindowPrefab);
+            float scale = window.transform.localScale.x;
             window.transform.SetParent(transform);
+            window.transform.localPosition = Vector3.zero;
+            window.transform.localScale = Vector3.one * scale;
+
+            //display cursor
+            CursorViewer.Instance.Display = true;
+            CursorViewer.Instance.Lock = true;
             return window;
         }
 

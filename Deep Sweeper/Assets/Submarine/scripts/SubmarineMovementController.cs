@@ -1,9 +1,9 @@
-﻿using com.ootii.Cameras;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
-public class SubmarineMovementController : MonoBehaviour
+public class SubmarineMovementController : PlayerController3D
 {
+    #region Exposed Editor Parameters
     [Header("Movement Settings")]
     [Tooltip("Minimum height of the submarine above the ground.")]
     [SerializeField] private float minHeight = 1;
@@ -29,17 +29,20 @@ public class SubmarineMovementController : MonoBehaviour
 
     [Tooltip("The float height of each wave.")]
     [SerializeField] private Vector2 waveLengthRange;
+    #endregion
 
-    private Rigidbody rigidBody;
+    #region Class Members
     private DirectionUnit directionUnit;
     private Vector3 startRestingPos;
     private float waveLength;
     private bool resting;
+    #endregion
 
+    #region Properties
     public bool MovementAllowd { get; set; }
+    #endregion
 
     private void Start() {
-        this.rigidBody = GetComponent<Rigidbody>();
         this.directionUnit = DirectionUnit.Instance;
         this.waveLength = RangeMath.PercentOfRange(WaterPhysics.Instance.IntensityPercentage, waveLengthRange);
         this.startRestingPos = transform.position;
@@ -49,6 +52,8 @@ public class SubmarineMovementController : MonoBehaviour
     }
 
     private void Update() {
+        if (!IsMovable) return;
+
         //get user input
         float horInput = Input.GetAxis("Horizontal");
         float verInput = Input.GetAxis("Vertical");
@@ -108,8 +113,12 @@ public class SubmarineMovementController : MonoBehaviour
         Vector3 direction = verDirection + horDirection;
         Vector3 verticalVector = Vector3.up * heightInput * verticalSpeed;
         Vector3 forceVector = direction * speed + verticalVector;
-        direction.y = 0;
-        rigidBody.AddForce(forceVector);
+        Move(forceVector);
+    }
+
+    /// <inheritdoc/>
+    protected override void Move(Vector3 vector) {
+        rigidBody.AddForce(vector);
 
         //prevent the submarine's velocity from diverging
         rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxVelocity);

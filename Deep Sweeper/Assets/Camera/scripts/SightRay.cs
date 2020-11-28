@@ -79,6 +79,8 @@ public class SightRay : Singleton<SightRay>
     }
 
     private void Update() {
+        if (CursorViewer.Instance.Display) return;
+
         CastRay();
 
         bool mouseRight = Input.GetMouseButtonDown(1);
