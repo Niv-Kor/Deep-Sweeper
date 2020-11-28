@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace FieldMeta
@@ -68,10 +69,10 @@ namespace FieldMeta
             };
 
             //initially select one of the difficulties
-            UpdatePromtValues(DifficultyLevel.Easy);
             GameObject defButtonObj = buttons.Find(x => x.Difficulty == defaultDifficulty).ButtonObject;
             Button defButton = defButtonObj?.GetComponent<Button>();
             defButton?.onClick.Invoke();
+            EventSystem.current.SetSelectedGameObject(defButtonObj);
         }
 
         /// <summary>
