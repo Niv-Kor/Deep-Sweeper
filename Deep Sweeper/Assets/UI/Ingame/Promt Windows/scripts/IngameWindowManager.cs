@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class IngameWindowManager : Singleton<IngameWindowManager>
 {
     [Serializable]
-    private struct PromtWindowConfig
-    {
+    private struct PromtWindowConfig {
         [Tooltip("The promt window type.")]
         [SerializeField] public PromtTypes Type;
 
@@ -17,8 +17,11 @@ public class IngameWindowManager : Singleton<IngameWindowManager>
     #region Exposed Editor Parameters
     [Tooltip("A list of all available window configurations.")]
     [SerializeField] private List<PromtWindowConfig> windows;
+
+    [Tooltip("The time it takes the window to fully scale up during entrance animation.")]
+    [SerializeField] private float scaleTime;
     #endregion
-    
+
     /// <summary>
     /// Pop a promt window on the screen.
     /// </summary>
@@ -31,8 +34,9 @@ public class IngameWindowManager : Singleton<IngameWindowManager>
             PromtWindow window = Instantiate(config.WindowPrefab);
             float scale = window.transform.localScale.x;
             window.transform.SetParent(transform);
+            window.transform.localScale = Vector3.zero;
             window.transform.localPosition = Vector3.zero;
-            window.transform.localScale = Vector3.one * scale;
+            StartCoroutine(ScaleEnter(window, scale));
 
             //display cursor
             CursorViewer.Instance.Display = true;
@@ -41,5 +45,23 @@ public class IngameWindowManager : Singleton<IngameWindowManager>
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Scale the window up from zero, until it reaches its original size.
+    /// </summary>
+    /// <param name="window">The window to scale</param>
+    /// <param name="fullScale">The original scale value of the window</param>
+    private IEnumerator ScaleEnter(PromtWindow window, float fullScale) {
+        float timer = 0;
+        window.transform.localScale = Vector3.one * fullScale;
+
+        while (timer <= scaleTime) {
+            timer += Time.deltaTime;
+            float scale = Mathf.Lerp(0, fullScale, timer / scaleTime);
+            window.transform.localScale = Vector3.one * scale;
+
+            yield return null;
+        }
     }
 }

@@ -2,16 +2,20 @@
 
 public class WavesLight : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Tooltip("The alpha value of the waves' light")]
     [SerializeField] private float brightness;
 
     [Tooltip("The minimum (inclusive) and maximum (exclusive) values the waves' speed can get.\n"
            + "This value is generated based on the waves intensity in the global Waves component.")]
     [SerializeField] private Vector2 speedRange;
+    #endregion
 
+    #region Class Members
     private Light lightComponent;
     private Vector3 direction;
     private float motionSpeed;
+    #endregion
 
     private void Start() {
         WaterPhysics waves = WaterPhysics.Instance;

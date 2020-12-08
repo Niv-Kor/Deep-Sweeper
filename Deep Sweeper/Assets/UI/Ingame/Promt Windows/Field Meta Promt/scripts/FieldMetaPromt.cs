@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -76,7 +75,7 @@ namespace FieldMeta
         }
 
         /// <summary>
-        /// Update each of the meta values in the promt
+        /// Update each of the meta values in the promt.
         /// </summary>
         /// <param name="difficulty">Selected difficulty entry button</param>
         private void UpdatePromtValues(DifficultyLevel difficulty) {

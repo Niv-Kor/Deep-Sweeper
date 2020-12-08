@@ -2,12 +2,17 @@
 
 public class ConfinedArea : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Area Definition")]
     [Tooltip("The field confines' offset and size.")]
     [SerializeField] public Confine Confine;
+    #endregion
 
+    #region Constants
     protected static readonly Color GIZMOS_COLOR = new Color(0xff, 0x0, 0xe8);
+    #endregion
 
+    #region Properties
     public Vector3 AreaCenter {
         get { return Confine.Offset + Confine.Size / 2; }
     }
@@ -24,6 +29,7 @@ public class ConfinedArea : MonoBehaviour
     public float AreaRadius {
         get { return AreaPerimeter / 2; }
     }
+    #endregion
 
     protected virtual void OnDrawGizmos() {
         Gizmos.color = GIZMOS_COLOR;

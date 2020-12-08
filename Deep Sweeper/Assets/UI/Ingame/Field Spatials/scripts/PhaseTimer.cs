@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PhaseTimer : MonoBehaviour
+public class PhaseTimer : Singleton<PhaseTimer>
 {
     #region Constants
     private static readonly int DECIMALS_THRESHOLD = 100;
@@ -18,9 +18,13 @@ public class PhaseTimer : MonoBehaviour
     #endregion
 
     private void Start() {
-        this.text = GetComponent<TextMeshProUGUI>();
+        this.text = GetComponentInChildren<TextMeshProUGUI>();
     }
 
+    /// <summary>
+    /// Activate the clock and start counting towards 0.
+    /// </summary>
+    /// <param name="seconds">Amount of seconds to start with</param>
     private IEnumerator Countdown(float seconds) {
         text.text = seconds + ":00";
 

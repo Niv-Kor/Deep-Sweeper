@@ -2,6 +2,7 @@
 
 public abstract class MarineSpawner : ConfinedArea
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The particle system prefabs to instantiate.")]
     [SerializeField] public GameObject[] Prefabs;
@@ -22,9 +23,12 @@ public abstract class MarineSpawner : ConfinedArea
 
     [Tooltip("Affection of the waves' turbulence.")]
     [SerializeField] public SpawnAffection TurbulenceAffection;
+    #endregion
 
+    #region Class Members
     protected GameObject parent;
     protected int spread, emission;
+    #endregion
 
     protected virtual void Start() {
         if (!string.IsNullOrEmpty(parentObjectName)) {

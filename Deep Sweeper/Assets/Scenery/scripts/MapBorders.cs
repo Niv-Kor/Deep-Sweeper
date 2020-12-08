@@ -2,6 +2,7 @@
 
 public class MapBorders : ConfinedArea
 {
+    #region Exposed Editor Parameters
     [Tooltip("True to automatically find the terrain's confines.")]
     [SerializeField] private bool autoFindTerrain;
 
@@ -15,12 +16,17 @@ public class MapBorders : ConfinedArea
            + "Setting it to 0 will cause the borders to be established the map's center point, "
            + "while setting it to 1 will cause them to be established at its furthest edges.")]
     [SerializeField] [Range(0f, 1f)] private float mapRadiusPercent = 1;
+    #endregion
 
+    #region Constants
     private static readonly float BORDERS_DEPTH = 50f;
     private static readonly Color GIZMOS_CEILING_COLOR = Color.green;
     private static readonly Color GIZMOS_FLOOR_COLOR = Color.red;
+    #endregion
 
+    #region Class Members
     private Terrain terrain;
+    #endregion
 
     private void Awake() {
         if (autoFindTerrain) this.terrain = FindObjectOfType<Terrain>();
