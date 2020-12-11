@@ -48,8 +48,14 @@ public class Phase
     /// Begin the phase's timer and game mechanics.
     /// The phase must first be initialized.
     /// </summary>
-    public void Begin() {
+    /// <param name="difficulty">The difficulty of the phase</param>
+    public void Begin(DifficultyLevel difficulty) {
         ActivateField(true);
+        DifficultyConfig config = Config.Levels.Find(x => x.Difficulty == difficulty);
+        int levelTimer = config.Clock;
+        PhaseTimerSpatial.Instance.Set(levelTimer);
+        PhaseCounterSpatial.Instance.Display(true);
+        FlagsGaugeSpatial.Instance.Display(true);
         GameFlow.Instance.ReportPhaseUpdated();
     }
 

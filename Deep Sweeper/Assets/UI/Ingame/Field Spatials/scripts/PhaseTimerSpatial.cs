@@ -3,42 +3,40 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PhaseTimer : Singleton<PhaseTimer>
+public class PhaseTimerSpatial : PhaseSpatial<PhaseTimerSpatial>
 {
-    #region Constants
-    private static readonly int DECIMALS_THRESHOLD = 100;
+    #region Exposed Editor Parameters
+    [Tooltip("The text component that consists of the timer's seconds.")]
+    [SerializeField] private TextMeshProUGUI modifiableText;
     #endregion
 
-    #region Class Members
-    private TextMeshProUGUI text;
+    #region Constants
+    private static readonly int DECIMALS_THRESHOLD = 100;
     #endregion
 
     #region Events
     public event UnityAction TimeupEvent;
     #endregion
 
-    private void Start() {
-        this.text = GetComponentInChildren<TextMeshProUGUI>();
-    }
-
     /// <summary>
     /// Activate the clock and start counting towards 0.
     /// </summary>
     /// <param name="seconds">Amount of seconds to start with</param>
     private IEnumerator Countdown(float seconds) {
-        text.text = seconds + ":00";
+        modifiableText.text = (seconds + 1) + ":00";
 
         while (seconds > 0) {
-            seconds -= Time.deltaTime;
             float integer = Mathf.Max((int) seconds, 0);
 
             if (integer < DECIMALS_THRESHOLD) {
                 float decimals = (int) (Mathf.Max(seconds % 1f, 0) * 100);
                 string decPrefix = (decimals < 10) ? "0" : "";
-                text.text = integer + ":" + decPrefix + decimals;
+                modifiableText.text = integer + ":" + decPrefix + decimals;
             }
-            else text.text = integer.ToString();
-            yield return null;
+            else modifiableText.text = integer.ToString();
+
+            yield return new WaitForSeconds(1);
+            seconds--;
         }
 
         TimeupEvent?.Invoke();
@@ -50,6 +48,7 @@ public class PhaseTimer : Singleton<PhaseTimer>
     /// <param name="seconds">Initial clock setting</param>
     public void Set(int seconds) {
         Stop();
+        Enabled = true;
         StartCoroutine(Countdown(seconds));
     }
 
@@ -58,5 +57,6 @@ public class PhaseTimer : Singleton<PhaseTimer>
     /// </summary>
     public void Stop() {
         StopAllCoroutines();
+        Enabled = false;
     }
 }

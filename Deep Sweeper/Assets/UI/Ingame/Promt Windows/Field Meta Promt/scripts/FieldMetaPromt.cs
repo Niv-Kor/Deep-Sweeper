@@ -37,6 +37,7 @@ namespace FieldMeta
 
         #region Class Members
         private List<FieldMetaValue> values;
+        private DifficultyLevel selectedDifficulty;
         #endregion
 
         protected override void Awake() {
@@ -44,6 +45,7 @@ namespace FieldMeta
 
             FieldMetaValue[] valuesCmpArr = GetComponentsInChildren<FieldMetaValue>();
             this.values = new List<FieldMetaValue>(valuesCmpArr);
+            this.selectedDifficulty = defaultDifficulty;
         }
 
         private void Start() {
@@ -60,11 +62,16 @@ namespace FieldMeta
                 int minesAmount = int.Parse(minesValueCmp.Value);
                 long reward = long.Parse(rewardValueCmp.Value);
 
-                BlankScreen.Instance.Apply(blankScreenTime, blankScreenPause, delegate {
+                void OnBlankScreen() {
                     GameFlow.Instance.CurrentPhase.Field.gameObject.SetActive(true);
                     GameFlow.Instance.CurrentPhase.Field.Init(minesAmount, reward);
-                    GameFlow.Instance.CurrentPhase.Begin();
-                });
+                }
+
+                void OnTransparentScreen() {
+                    GameFlow.Instance.CurrentPhase.Begin(selectedDifficulty);
+                }
+
+                BlankScreen.Instance.Apply(blankScreenTime, blankScreenPause, OnBlankScreen, OnTransparentScreen);
             };
 
             //initially select one of the difficulties
@@ -79,23 +86,10 @@ namespace FieldMeta
         /// </summary>
         /// <param name="difficulty">Selected difficulty entry button</param>
         private void UpdatePromtValues(DifficultyLevel difficulty) {
+            selectedDifficulty = difficulty;
+
             foreach (FieldMetaValue metaValue in values)
                 metaValue.UpdateValue(difficulty);
-        }
-        
-        /// <summary>
-        /// Start the phase and close the window.
-        /// </summary>
-        public void StartPhase() {
-            FieldMinesMeta minesValueCmp = (FieldMinesMeta) values.Find(x => x is FieldMinesMeta);
-            FieldRewardMeta rewardValueCmp = (FieldRewardMeta) values.Find(x => x is FieldRewardMeta);
-
-            if (minesValueCmp != null && rewardValueCmp != null) {
-                int minesAmount = int.Parse(minesValueCmp.Value);
-                long reward = long.Parse(rewardValueCmp.Value);
-                GameFlow.Instance.CurrentPhase.Field.Init(minesAmount, reward);
-                GameFlow.Instance.CurrentPhase.Begin();
-            }
         }
     }
 }

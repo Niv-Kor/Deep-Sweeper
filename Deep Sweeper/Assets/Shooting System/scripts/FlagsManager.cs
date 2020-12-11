@@ -8,7 +8,7 @@ public class FlagsManager : Singleton<FlagsManager>
     public event UnityAction FlagsAmountUpdateEvent;
     #endregion
 
-    #region Public Properties
+    #region Properties
     public int MaxFlags { get; private set; }
     public int AvailableFlags { get; private set; }
     #endregion
