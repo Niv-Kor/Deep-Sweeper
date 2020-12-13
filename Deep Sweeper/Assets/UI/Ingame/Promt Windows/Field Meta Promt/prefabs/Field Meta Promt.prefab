@@ -170,11 +170,14 @@ MonoBehaviour:
   value: {fileID: 9099859370967270875}
   iconColors:
   - Difficulty: 0
-    Color: {r: 0, g: 1, b: 0.41568628, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 1
-    Color: {r: 1, g: 0.8392157, b: 0, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 2
-    Color: {r: 1, g: 0, b: 0.5764706, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
 --- !u!1 &9099859371072828472
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,10 +349,13 @@ MonoBehaviour:
   iconColors:
   - Difficulty: 0
     Color: {r: 1, g: 1, b: 1, a: 1}
+    UsePredefColor: 0
   - Difficulty: 1
     Color: {r: 1, g: 1, b: 1, a: 1}
+    UsePredefColor: 0
   - Difficulty: 2
     Color: {r: 1, g: 1, b: 1, a: 1}
+    UsePredefColor: 0
 --- !u!1 &9099859371130683341
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +538,7 @@ MonoBehaviour:
     ButtonObject: {fileID: 9099859372098866092}
   - Difficulty: 2
     ButtonObject: {fileID: 9099859371861797398}
+  defaultDifficulty: 0
   blankScreenTime: 0.8
   blankScreenPause: 2
 --- !u!1 &9099859371468077173
@@ -626,11 +633,14 @@ MonoBehaviour:
   value: {fileID: 9099859371484065901}
   iconColors:
   - Difficulty: 0
-    Color: {r: 0, g: 1, b: 0.41568628, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 1
-    Color: {r: 1, g: 0.8392157, b: 0, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 2
-    Color: {r: 1, g: 0, b: 0.5764706, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
 --- !u!1 &9099859371484065899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,8 +2481,11 @@ MonoBehaviour:
   value: {fileID: 9099859371904372787}
   iconColors:
   - Difficulty: 0
-    Color: {r: 0, g: 1, b: 0.41568628, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 1
-    Color: {r: 1, g: 0.8392157, b: 0, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1
   - Difficulty: 2
-    Color: {r: 1, g: 0, b: 0.5764706, a: 0.72156864}
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    UsePredefColor: 1

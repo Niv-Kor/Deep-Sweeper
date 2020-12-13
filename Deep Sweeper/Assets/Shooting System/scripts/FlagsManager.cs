@@ -14,7 +14,9 @@ public class FlagsManager : Singleton<FlagsManager>
     #endregion
 
     private void Awake() {
-        GameFlow.Instance.PhaseUpdatedEvent += delegate(int _) { CollectFieldInfo(); };
+        GameFlow.Instance.PhaseUpdatedEvent += delegate(PhaseConfig pahseConfig, PhaseDifficultyConfig diffConfig, int index) {
+            CollectFieldInfo();
+        };
     }
 
     /// <summary>

@@ -32,6 +32,12 @@ public class MineField : ConfinedArea
     public long TotalReward { get; private set; }
     public bool IsReady { get; private set; }
     public Vector2Int MatrixSize { get; private set; }
+    public Vector3 Center {
+        get {
+            float height = terrain.terrainData.size.y;
+            return Confine.Offset + Confine.Size / 2 + Vector3.up * height / 2;
+        }
+    }
     #endregion
 
     private void Awake() {
@@ -52,6 +58,14 @@ public class MineField : ConfinedArea
         this.MatrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[MatrixSize.x, MatrixSize.y];
         this.gridsAmount = MatrixSize.x * MatrixSize.y;
+
+        //create a collider over the field
+        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+        float colHeight = terrain.terrainData.size.y;
+        collider.center = Center;
+        collider.size = Confine.Size + Vector3.up * colHeight;
+        collider.isTrigger = true;
+
         IsReady = true;
         FieldReadyEvent?.Invoke();
     }

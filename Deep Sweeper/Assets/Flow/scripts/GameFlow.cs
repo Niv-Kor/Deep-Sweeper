@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Constants;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -37,11 +38,12 @@ public class GameFlow : Singleton<GameFlow>
 
     #region Events
     public event UnityAction<int> PhaseChangeEvent;
-    public event UnityAction<int> PhaseUpdatedEvent;
+    public event UnityAction<PhaseConfig, PhaseDifficultyConfig, int> PhaseUpdatedEvent;
     #endregion
 
     #region Properties
     public List<Phase> Phases { get; private set; }
+    public bool DuringPhase { get; private set; }
     public Phase CurrentPhase {
         get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
     }
@@ -53,6 +55,7 @@ public class GameFlow : Singleton<GameFlow>
 
     private void Awake() {
         this.Phases = new List<Phase>();
+        this.DuringPhase = false;
         this.phaseIndex = -1;
         initialGate.RequestOpen(false);
     }
@@ -64,15 +67,16 @@ public class GameFlow : Singleton<GameFlow>
 
     private void OnValidate() {
         //check that each phase config contains the entire difficulty configurations set
+        var levels = Enum.GetValues(typeof(DifficultyLevel));
+
         for (int i = 0; i < phases.Length; i++) {
             PhaseConfig phaseConfig = phases[i];
 
-            if (phaseConfig.Levels.Count != 3) {
-                List<DifficultyConfig> configList = new List<DifficultyConfig>();
-                var levels = Enum.GetValues(typeof(DifficultyLevel));
+            if (phaseConfig.Levels.Count != levels.Length) {
+                List<PhaseDifficultyConfig> configList = new List<PhaseDifficultyConfig>();
 
                 foreach (DifficultyLevel level in levels) {
-                    DifficultyConfig config = new DifficultyConfig {
+                    PhaseDifficultyConfig config = new PhaseDifficultyConfig {
                         Difficulty = level,
                         MinesPercent = 0,
                         PhaseReward = 0,
@@ -113,6 +117,7 @@ public class GameFlow : Singleton<GameFlow>
             fieldObj.position = Vector3.zero;
             fieldObj.rotation = Quaternion.identity;
             fieldObj.SetParent(fieldsParent);
+            fieldObj.gameObject.layer = Layers.GetLayerValue(Layers.MINE_FIELD);
 
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
@@ -153,7 +158,10 @@ public class GameFlow : Singleton<GameFlow>
     /// </summary>
     public void NextPhase() {
         if (phaseIndex < Phases.Count - 1) {
-            if (phaseIndex >= 0) Phases[phaseIndex++].Conclude();
+            if (phaseIndex >= 0) {
+                Phases[phaseIndex++].Conclude();
+                DuringPhase = false;
+            }
             else ++phaseIndex; //first phase
 
             ///Phases[phaseIndex].Initiate(); ///TODO MAYBE DELETE
@@ -164,7 +172,11 @@ public class GameFlow : Singleton<GameFlow>
     /// <summary>
     /// Report an initialized phase that finished updating.
     /// </summary>
-    public void ReportPhaseUpdated() {
-        PhaseUpdatedEvent?.Invoke(phaseIndex);
+    /// <param name="phaseConfig">Phase configuration</param>
+    /// <param name="difficultyConfig">Phase difficultyConfiguration</param>
+    /// <param name="index">The phase's index</param>
+    public void ReportPhaseUpdated(PhaseConfig phaseConfig, PhaseDifficultyConfig difficultyConfig, int index) {
+        PhaseUpdatedEvent?.Invoke(phaseConfig, difficultyConfig, index);
+        DuringPhase = true;
     }
 }

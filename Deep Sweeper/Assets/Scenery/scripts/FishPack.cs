@@ -23,13 +23,11 @@ public class FishPack : MonoBehaviour
     };
 
     #region Constants
-    private static readonly int ID_SIZE = 8;
     private static readonly int MAX_ROTATION_ATTEMPTS = 5;
     private static readonly float ALLOWD_ESCAPE_PERCENT = .3f;
     #endregion
 
     #region Class Members
-    private static int packIdUtilizer = 0;
     private List<MarineLife> members;
     private MarineLifeManager marineLifeMngr;
     private float m_yawDirection;

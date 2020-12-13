@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Constants;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,9 @@ namespace FieldMeta
 
             [Tooltip("The color of the icon for the corresponding difficulty.")]
             [SerializeField] public Color Color;
+
+            [Tooltip("True to use the color constant that has been predefined.")]
+            [SerializeField] public bool UsePredefColor;
         }
 
         #region Exposed Editor Parameters
@@ -55,7 +59,7 @@ namespace FieldMeta
 
         /// <param name="difficulty">A level difficulty</param>
         /// <returns>The configuration of the specified difficulty in the current phase.</returns>
-        protected DifficultyConfig GetCurrentConfig(DifficultyLevel difficulty) {
+        protected PhaseDifficultyConfig GetCurrentConfig(DifficultyLevel difficulty) {
             return GameFlow.Instance.CurrentPhase.Config.Levels.Find(x => x.Difficulty == difficulty);
         }
 
@@ -66,7 +70,9 @@ namespace FieldMeta
         public void UpdateValue(DifficultyLevel difficulty) {
             Value = GetFieldValue(difficulty);
             FieldMetaIconColor colorConfig = iconColors.Find(x => x.Difficulty == difficulty);
-            Color color = (colorConfig.Difficulty == difficulty) ? colorConfig.Color : defaultIconColor;
+            bool configExists = colorConfig.Difficulty == difficulty;
+            bool usePredefColor = !configExists || colorConfig.UsePredefColor;
+            Color color = usePredefColor ? Colors.DifficultyColors.Get(difficulty) : colorConfig.Color;
             value.color = TEXT_COLOR;
             icon.color = color;
         }

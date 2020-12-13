@@ -15,13 +15,6 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         [Tooltip("The counter's corresponding font size for each amount of characters\n"
                + "(as noted by the list indices).")]
         [SerializeField] public List<int> fontSizes;
-
-        [Header("Pump Settings")]
-        [Tooltip("The percentage by which the scale of the text multiplies when is pumps (1:Inf).")]
-        [SerializeField] public float pumpPercentOnUpdate;
-
-        [Tooltip("The time it takes the flag icon to pump once.")]
-        [SerializeField] public float pumpTime;
     }
 
     #region Exposed Editor Parameters
@@ -56,48 +49,13 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         int size = sizeDefined ? fontSizes[len] : defaultSize;
         textCmp.fontSize = size;
 
-        //pump
-        if (textCmp.text != text)
-            StartCoroutine(Pump(counter));
-
-        textCmp.text = text;
+        base.SetText(textCmp, text, textCmp.text != text);
     }
 
     /// <see cref="SetCounter(int, string)"/>
     /// <param name="text">The counter's new numeric value</param>
     private void SetCounter(int index, int num) {
         SetCounter(index, num.ToString());
-    }
-
-    /// <summary>
-    /// Pump the flag icon.
-    /// </summary>
-    private IEnumerator Pump(CounterSettings counter) {
-        TextMeshProUGUI textCmp = counter.textComponent;
-        textCmp.transform.localScale = Vector3.one;
-        Vector3 startingScale = Vector3.one;
-        Vector3 targetScale = startingScale * counter.pumpPercentOnUpdate;
-        float halfTime = counter.pumpTime / 2;
-        float timer = 0;
-
-        //scale up
-        while (timer <= halfTime) {
-            timer += Time.deltaTime;
-            Vector3 scale = Vector3.Lerp(startingScale, targetScale, timer / halfTime);
-            textCmp.transform.localScale = scale;
-
-            yield return null;
-        }
-
-        //scale down
-        timer = 0;
-        while (timer <= halfTime) {
-            timer += Time.deltaTime;
-            Vector3 scale = Vector3.Lerp(targetScale, startingScale, timer / halfTime);
-            textCmp.transform.localScale = scale;
-
-            yield return null;
-        }
     }
 
     /// <summary>

@@ -15,5 +15,5 @@ public struct PhaseConfig
     [SerializeField] public Gate Gate;
 
     [Tooltip("A list of configurations for each difficulty level.")]
-    [SerializeField] public List<DifficultyConfig> Levels;
+    [SerializeField] public List<PhaseDifficultyConfig> Levels;
 }

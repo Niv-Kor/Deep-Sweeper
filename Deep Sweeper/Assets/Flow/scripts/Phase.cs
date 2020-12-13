@@ -51,12 +51,12 @@ public class Phase
     /// <param name="difficulty">The difficulty of the phase</param>
     public void Begin(DifficultyLevel difficulty) {
         ActivateField(true);
-        DifficultyConfig config = Config.Levels.Find(x => x.Difficulty == difficulty);
-        int levelTimer = config.Clock;
-        PhaseTimerSpatial.Instance.Set(levelTimer);
-        PhaseCounterSpatial.Instance.Display(true);
+        PhaseDifficultyConfig diffConfig = Config.Levels.Find(x => x.Difficulty == difficulty);
+        int levelTimer = diffConfig.Clock;
+        PhaseTimerSpatial.Instance.Set(difficulty, levelTimer);
+        PhaseNameSpatial.Instance.Display(true);
         FlagsGaugeSpatial.Instance.Display(true);
-        GameFlow.Instance.ReportPhaseUpdated();
+        GameFlow.Instance.ReportPhaseUpdated(Config, diffConfig, Index);
     }
 
     /// <summary>
@@ -66,10 +66,7 @@ public class Phase
     /// <param name="destoryField">True to permanently destory the mine field object</param>
     public void ActivateField(bool flag, bool destoryField = false) {
         if (!flag && destoryField) Field.DestroyField();
-        else {
-            Field.gameObject.SetActive(flag);
-            if (flag) Field.Begin();
-        }
+        else if (flag) Field.Begin();
     }
 
     /// <summary>

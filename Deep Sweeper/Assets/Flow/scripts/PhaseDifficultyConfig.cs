@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public struct DifficultyConfig
+public struct PhaseDifficultyConfig
 {
     [Tooltip("The difficulty level of this configuration.")]
     [SerializeField] public DifficultyLevel Difficulty;
