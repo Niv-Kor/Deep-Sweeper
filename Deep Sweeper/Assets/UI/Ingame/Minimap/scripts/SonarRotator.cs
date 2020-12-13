@@ -10,7 +10,7 @@ public class SonarRotator : MonoBehaviour
     #endregion
 
     #region Constants
-    protected static readonly float CHANGE_TOLERANCE = .1f;
+    protected static readonly float CHANGE_TOLERANCE = .001f;
     #endregion
 
     #region Class Members
@@ -29,7 +29,6 @@ public class SonarRotator : MonoBehaviour
     /// </summary>
     /// <returns>The next direction of the sonar.</returns>
     protected virtual float CalcAngle() {
-        print("euler angles: " + camTransform.eulerAngles);
         return camTransform.eulerAngles.y;
     }
 
@@ -46,7 +45,7 @@ public class SonarRotator : MonoBehaviour
 
             if (rotationSpeed == 0) rect.rotation = rotQuat;
             else {
-                //check if final cam setting has been changed
+                //check if final rotation has been changed
                 bool changed = !VectorSensitivity.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
                 if (changed) {
                     startingRot = transform.rotation;
