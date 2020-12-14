@@ -18,6 +18,13 @@ public class SonarRotator : MonoBehaviour
     protected Transform camTransform;
     #endregion
 
+    #region Properties
+    public virtual bool Enabled {
+        get { return true; }
+        protected set {}
+    }
+    #endregion
+
     protected virtual void Start() {
         this.camTransform = CameraManager.Instance.Rig.transform;
         this.rect = GetComponent<RectTransform>();
@@ -40,21 +47,25 @@ public class SonarRotator : MonoBehaviour
         Vector3 targetRot = transform.rotation.eulerAngles;
 
         while (true) {
-            Vector3 rot = Vector3.forward * CalcAngle();
-            Quaternion rotQuat = Quaternion.Euler(rot);
+            while (Enabled) {
+                Vector3 rot = Vector3.forward * CalcAngle();
+                Quaternion rotQuat = Quaternion.Euler(rot);
 
-            if (rotationSpeed == 0) rect.rotation = rotQuat;
-            else {
-                //check if final rotation has been changed
-                bool changed = !VectorSensitivity.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
-                if (changed) {
-                    startingRot = transform.rotation;
-                    targetRot = rot;
+                if (rotationSpeed == 0) rect.rotation = rotQuat;
+                else {
+                    //check if final rotation has been changed
+                    bool changed = !VectorSensitivity.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
+                    if (changed) {
+                        startingRot = transform.rotation;
+                        targetRot = rot;
+                    }
+
+                    //rotate
+                    float step = Time.deltaTime * rotationSpeed;
+                    rect.rotation = Quaternion.Lerp(startingRot, rotQuat, step);
                 }
 
-                //rotate
-                float step = Time.deltaTime * rotationSpeed;
-                rect.rotation = Quaternion.Lerp(startingRot, rotQuat, step);
+                yield return null;
             }
 
             yield return null;

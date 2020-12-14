@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 2399839787399006965}
   - component: {fileID: 2399839787399006968}
   - component: {fileID: 2399839787399006967}
-  m_Layer: 9
+  m_Layer: 18
   m_Name: Gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ MonoBehaviour:
   xScaleMultiplier: 20
   dollySpeed: 0.03
   upperEdgeShutTime: 2.7
-  forceFielsShutTime: 2.7
+  forceFieldShutTime: 0
   emblemShutTime: 0.3
   pauseBeforeCam: 1
   pauseBeforeOpen: 1

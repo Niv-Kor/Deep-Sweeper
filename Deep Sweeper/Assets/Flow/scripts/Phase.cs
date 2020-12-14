@@ -53,9 +53,7 @@ public class Phase
         ActivateField(true);
         PhaseDifficultyConfig diffConfig = Config.Levels.Find(x => x.Difficulty == difficulty);
         int levelTimer = diffConfig.Clock;
-        PhaseTimerSpatial.Instance.Set(difficulty, levelTimer);
-        PhaseNameSpatial.Instance.Display(true);
-        FlagsGaugeSpatial.Instance.Display(true);
+        SpatialsManager.Instance.Activate(difficulty, levelTimer);
         GameFlow.Instance.ReportPhaseUpdated(Config, diffConfig, Index);
     }
 
@@ -74,6 +72,7 @@ public class Phase
     /// </summary>
     public void Conclude() {
         if (ExitGate != null) {
+            SpatialsManager.Instance.Deactivate();
             ExitGate.RequestOpen(true);
             ActivateField(false, true);
         }

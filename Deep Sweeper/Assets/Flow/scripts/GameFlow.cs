@@ -117,7 +117,6 @@ public class GameFlow : Singleton<GameFlow>
             fieldObj.position = Vector3.zero;
             fieldObj.rotation = Quaternion.identity;
             fieldObj.SetParent(fieldsParent);
-            fieldObj.gameObject.layer = Layers.GetLayerValue(Layers.MINE_FIELD);
 
             //configurate
             MineField mineFieldCmp = fieldObj.GetComponent<MineField>();
@@ -159,12 +158,11 @@ public class GameFlow : Singleton<GameFlow>
     public void NextPhase() {
         if (phaseIndex < Phases.Count - 1) {
             if (phaseIndex >= 0) {
-                Phases[phaseIndex++].Conclude();
                 DuringPhase = false;
+                Phases[phaseIndex++].Conclude();
             }
             else ++phaseIndex; //first phase
 
-            ///Phases[phaseIndex].Initiate(); ///TODO MAYBE DELETE
             PhaseChangeEvent?.Invoke(phaseIndex);
         }
     }

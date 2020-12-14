@@ -7,9 +7,6 @@ public class MinimapNavigator : SonarRotator
 {
     #region Exposed Editor Parameters
     [Header("Flicker Effect")]
-    [Tooltip("The arrows that engage with the flicker effect.")]
-    [SerializeField] private RawImage[] arrows;
-    
     [Tooltip("The percentage of alpha value loss during the flicker effect.")]
     [SerializeField] [Range(.01f, 1f)] private float alphaLossPercent = 1;
 
@@ -32,7 +29,9 @@ public class MinimapNavigator : SonarRotator
     #region Class Members
     private Transform player;
     private GameFlow flow;
+    private RawImage arrow;
     private bool positiveTremble;
+    private float minDisplayDistance;
     private float trembleTimer;
     private float extraRotation;
     #endregion
@@ -41,7 +40,18 @@ public class MinimapNavigator : SonarRotator
     public Vector3 Target { get; private set; }
     public Vector3 Direction { get; private set; }
     public float Distance { get; private set; }
+    public override bool Enabled {
+        get { return arrow != null && arrow.gameObject.activeSelf; }
+        protected set {
+            if (arrow != null)
+                arrow.gameObject.SetActive(value);
+        }
+    }
     #endregion
+
+    private void Awake() {
+        this.arrow = GetComponentInChildren<RawImage>();
+    }
 
     protected override void Start() {
         base.Start();
@@ -50,21 +60,33 @@ public class MinimapNavigator : SonarRotator
         this.positiveTremble = true;
         this.extraRotation = 0;
         this.trembleTimer = 0;
-        StartCoroutine(LaunchFlickerEffect());
+
+        Camera minimap = CameraManager.Instance.MinimapCam;
+        this.minDisplayDistance = minimap.orthographicSize / 4;
+
+        StartCoroutine(FlickerArrow());
     }
 
     private void Update() {
-        if (flow.DuringPhase) return;
+        if (flow.DuringPhase) {
+            Enabled = false;
+            return;
+        }
 
-        MineField field = flow.CurrentPhase.Field;
         Vector3 pos = player.position;
         Vector3 heightVec = Vector3.up * pos.y;
-        Vector3 target = Vector3.Scale(field.Center, Vector3.right + Vector3.forward) + heightVec;
-        Vector3 dir = target - pos;
-        bool hit = Physics.Raycast(pos, dir, out RaycastHit info, Mathf.Infinity, Layers.MINE_FIELD);
-        Target = hit ? info.point : Vector3.zero;
-        Direction = hit ? dir : Vector3.zero;
-        Distance = hit ? info.distance : Mathf.Infinity;
+        Vector3 targetPos = flow.CurrentPhase.EntranceGate.transform.position;
+        Vector3 target = Vector3.Scale(targetPos, Vector3.right + Vector3.forward) + heightVec;
+        float dist = Vector3.Distance(pos, target);
+        Enabled = dist > minDisplayDistance;
+
+        if (Enabled) {
+            Vector3 dir = target - pos;
+            bool hit = Physics.Raycast(pos, dir, out RaycastHit info, Mathf.Infinity, Layers.GATE);
+            Direction = dir;
+            Target = hit ? info.point : target;
+            Distance = hit ? info.distance : dist;
+        }
     }
 
     /// <inheritdoc/>
@@ -83,21 +105,9 @@ public class MinimapNavigator : SonarRotator
     }
 
     /// <summary>
-    /// Activate the flicker effect for each of
-    /// the arrows with an appropriate delay.
-    /// </summary>
-    private IEnumerator LaunchFlickerEffect() {
-        foreach (RawImage arrow in arrows) {
-            StartCoroutine(FlickerArrow(arrow));
-            yield return new WaitForSeconds(flickerDelay);
-        }
-    }
-
-    /// <summary>
     /// Flicker an arrow's alpha value back and forth once.
     /// </summary>
-    /// <param name="arrow">The arrow to flicker</param>
-    private IEnumerator FlickerArrow(RawImage arrow) {
+    private IEnumerator FlickerArrow() {
         Color modifiedColor = arrow.color;
         float originAlpha = modifiedColor.a;
         float halfTime = rtFlickerTime / 2;

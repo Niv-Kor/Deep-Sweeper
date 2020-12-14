@@ -58,13 +58,7 @@ public class MineField : ConfinedArea
         this.MatrixSize = CalcMatrixSize();
         this.gridsMatrix = new MineGrid[MatrixSize.x, MatrixSize.y];
         this.gridsAmount = MatrixSize.x * MatrixSize.y;
-
-        //create a collider over the field
-        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-        float colHeight = terrain.terrainData.size.y;
-        collider.center = Center;
-        collider.size = Confine.Size + Vector3.up * colHeight;
-        collider.isTrigger = true;
+        LayoutMatrix();
 
         IsReady = true;
         FieldReadyEvent?.Invoke();
@@ -83,7 +77,6 @@ public class MineField : ConfinedArea
 
         MinesAmount = minesAmount;
         TotalReward = totalReward;
-        LayoutMatrix();
         SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
@@ -137,6 +130,8 @@ public class MineField : ConfinedArea
                 MineGrid mineGrid = obj.GetComponent<MineGrid>();
                 mineGrid.Field = this;
                 mineGrid.Position = new Vector2Int(i, j);
+
+                //save grid
                 gridsMatrix[i, j] = mineGrid;
                 Grids.Add(mineGrid);
             }
@@ -192,8 +187,8 @@ public class MineField : ConfinedArea
         bool lowerStandard = false;
 
         do {
+            //fill pool again and now ignore the mined neighbours condition
             if (!lowerStandard && indicesPool.Count <= 0) {
-                //fill pool again and now ignore the mined neighbours condition
                 for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
                 lowerStandard = true;
             }

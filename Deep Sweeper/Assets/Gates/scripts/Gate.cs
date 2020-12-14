@@ -42,12 +42,11 @@ public class Gate : MonoBehaviour
     private Transform emblem;
     private SubmarineMovementController submarine;
     private CameraController camController;
+    private bool initiated;
     private UnityAction onFullyBlankHandler1;
     private UnityAction onFullyBlankHandler2;
     private UnityAction onFullyTransparentHandler1;
     private UnityAction onFullyTransparentHandler2;
-    private bool crossedGate;
-    private bool initiated;
     #endregion
 
     #region Events
@@ -64,7 +63,6 @@ public class Gate : MonoBehaviour
     private void Start() {
         this.submarine = FindObjectOfType<SubmarineMovementController>();
         this.camController = FindObjectOfType<CameraController>();
-        this.crossedGate = false;
         this.initiated = false;
     }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Constants;
+using UnityEngine;
 
 public class GateBuilder : MonoBehaviour
 {
@@ -105,14 +106,17 @@ public class GateBuilder : MonoBehaviour
     private void BuildElectrodes(Vector3 leftPos, Vector3 rightPos) {
         GameObject parent = Instantiate(electrodesParent);
         parent.name = ELECTRODES_PARENT_NAME;
+        parent.layer = Layers.GetLayerValue(Layers.GATE);
         parent.transform.SetParent(transform);
 
         this.LeftElectrode = Instantiate(electrode);
+        LeftElectrode.layer = Layers.GetLayerValue(Layers.GATE);
         LeftElectrode.name = LEFT_ELECTRODE_NAME;
         LeftElectrode.transform.SetParent(parent.transform);
         LeftElectrode.transform.position = leftPos;
 
         this.RightElectrode = Instantiate(electrode);
+        RightElectrode.layer = Layers.GetLayerValue(Layers.GATE);
         RightElectrode.name = RIGHT_ELECTRODE_NAME;
         RightElectrode.transform.SetParent(parent.transform);
         RightElectrode.transform.position = rightPos;
@@ -128,6 +132,7 @@ public class GateBuilder : MonoBehaviour
     private void BuildUpperEdge(Vector3 pos) {
         this.ForceFieldEdge = Instantiate(upperEdge);
         ForceFieldEdge.name = ForceFieldEdge.name.Replace("(Clone)", "");
+        ForceFieldEdge.layer = Layers.GetLayerValue(Layers.GATE);
         ForceFieldEdge.transform.SetParent(transform);
         ForceFieldEdge.transform.position = pos;
 
@@ -145,6 +150,7 @@ public class GateBuilder : MonoBehaviour
     private void BuildForceField(float edgeLength, Vector3 forward) {
         this.ForceField = Instantiate(forceField);
         ForceField.name = ForceField.name.Replace("(Clone)", "");
+        ForceField.layer = Layers.GetLayerValue(Layers.GATE);
         ForceField.transform.SetParent(transform);
 
         //resize
@@ -153,6 +159,14 @@ public class GateBuilder : MonoBehaviour
         float height = transform.position.y;
         float xScale = edgeLength / sizeRatio.x;
         float yScale = height / sizeRatio.y;
+
+        //set collider height as the terrain's height
+        Terrain terrain = WaterPhysics.Instance.Terrain;
+        float terrainHeight = terrain.terrainData.size.y;
+        float terrainScale = terrainHeight / yScale;
+        Vector3 xzMask = Vector3.right + Vector3.forward;
+        collider.size = Vector3.Scale(collider.size, Vector3.right) + Vector3.up * terrainScale + Vector3.forward;
+
         ForceField.transform.localPosition = Vector3.zero - Vector3.up * height / 2;
         ForceField.transform.localScale = new Vector3(xScale, yScale, 1);
         ForceField.transform.rotation = Quaternion.LookRotation(forward, Vector3.up);
@@ -165,6 +179,7 @@ public class GateBuilder : MonoBehaviour
     private void BuildEmblem(Vector3 forward) {
         this.Emblem = Instantiate(emblem);
         Emblem.name = Emblem.name.Replace("(Clone)", "");
+        Emblem.layer = Layers.GetLayerValue(Layers.GATE);
         Emblem.transform.SetParent(transform);
 
         Vector3 pos = transform.position;
