@@ -33,7 +33,12 @@ public class CameraManager : Singleton<CameraManager>
     public Transform Rig { get { return rig; } }
     public PostProcessingManager FPPostProcess { get { return fpPostProcess; } }
     public PostProcessingManager MinimapPostProcess { get { return minimapPostProcess; } }
+    public Camera CurrentActive { get; private set; }
     #endregion
+
+    private void Start() {
+        this.CurrentActive = FPCam;
+    }
 
     /// <summary>
     /// Switch the main camera.
@@ -46,10 +51,18 @@ public class CameraManager : Singleton<CameraManager>
         foreach (Camera iterCam in allCams) {
             AudioListener audio = iterCam.GetComponent<AudioListener>();
             CameraPreferences camPref = iterCam.GetComponent<CameraPreferences>();
-            bool isSelected = iterCam == cam;
-            iterCam.tag = isSelected ? CAMERA_TAG : UNTAGGED_TAG;
-            iterCam.enabled = (camPref != null && camPref.AlwaysOn) || isSelected;
-            if (audio != null) audio.enabled = isSelected;
+            bool isNewCam = iterCam == cam;
+            bool isOldCam = iterCam == CurrentActive;
+
+            iterCam.tag = isNewCam ? CAMERA_TAG : UNTAGGED_TAG;
+            iterCam.enabled = (camPref != null && camPref.AlwaysOn) || isNewCam;
+            if (audio != null) audio.enabled = isNewCam;
+
+            //activate an optional callback method
+            if (isNewCam) camPref?.OnActivation();
+            else if (isOldCam) camPref?.OnDeactivation();
         }
+
+        CurrentActive = cam;
     }
 }
