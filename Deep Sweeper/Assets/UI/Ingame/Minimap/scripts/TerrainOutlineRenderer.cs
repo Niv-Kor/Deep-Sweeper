@@ -85,7 +85,10 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
         terrainCopy.transform.SetParent(transform);
         terrainCopy.transform.position = terrain.transform.position;
         terrainCopy.transform.rotation = terrain.transform.rotation;
-        terrainCopy.materialTemplate = terrainMaterial;
+
+        //reassign material
+        MicroSplatTerrain splat = terrainCopy.GetComponent<MicroSplatTerrain>();
+        splat.templateMaterial = terrainMaterial;
         terrainCopy.gameObject.SetActive(true);
     }
 
