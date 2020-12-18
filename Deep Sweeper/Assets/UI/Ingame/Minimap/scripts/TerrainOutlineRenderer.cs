@@ -21,6 +21,7 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
     #endregion
 
     #region Constants
+    private static readonly float OUTER_GROUNDS_SCALE = 2;
     private static readonly float ICONS_HEIGHT_PERCENT = 1.1f;
     private static readonly string TERRAIN_COPY_NAME = "Terrain Copy";
     private static readonly string PLANE_NAME = "Plane";
@@ -48,7 +49,8 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
 
         this.lastHeightSetting = heightPercent;
         DuplicateTerrain();
-        CreateBackgroundPlane();
+        CreateInnerGroundsPlane();
+        CreateOuterGroundsPlane();
     }
 
     private void OnValidate() {
@@ -80,22 +82,20 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
         //set name and layer
         terrainCopy.name = TERRAIN_COPY_NAME;
         terrainCopy.gameObject.layer = Layers.GetLayerValue(Layers.MINIMAP);
+        terrainCopy.materialTemplate = terrainMaterial;
 
         //locate
         terrainCopy.transform.SetParent(transform);
         terrainCopy.transform.position = terrain.transform.position;
         terrainCopy.transform.rotation = terrain.transform.rotation;
 
-        //reassign material
-        MicroSplatTerrain splat = terrainCopy.GetComponent<MicroSplatTerrain>();
-        splat.templateMaterial = terrainMaterial;
         terrainCopy.gameObject.SetActive(true);
     }
 
     /// <summary>
     /// Create a plane that intersects the terrain at a specified height.
     /// </summary>
-    private void CreateBackgroundPlane() {
+    private void CreateInnerGroundsPlane() {
         plane = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
         //remove collider component
@@ -103,11 +103,14 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
         Destroy(collider);
 
         //resize and locate
-        Vector3 size = terrain.terrainData.size;
+        Vector3 terrainSize = terrain.terrainData.size;
+        Vector3 planeSize = Vector3.Scale(terrainSize, Vector3.one);
+        planeSize.y = planeSize.z; //swap y and z
+        planeSize.z = 0;
         Quaternion rotation = Quaternion.Euler(Vector3.right * 90);
         plane.transform.rotation = rotation;
-        plane.transform.localScale = size;
-        SetPlanePosition(size);
+        plane.transform.localScale = planeSize;
+        SetPlanePosition(terrainSize);
 
         //set plane material
         Renderer renderer = plane.GetComponent<Renderer>();
@@ -116,7 +119,31 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
         //set parent and other settings
         plane.transform.SetParent(terrainCopy.transform);
         plane.layer = Layers.GetLayerValue(Layers.MINIMAP);
-        plane.name = PLANE_NAME;
+        plane.name = "Inner " + PLANE_NAME;
+    }
+
+    /// <summary>
+    /// Create a plane simulates the ground all around the actual scene.
+    /// </summary>
+    private void CreateOuterGroundsPlane() {
+        GameObject outerPlane = Instantiate(plane);
+        outerPlane.transform.SetParent(plane.transform.parent);
+        Vector3 yOffset = Vector3.up * plane.transform.localPosition.y / 90f;
+        outerPlane.transform.localRotation = plane.transform.localRotation;
+        outerPlane.transform.localPosition = plane.transform.localPosition - yOffset;
+
+        //scale
+        Vector3 originScale = outerPlane.transform.localScale;
+        Vector3 scaleVec = new Vector3(OUTER_GROUNDS_SCALE, OUTER_GROUNDS_SCALE, 1);
+        outerPlane.transform.localScale = Vector3.Scale(originScale, scaleVec);
+
+        //set plane material
+        Renderer renderer = outerPlane.GetComponent<Renderer>();
+        renderer.material = terrainMaterial;
+
+        //set parent and other settings
+        outerPlane.layer = Layers.GetLayerValue(Layers.MINIMAP);
+        outerPlane.name = "Outer " + PLANE_NAME;
     }
 
     /// <summary>

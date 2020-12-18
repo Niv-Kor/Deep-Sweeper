@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimap: {fileID: 99459896816359574}
-  scanningCircle: {fileID: 6608897564021537828}
+  scanningCircle: {fileID: 0}
 --- !u!1 &99459896816359574
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0d1b81239d6144186b09ada73b636c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationTime: 0
+  rotationSpeed: 0
 --- !u!1 &6608897564021537828
 GameObject:
   m_ObjectHideFlags: 0

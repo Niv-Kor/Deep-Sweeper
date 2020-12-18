@@ -13,10 +13,6 @@ public class SonarScanWave : MonoBehaviour
     [SerializeField] private GameObject scanningCircle;
     #endregion
 
-    #region Constants
-    private static readonly float CIRCLE_SIZE_OFFSET = 2;
-    #endregion
-
     #region Class Members
     private float maxRad;
     private bool started, scanWhenReady;
@@ -26,7 +22,7 @@ public class SonarScanWave : MonoBehaviour
     private Image scanningCircleImg;
     #endregion
 
-    #region Public Properties
+    #region Properties
     public float ScanTime { get; set; }
     public float SignalFadeTime { get; set; }
     #endregion
@@ -37,8 +33,12 @@ public class SonarScanWave : MonoBehaviour
         this.rectTransform = GetComponent<RectTransform>();
         this.maxRad = parentRectTransform.sizeDelta.x;
         this.minimapDisplay = minimap.GetComponent<RawImage>();
-        this.scanningCircleRect = scanningCircle.GetComponent<RectTransform>();
-        this.scanningCircleImg = scanningCircle.GetComponent<Image>();
+
+        if (scanningCircle != null) {
+            this.scanningCircleRect = scanningCircle.GetComponent<RectTransform>();
+            this.scanningCircleImg = scanningCircle.GetComponent<Image>();
+        }
+
         this.started = true;
 
         //resize component according to parent
@@ -54,7 +54,7 @@ public class SonarScanWave : MonoBehaviour
     /// <seealso cref="Scan"/>
     private IEnumerator Wave() {
         minimap.SetActive(true);
-        scanningCircle.SetActive(true);
+        if (scanningCircle != null) scanningCircle.SetActive(true);
         float minimapTimer = 0;
 
         while (minimapTimer <= ScanTime) {
@@ -63,15 +63,17 @@ public class SonarScanWave : MonoBehaviour
             float minimapRad = Mathf.Lerp(0, maxRad, minimapTimer / ScanTime);
             Vector2 size = Vector2.one * minimapRad;
             rectTransform.sizeDelta = size;
-            scanningCircleRect.sizeDelta = size;
 
             Color minimapColor = minimapDisplay.color;
             minimapColor.a = Mathf.Lerp(1, 0, minimapTimer / SignalFadeTime);
             minimapDisplay.color = minimapColor;
 
-            Color circleColor = scanningCircleImg.color;
-            circleColor.a = Mathf.Lerp(0, 1, minimapTimer / SignalFadeTime);
-            scanningCircleImg.color = circleColor;
+            if (scanningCircle != null) {
+                scanningCircleRect.sizeDelta = size;
+                Color circleColor = scanningCircleImg.color;
+                circleColor.a = Mathf.Lerp(0, 1, minimapTimer / SignalFadeTime);
+                scanningCircleImg.color = circleColor;
+            }
 
             yield return null;
         }

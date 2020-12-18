@@ -98,7 +98,7 @@ public class GameFlow : Singleton<GameFlow>
             PhaseConfig phase = phases[i];
             Vector3 areaCenter = phase.Confine.Offset + phase.Confine.Size / 2;
             Gizmos.DrawWireCube(areaCenter, phase.Confine.Size);
-            Handles.Label(areaCenter, FIELD_NAME + " " + i);
+            Handles.Label(areaCenter, phase.MapName + " (" + (i + 1) + ")");
         }
     }
 
