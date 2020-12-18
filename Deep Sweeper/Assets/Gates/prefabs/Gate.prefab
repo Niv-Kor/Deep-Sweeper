@@ -218,6 +218,11 @@ MonoBehaviour:
   camWallOffset: 70
   camRotation: {x: -10, y: 0, z: 0}
   camOffset: {x: 0, y: -10, z: 0}
+  emblemMaterial: {fileID: 2100000, guid: 172b402a50e30b747aa3e745a0f281fd, type: 2}
+  emblemWidthPercent: 0.3
+  emblemRatio: 1.2
+  laserMaterial: {fileID: 2100000, guid: b1eba5e34d25bcc4c8759576efeee0e3, type: 2}
+  forceFieldMaterial: {fileID: 2100000, guid: 699a4dd7e81132d4486da1e1c31d0b8a, type: 2}
 --- !u!114 &2399839787399006967
 MonoBehaviour:
   m_ObjectHideFlags: 0

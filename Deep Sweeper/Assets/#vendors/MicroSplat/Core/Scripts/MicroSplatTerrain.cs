@@ -232,109 +232,87 @@ public class MicroSplatTerrain : MicroSplatObject
    }
 
 #if UNITY_EDITOR
+    void RestorePrototypes() {
+        if (templateMaterial != null && templateMaterial.HasProperty("_Diffuse")) {
+            Texture2DArray diffuseArray = templateMaterial.GetTexture("_Diffuse") as Texture2DArray;
+            if (diffuseArray != null) {
+                var cfg = JBooth.MicroSplat.TextureArrayConfig.FindConfig(diffuseArray);
 
+                if (cfg != null && propData != null && keywordSO != null) {
+                    int count = cfg.sourceTextures.Count;
+                    if (count > 32) count = 32;
 
-   void RestorePrototypes()
-   {
-      if (templateMaterial != null)
-      {
-         Texture2DArray diffuseArray = templateMaterial.GetTexture("_Diffuse") as Texture2DArray;
-         if (diffuseArray != null)
-         {
-            var cfg = JBooth.MicroSplat.TextureArrayConfig.FindConfig(diffuseArray);
-           
-            if (cfg != null && propData != null && keywordSO != null)
-            {
-               int count = cfg.sourceTextures.Count;
-               if (count > 32)
-                  count = 32;
-
-               var protos = terrain.terrainData.terrainLayers;
-               bool needsRefresh = false;
-               if (protos.Length != count)
-               {
-                  needsRefresh = true;
-               }
-               if (!needsRefresh)
-               {
-                  for (int i = 0; i < protos.Length; ++i)
-                  {
-                     if (protos[i] == null)
-                     {
+                    var protos = terrain.terrainData.terrainLayers;
+                    bool needsRefresh = false;
+                    if (protos.Length != count) {
                         needsRefresh = true;
-                        break;
-                     }
-                     if (protos[i] != null && cfg.sourceTextures[i] != null && protos[i].diffuseTexture != cfg.sourceTextures[i].diffuse)
-                     {
-                        needsRefresh = true;
-                        break;
-                     }
-                  }
-               }
-               if (needsRefresh)
-               {
-                  Vector4 v4 = templateMaterial.GetVector("_UVScale");
-
-                  Vector2 uvScales = new Vector2(v4.x, v4.y);
-                  uvScales = MicroSplatRuntimeUtil.UVScaleToUnityUVScale(uvScales, terrain);
-
-                  protos = new TerrainLayer[count];
-                  for (int i = 0; i < count; ++i)
-                  {
-                     string path = UnityEditor.AssetDatabase.GetAssetPath(cfg);
-                     path = path.Replace("\\", "/");
-                     path = path.Substring(0, path.LastIndexOf("/"));
-                     path += "/microsplat_layer_";
-                     path = path.Replace("//", "/");
-
-                     if (cfg.sourceTextures[i].diffuse != null)
-                     {
-                        path += cfg.sourceTextures[i].diffuse.name;
-                     }
-                     path += "_" + i;
-                     path += ".terrainlayer";
-                     TerrainLayer sp = UnityEditor.AssetDatabase.LoadAssetAtPath<TerrainLayer>(path);
-                     if (sp != null)
-                     {
-                        if (sp.diffuseTexture == cfg.sourceTextures[i].diffuse)
-                        {
-                           protos[i] = sp;
-                           continue;
+                    }
+                    if (!needsRefresh) {
+                        for (int i = 0; i < protos.Length; ++i) {
+                            if (protos[i] == null) {
+                                needsRefresh = true;
+                                break;
+                            }
+                            if (protos[i] != null && cfg.sourceTextures[i] != null && protos[i].diffuseTexture != cfg.sourceTextures[i].diffuse) {
+                                needsRefresh = true;
+                                break;
+                            }
                         }
-                     }
+                    }
+                    if (needsRefresh) {
+                        Vector4 v4 = templateMaterial.GetVector("_UVScale");
 
-                     sp = new TerrainLayer();
+                        Vector2 uvScales = new Vector2(v4.x, v4.y);
+                        uvScales = MicroSplatRuntimeUtil.UVScaleToUnityUVScale(uvScales, terrain);
 
-                     sp.diffuseTexture = cfg.sourceTextures[i].diffuse;
-                     sp.tileSize = uvScales;
-                     if (keywordSO.IsKeywordEnabled("_PERTEXUVSCALEOFFSET"))
-                     {
-                        Color c = propData.GetValue (i, 0);
-                        Vector2 ptScale = new Vector2 (c.r, c.b);
-                        sp.tileSize = MicroSplatRuntimeUtil.UVScaleToUnityUVScale (uvScales * ptScale, terrain);
-                     }
+                        protos = new TerrainLayer[count];
+                        for (int i = 0; i < count; ++i) {
+                            string path = UnityEditor.AssetDatabase.GetAssetPath(cfg);
+                            path = path.Replace("\\", "/");
+                            path = path.Substring(0, path.LastIndexOf("/"));
+                            path += "/microsplat_layer_";
+                            path = path.Replace("//", "/");
 
-                     if (cfg.sourceTextures[i].normal != null)
-                     {
-                        sp.normalMapTexture = cfg.sourceTextures[i].normal;
-                     }
-                     
-                     protos[i] = sp;
+                            if (cfg.sourceTextures[i].diffuse != null) {
+                                path += cfg.sourceTextures[i].diffuse.name;
+                            }
+                            path += "_" + i;
+                            path += ".terrainlayer";
+                            TerrainLayer sp = UnityEditor.AssetDatabase.LoadAssetAtPath<TerrainLayer>(path);
+                            if (sp != null) {
+                                if (sp.diffuseTexture == cfg.sourceTextures[i].diffuse) {
+                                    protos[i] = sp;
+                                    continue;
+                                }
+                            }
+
+                            sp = new TerrainLayer();
+
+                            sp.diffuseTexture = cfg.sourceTextures[i].diffuse;
+                            sp.tileSize = uvScales;
+                            if (keywordSO.IsKeywordEnabled("_PERTEXUVSCALEOFFSET")) {
+                                Color c = propData.GetValue(i, 0);
+                                Vector2 ptScale = new Vector2(c.r, c.b);
+                                sp.tileSize = MicroSplatRuntimeUtil.UVScaleToUnityUVScale(uvScales * ptScale, terrain);
+                            }
+
+                            if (cfg.sourceTextures[i].normal != null) {
+                                sp.normalMapTexture = cfg.sourceTextures[i].normal;
+                            }
+
+                            protos[i] = sp;
 
 
-                     UnityEditor.AssetDatabase.CreateAsset(sp, path);
-                  }
+                            UnityEditor.AssetDatabase.CreateAsset(sp, path);
+                        }
 
-                  terrain.terrainData.terrainLayers = protos;
-                  UnityEditor.EditorUtility.SetDirty(terrain);
-                  UnityEditor.EditorUtility.SetDirty(terrain.terrainData);
-
-               }
-
+                        terrain.terrainData.terrainLayers = protos;
+                        UnityEditor.EditorUtility.SetDirty(terrain);
+                        UnityEditor.EditorUtility.SetDirty(terrain.terrainData);
+                    }
+                }
             }
-         }
-
-      }
+        }
    }
 #endif
 

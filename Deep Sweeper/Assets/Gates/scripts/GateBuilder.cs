@@ -38,6 +38,22 @@ public class GateBuilder : MonoBehaviour
 
     [Tooltip("The camera's offset from its fixed position in fron of the gate.")]
     [SerializeField] private Vector3 camOffset;
+
+    [Header("Style")]
+    [Tooltip("The emblem's rendered material.")]
+    [SerializeField] private Material emblemMaterial;
+    
+    [Tooltip("The width of the emblem as a percentage of the gate's full width.")]
+    [SerializeField] [Range(.01f, 1f)] private float emblemWidthPercent = .3f;
+
+    [Tooltip("Width (x) length of the emblem divided by its height (y).")]
+    [SerializeField] private float emblemRatio = 1;
+
+    [Tooltip("The material of the upper edge laser.")]
+    [SerializeField] private Material laserMaterial;
+
+    [Tooltip("The force field's rendererd material.")]
+    [SerializeField] private Material forceFieldMaterial;
     #endregion
 
     #region Constants
@@ -48,6 +64,10 @@ public class GateBuilder : MonoBehaviour
     private static readonly string ELECTRODES_PARENT_NAME = "Electrodes";
     private static readonly string LEFT_ELECTRODE_NAME = "Left";
     private static readonly string RIGHT_ELECTRODE_NAME = "Right";
+    #endregion
+
+    #region Class Members
+    private float fieldLength;
     #endregion
 
     #region Properties
@@ -69,7 +89,7 @@ public class GateBuilder : MonoBehaviour
         BuildElectrodes(leftPos, rightPos);
         forward = Vector3.Cross(Vector3.up, LeftElectrode.transform.forward);
         BuildForceField(dist, forward);
-        BuildUpperEdge(leftPos);
+        this.fieldLength = BuildUpperEdge(leftPos);
         BuildEmblem(forward);
         FixCamPosition(forward);
 
@@ -129,17 +149,29 @@ public class GateBuilder : MonoBehaviour
     /// Instantiate the force field's upper edge.
     /// </summary>
     /// <param name="pos">The position of the edge</param>
-    private void BuildUpperEdge(Vector3 pos) {
+    /// <returns>The length of the edge.</returns>
+    private float BuildUpperEdge(Vector3 pos) {
         this.ForceFieldEdge = Instantiate(upperEdge);
         ForceFieldEdge.name = ForceFieldEdge.name.Replace("(Clone)", "");
         ForceFieldEdge.layer = Layers.GetLayerValue(Layers.GATE);
         ForceFieldEdge.transform.SetParent(transform);
         ForceFieldEdge.transform.position = pos;
 
-        //scale
+        //set material
         LineRenderer line = ForceFieldEdge.GetComponent<LineRenderer>();
+        line.material = laserMaterial;
+
+        //scale
         line.SetPosition(0, LeftElectrode.transform.position);
         line.SetPosition(1, RightElectrode.transform.position);
+
+        //calculate line length
+        if (line.positionCount != 2) return 0;
+        else {
+            Vector3 pointA = line.GetPosition(0);
+            Vector3 pointB = line.GetPosition(1);
+            return Vector3.Distance(pointA, pointB);
+        }
     }
 
     /// <summary>
@@ -153,6 +185,10 @@ public class GateBuilder : MonoBehaviour
         ForceField.layer = Layers.GetLayerValue(Layers.GATE);
         ForceField.transform.SetParent(transform);
 
+        //set material
+        var particlesRender = ForceField.GetComponent<ParticleSystemRenderer>();
+        particlesRender.material = forceFieldMaterial;
+
         //resize
         BoxCollider collider = ForceField.GetComponent<BoxCollider>();
         Vector3 sizeRatio = collider.bounds.size;
@@ -164,7 +200,6 @@ public class GateBuilder : MonoBehaviour
         Terrain terrain = WaterPhysics.Instance.Terrain;
         float terrainHeight = terrain.terrainData.size.y;
         float terrainScale = terrainHeight / yScale;
-        Vector3 xzMask = Vector3.right + Vector3.forward;
         collider.size = Vector3.Scale(collider.size, Vector3.right) + Vector3.up * terrainScale + Vector3.forward;
 
         ForceField.transform.localPosition = Vector3.zero - Vector3.up * height / 2;
@@ -182,6 +217,15 @@ public class GateBuilder : MonoBehaviour
         Emblem.layer = Layers.GetLayerValue(Layers.GATE);
         Emblem.transform.SetParent(transform);
 
+        //edit sprite
+        var particlesRender = Emblem.GetComponent<ParticleSystemRenderer>();
+        particlesRender.material = emblemMaterial;
+        var particles = Emblem.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule particlesMain = particles.main;
+        particlesMain.startSizeX = fieldLength * emblemWidthPercent;
+        particlesMain.startSizeY = particlesMain.startSizeX.constant / emblemRatio;
+
+        //position
         Vector3 pos = transform.position;
         Vector3 offset = -Vector3.up * pos.y * .4f + forward * emblemWallOffset;
         Emblem.transform.position = pos + offset;
