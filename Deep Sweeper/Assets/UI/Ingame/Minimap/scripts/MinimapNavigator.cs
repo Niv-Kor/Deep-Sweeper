@@ -81,7 +81,7 @@ public class MinimapNavigator : SonarRotator
         Enabled = dist > minDisplayDistance;
 
         if (Enabled) {
-            Vector3 dir = target - pos;
+            Vector3 dir = Vector3.Normalize(target - pos);
             bool hit = Physics.Raycast(pos, dir, out RaycastHit info, Mathf.Infinity, Layers.GATE);
             Direction = dir;
             Target = hit ? info.point : target;
@@ -99,9 +99,13 @@ public class MinimapNavigator : SonarRotator
             positiveTremble ^= true;
             trembleTimer = 0;
         }
-        
+
         float angle = Vector3.Angle(Vector3.forward, Direction);
-        return base.CalcAngle() + angle + extraRotation;
+        Vector3 cross = Vector3.Cross(Vector3.forward, Direction);
+        float tanAngle = AngleUtils.TangentiateAngle(angle);
+        tanAngle *= (cross.y < 0) ? 1 : -1;
+
+        return base.CalcAngle() + tanAngle + extraRotation;
     }
 
     /// <summary>

@@ -13,7 +13,7 @@ public class MarineLife : MonoBehaviour
            + "The distance parameter is decided randomly within this range.")]
     [SerializeField] private Vector2 zigzagIntensityRange;
 
-    [Header("Spawn Preferances")]
+    [Header("Spawn Preferences")]
     [Tooltip("The minimal depth at which the creature can live.")]
     [SerializeField] public float DepthHabitat;
 
@@ -43,7 +43,6 @@ public class MarineLife : MonoBehaviour
     #endregion
 
     #region Class Members
-    private static int fishIdUtilizer = 0;
     private SkinnedMeshRenderer mesh;
     private FishPack pack;
     private Vector3 originScale;

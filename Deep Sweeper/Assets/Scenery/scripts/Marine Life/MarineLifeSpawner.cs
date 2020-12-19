@@ -17,6 +17,7 @@ public class MarineLifeSpawner : MarineSpawner
     private static readonly string INSTANCE_NAME_TAG = "instance";
     private static readonly string CLONE_TAG = "(Clone)";
     private static readonly float MAX_SPAWN_DISTANCE_OF_RAD = .7f;
+    private static readonly float MAX_EMISSION_DELAY_TIME = 1;
     #endregion
 
     #region Class Members
@@ -33,7 +34,7 @@ public class MarineLifeSpawner : MarineSpawner
 
         //insert the source instance to a lower level parent
         GameObject subParent = new GameObject(RemoveCloneTag(instance.name));
-        MarineLife marineLifeComponent = instance.GetComponent<MarineLife>();
+        MarineLife marineLifeCmp = instance.GetComponent<MarineLife>();
         subParent.transform.SetParent(instance.transform.parent);
 
         //establish pack connection
@@ -43,11 +44,11 @@ public class MarineLifeSpawner : MarineSpawner
         //emit leader
         instance.transform.SetParent(subParent.transform);
         instance.name = RemoveCloneTag(instance.name) + "_" + INSTANCE_NAME_TAG;
-        OnEmissionFinish(marineLifeComponent);
+        OnEmissionFinish(marineLifeCmp);
 
         //emit pack members
         for (int i = 0; i < emission - 1; i++)
-            StartCoroutine(Emit(instance, subParent, 1, pack));
+            StartCoroutine(Emit(instance, subParent, MAX_EMISSION_DELAY_TIME));
     }
 
     /// <inheritdoc/>
@@ -79,8 +80,7 @@ public class MarineLifeSpawner : MarineSpawner
     /// <param name="source">Source prefab to intantiate</param>
     /// <param name="subParent">The parent of the new emitted object</param>
     /// <param name="maxDelayTime">Maximum amount of time [s] until the emission</param>
-    /// <param name="pack">The marine life's intended pack</param>
-    private IEnumerator Emit(GameObject source, GameObject subParent, float maxDelayTime, FishPack pack) {
+    private IEnumerator Emit(GameObject source, GameObject subParent, float maxDelayTime) {
         //wait for x seconds
         float delay = Random.Range(0, maxDelayTime);
         yield return new WaitForSeconds(delay);
@@ -100,7 +100,7 @@ public class MarineLifeSpawner : MarineSpawner
     /// Activate when each emission process is done.
     /// When all emissions are done, this function joins together all marine lives into one pack.
     /// </summary>
-    /// <param name="spawn"></param>
+    /// <param name="spawn">The spawn that had been successfully emitted.</param>
     private void OnEmissionFinish(MarineLife spawn) {
         collectedPack.Enqueue(spawn);
 
@@ -119,7 +119,7 @@ public class MarineLifeSpawner : MarineSpawner
     /// Generate a random 3D distance from a point.
     /// </summary>
     /// <param name="point">The point from which to measure the generated distance</param>
-    /// <returns></returns>
+    /// <returns>A random 3D distance from the specified point.</returns>
     private Vector3 GenerateIndividualDistance(Vector3 point) {
         float x = Random.Range(MinIndividualDistance.x, MaxIndividualDistance.x);
         float y = Random.Range(MinIndividualDistance.y, MaxIndividualDistance.y);

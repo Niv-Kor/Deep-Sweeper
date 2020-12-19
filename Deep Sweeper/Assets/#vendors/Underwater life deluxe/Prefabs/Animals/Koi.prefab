@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4485317997829598}
   - component: {fileID: 95578699097144716}
-  - component: {fileID: -4624031594513368826}
+  - component: {fileID: 2304967953510345661}
   m_Layer: 11
   m_Name: Koi
   m_TagString: Untagged
@@ -462,7 +462,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-4624031594513368826
+--- !u!114 &2304967953510345661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -471,18 +471,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1748946944915498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db2c64ef1c5e6645adcf539c89c82fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 615b5e303e1a1904482ed90254ff5f1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.05
-  zigzagIntensityRange: {x: 0.3, y: 1}
+  speed: 0.1
+  zigzagIntensityRange: {x: 1, y: 1}
   DepthHabitat: 0
-  PacksAmountRange: {x: 5, y: 10}
-  PackSizeRange: {x: 2, y: 6}
-  MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
-  MaxIndividualDistance: {x: 4, y: 4, z: 4}
-  DepthAffection: 1
-  TurbulenceAffection: 2
+  PacksAmountRange: {x: 2, y: 4}
+  PackSizeRange: {x: 3, y: 6}
+  MinIndividualDistance: {x: 10, y: 10, z: 10}
+  MaxIndividualDistance: {x: 50, y: 50, z: 50}
+  DepthAffection: 2
+  TurbulenceAffection: 0
 --- !u!1 &1779501827883952
 GameObject:
   m_ObjectHideFlags: 0

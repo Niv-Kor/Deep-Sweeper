@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4354515940991176}
   - component: {fileID: 33100586488404320}
   - component: {fileID: 23017913061795414}
-  - component: {fileID: -437459107626788041}
   m_Layer: 11
   m_Name: Mussel
   m_TagString: Untagged
@@ -81,24 +80,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &-437459107626788041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275044948922960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1db2c64ef1c5e6645adcf539c89c82fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.05
-  zigzagIntensityRange: {x: 0.3, y: 1}
-  DepthHabitat: 0
-  PacksAmountRange: {x: 5, y: 10}
-  PackSizeRange: {x: 2, y: 6}
-  MinIndividualDistance: {x: 1.5, y: 1.5, z: 1.5}
-  MaxIndividualDistance: {x: 4, y: 4, z: 4}
-  DepthAffection: 1
-  TurbulenceAffection: 2

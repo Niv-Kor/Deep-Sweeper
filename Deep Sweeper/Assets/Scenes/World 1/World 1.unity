@@ -4690,7 +4690,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1964278202}
-  - component: {fileID: 1964278203}
   - component: {fileID: 1964278204}
   m_Layer: 0
   m_Name: Marine Life
@@ -4713,7 +4712,7 @@ Transform:
   m_Father: {fileID: 46142608}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1964278203
+--- !u!114 &1964278204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4722,12 +4721,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1964278201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07ec26b8dee646b4a8b5b380388bb9ca, type: 3}
+  m_Script: {fileID: 11500000, guid: ec495e4d6e7fde94ca7a91c8946ca5f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Confine:
-    Offset: {x: 18.4, y: 5, z: -3.8}
-    Size: {x: 900.9, y: 200, z: 888.9}
+    Offset: {x: 0, y: 20, z: 0}
+    Size: {x: 900, y: 150, z: 900}
   creaturesPool:
   - {fileID: 1107411160630964, guid: bd52fe591dcea5a4ba689c55c42d29eb, type: 3}
   - {fileID: 1870853889962878, guid: 0885df2fceef3734896156b6c9d699be, type: 3}
@@ -4745,7 +4744,6 @@ MonoBehaviour:
   - {fileID: 1272166223363426, guid: d92e5f6e34b14d74893039690fd790af, type: 3}
   - {fileID: 1536911975133754, guid: c9f75ca7dac948d498ade13b23649ad6, type: 3}
   - {fileID: 1365381192422962, guid: 5469708956414f94797e5470f221a016, type: 3}
-  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
   - {fileID: 1748946944915498, guid: 9b37844427900714bac5b352dbd931d0, type: 3}
   - {fileID: 1502900601577816, guid: 428bbdf30777be043a92558682b7757a, type: 3}
   - {fileID: 1425027144221698, guid: cc9a616fb3be3b74c8674bc0e2da1ff5, type: 3}
@@ -4757,22 +4755,10 @@ MonoBehaviour:
   - {fileID: 1045811944559828, guid: bab1287a00165c34eb228a8dc61d3469, type: 3}
   - {fileID: 1301750832583068, guid: a2fa5a930c613414a9e7c8b729c7caa2, type: 3}
   - {fileID: 1957303125167972, guid: 26be2583b4415674ba8757e8cbcf0a60, type: 3}
+  - {fileID: 1275721718250480, guid: 10e35f433bec91241ad1a1d84fac1228, type: 3}
   borderLayer:
     serializedVersion: 2
-    m_Bits: 8192
---- !u!114 &1964278204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1964278201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e75dc2fddce8e44a83d98c25686878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxPacks: 200
+    m_Bits: 4096
 --- !u!1 &1970372935
 GameObject:
   m_ObjectHideFlags: 0
