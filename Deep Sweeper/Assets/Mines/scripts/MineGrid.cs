@@ -60,7 +60,6 @@ public class MineGrid : MonoBehaviour
         this.IsMined = false;
 
         //bind events
-        MineHitEvent += delegate { Reveal(true); };
         Sweeper.MineDisposalEndEvent += Activator.Unlock;
         Selector.ModeApplicationHalfwayEvent += ChangeMineLayer;
     }

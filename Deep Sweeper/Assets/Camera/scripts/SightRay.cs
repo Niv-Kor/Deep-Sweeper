@@ -1,16 +1,22 @@
 ﻿using Constants;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SightRay : Singleton<SightRay>
 {
     private class MineInfo
     {
+        #region Class Members
         private GameObject avatar;
+        #endregion
 
+        #region Properties
         public MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
         public Indicator Indicator { get; private set; }
         public MineSelector Selector { get; private set; }
+        #endregion
 
         public MineInfo(GameObject mine) {
             this.avatar = mine;
@@ -55,20 +61,26 @@ public class SightRay : Singleton<SightRay>
         }
     }
 
+    #region Exposed Editor Parameters
     [Tooltip("Maximum raycast distance from the sight's center.")]
     [SerializeField] private float maxDistance = 100f;
 
     [Tooltip("Maximum raycast distance from the sight's center.")]
     [SerializeField] private LayerMask hitLayers;
+    #endregion
 
+    #region Class Members
     private MineInfo selectedMine;
     private MineInfo selectedIndicator;
     private Transform camTransform;
     private SubmarineGun gun;
     private LayerMask mineLayer, indicatorLayer;
+    #endregion
 
+    #region Properties
     public float MaxDistance { get { return maxDistance; } }
     public float HitDistance { get; private set; }
+    #endregion
 
     private void Start() {
         this.camTransform = CameraManager.Instance.FPCam.transform;
@@ -86,8 +98,7 @@ public class SightRay : Singleton<SightRay>
         bool mouseRight = Input.GetMouseButtonDown(1);
         bool mouseLeft = Input.GetMouseButtonDown(0);
 
-        if (mouseLeft) gun.Fire();
-
+        if (mouseLeft) Fire();
         if (selectedMine != null) {
             if (mouseRight) selectedMine.Grid.ToggleFlag();
             if (mouseLeft) {
@@ -148,6 +159,38 @@ public class SightRay : Singleton<SightRay>
             DeselectIndicators();
             Crosshair.Instance.Release();
         }
+    }
+    
+    /// <summary>
+    /// Fire the submarine gun.
+    /// </summary>
+    private void Fire() {
+        Vector3 upDir = camTransform.up;
+        Vector3 pos = camTransform.position;
+        Vector3 dir = camTransform.forward;
+        bool indicatorHit = Physics.Raycast(pos, dir, out RaycastHit hitInfo, Mathf.Infinity, Layers.MINE_INDICATION);
+
+        if (indicatorHit) {
+            GameObject hitObj = hitInfo.collider.gameObject;
+            MineGrid grid = hitObj.GetComponentInParent<MineGrid>();
+            Indicator indicator = grid.MinesIndicator;
+
+            //only fire the bullets if the indicator is fulfilled
+            if (indicator.IsIndicationFulfilled()) {
+                IEnumerable<MineGrid> section = from neighbour in grid.Section
+                                                where neighbour != null && !neighbour.Sweeper.IsDismissed && !neighbour.IsFlagged
+                                                select neighbour;
+
+                //fire a bullet at each of the neighbours
+                foreach (MineGrid neighbour in section) {
+                    Vector3 neighbourPos = neighbour.Avatar.transform.position;
+                    Vector3 neighbourDir = Vector3.Normalize(neighbourPos - pos);
+                    gun.Fire(neighbourDir, upDir, false, true);
+                }
+            }
+        }
+        
+        gun.Fire(camTransform.forward, upDir, true);
     }
 
     /// <summary>

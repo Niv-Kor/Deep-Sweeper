@@ -7010,6 +7010,12 @@ PrefabInstance:
       propertyPath: _InputSourceOwner
       value: 
       objectReference: {fileID: 894153086}
+    - target: {fileID: 2656385976206928389, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 7836413652284180858, guid: 8b1c2a84e047bab44be6f39ffaa0b1b7,
+        type: 3}
     - target: {fileID: 2656385976961513051, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
       propertyPath: m_CullingMask.m_Bits
@@ -7074,6 +7080,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Submarine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977666013638, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2656385977666013656, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}

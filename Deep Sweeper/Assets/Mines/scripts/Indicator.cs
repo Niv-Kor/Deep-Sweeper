@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Indicator : MonoBehaviour
@@ -13,6 +14,7 @@ public class Indicator : MonoBehaviour
     #endregion
 
     #region Class Members
+    private MineGrid grid;
     private IndicationNumber indicationNum;
     private Transform textTransform;
     private Submarine player;
@@ -27,12 +29,8 @@ public class Indicator : MonoBehaviour
     }
     #endregion
 
-    private void OnEnable() {
-        StopAllCoroutines();
-        StartCoroutine(Float());
-    }
-
     private void Awake() {
+        this.grid = GetComponentInParent<MineGrid>();
         this.indicationNum = GetComponentInChildren<IndicationNumber>();
         this.textTransform = indicationNum.transform.parent;
         this.player = Submarine.Instance;
@@ -95,5 +93,21 @@ public class Indicator : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Check if the mine's section consists of the correct amount of flags it should have.
+    /// This method does NOT check if the flags are correctly placed.
+    /// </summary>
+    /// <returns>
+    /// True if the amount of flagged neighbours
+    /// equals the amount of mined neighbours.
+    /// </returns>
+    public bool IsIndicationFulfilled() {
+        int flaggedNeighbours = (from neighbour in grid.Section
+                                 where neighbour != null && neighbour.IsFlagged
+                                 select neighbour).Count();
+
+        return MinedNeighbours == flaggedNeighbours;
     }
 }

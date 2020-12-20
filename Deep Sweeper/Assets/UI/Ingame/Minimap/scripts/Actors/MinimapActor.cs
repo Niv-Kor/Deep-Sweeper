@@ -10,20 +10,27 @@ public class MinimapActor : MonoBehaviour
     }
 
     #region Exposed editor parameters
+    [Header("Prefabs")]
     [Tooltip("The sprite that represents this object in the minimap.")]
     [SerializeField] protected Sprite sprite;
 
-    [Tooltip("A prefab of an object to use as the minimap icon.")]
+    [Tooltip("A prefab of an object to use as the minimap icon\n"
+           + "(optional - you must either choose a sprite or a prefab).")]
     [SerializeField] protected GameObject iconPrefab;
 
+    [Header("Settings")]
     [Tooltip("The layer that this icon belongs to.")]
     [SerializeField] protected MapLayer layer;
 
+    [Tooltip("True to immediately display the icon in the Minimap layer.")]
+    [SerializeField] protected bool immediateDisplay = true;
+
+    [Header("View")]
     [Tooltip("The size of the icon as viewed over the minimap.")]
     [SerializeField] protected float size = 1;
 
-    [Tooltip("True to immediately display the icon in the Minimap layer.")]
-    [SerializeField] protected bool immediateDisplay = true;
+    [Tooltip("The color that's applied to the icon.")]
+    [SerializeField] protected Color defaultColor;
     #endregion
 
     #region Constants
@@ -35,7 +42,7 @@ public class MinimapActor : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     #endregion
 
-    #region Public properties
+    #region properties
     public Vector2 Size {
         get { return (spriteRenderer != null) ? spriteRenderer.size : Vector2.zero; }
         set { if (spriteRenderer != null) spriteRenderer.size = value; }
@@ -81,6 +88,7 @@ public class MinimapActor : MonoBehaviour
             this.spriteRenderer = iconObj.AddComponent<SpriteRenderer>();
             spriteRenderer.sortingLayerName = layer.ToString();
             spriteRenderer.sortingOrder = GetSortingOrder(layer);
+            spriteRenderer.color = defaultColor;
             spriteRenderer.drawMode = SpriteDrawMode.Sliced;
             Sprite = sprite;
             Size = Vector2.one * size;
