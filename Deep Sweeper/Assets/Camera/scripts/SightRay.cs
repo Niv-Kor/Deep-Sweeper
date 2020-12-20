@@ -7,19 +7,16 @@ public class SightRay : Singleton<SightRay>
 {
     private class MineInfo
     {
-        #region Class Members
-        private GameObject avatar;
-        #endregion
-
         #region Properties
         public MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
         public Indicator Indicator { get; private set; }
         public MineSelector Selector { get; private set; }
+        private GameObject Avatar { get; set; }
         #endregion
 
         public MineInfo(GameObject mine) {
-            this.avatar = mine;
+            this.Avatar = mine;
             this.Grid = mine.GetComponentInParent<MineGrid>();
             this.Activator = Grid.Activator;
             this.Indicator = Grid.MinesIndicator;
@@ -57,7 +54,7 @@ public class SightRay : Singleton<SightRay>
         /// <param name="other">The object to test</param>
         /// <returns>True if both objects reference the same location in memory.</returns>
         public bool Equals(GameObject other) {
-            return avatar == other;
+            return Avatar == other;
         }
     }
 

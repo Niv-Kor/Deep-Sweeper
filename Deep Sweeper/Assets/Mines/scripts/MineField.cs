@@ -80,6 +80,7 @@ public class MineField : ConfinedArea
         SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
+        ActivateGrids();
         return true;
     }
 
@@ -200,6 +201,16 @@ public class MineField : ConfinedArea
         }
         while (grid.IsMined || (grid.MinesIndicator.MinedNeighbours != 0 && !lowerStandard));
         grid.TriggerHit(BulletHitType.SingleHit, false);
+    }
+
+    /// <summary>
+    /// Activate the field grids so the player can interact with them.
+    /// </summary>
+    private void ActivateGrids() {
+        int mineLayer = Layers.GetLayerValue(Layers.MINE);
+
+        foreach (MineGrid grid in Grids)
+            grid.Avatar.gameObject.layer = mineLayer;
     }
 
     /// <summary>

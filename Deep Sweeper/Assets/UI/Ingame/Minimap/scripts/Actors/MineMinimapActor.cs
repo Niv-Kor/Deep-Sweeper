@@ -12,7 +12,7 @@ public class MineMinimapActor : MinimapActor
         MineSelector selector = grid.Selector;
         Sweeper sweeper = grid.Sweeper;
 
-        //bind events1
+        //bind events
         sweeper.MineDisposalStartEvent += delegate { Sprite = null; };
         selector.ModeApplicationStartEvent += OnMineSelection;
     }

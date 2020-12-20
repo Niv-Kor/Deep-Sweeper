@@ -21,6 +21,7 @@ namespace Constants
         private static readonly string NAME_FLAGGED_MINE = "Flagged Mine";
         private static readonly string NAME_MINIMAP = "Minimap";
         private static readonly string NAME_GATE = "Gate";
+        private static readonly string NAME_INACTIVE_MINE = "Inactive Mine";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -39,6 +40,7 @@ namespace Constants
         public static readonly LayerMask FLAGGED_MINE = LayerMask.GetMask(NAME_FLAGGED_MINE);
         public static readonly LayerMask MINIMAP = LayerMask.GetMask(NAME_MINIMAP);
         public static readonly LayerMask GATE = LayerMask.GetMask(NAME_GATE);
+        public static readonly LayerMask INACTIVE_MINE = LayerMask.GetMask(NAME_INACTIVE_MINE);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.
