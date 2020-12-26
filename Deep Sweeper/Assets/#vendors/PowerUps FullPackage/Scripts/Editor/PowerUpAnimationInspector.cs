@@ -1,55 +1,55 @@
-﻿namespace VisCircle {
+﻿using UnityEngine;
+using UnityEditor;
 
-    using UnityEngine;
-    using UnityEditor;
-    using System.Collections;
-
+namespace VisCircle
+{
     [CustomEditor(typeof(LootAnimation))]
-    public class PowerupAnimationInspector : Editor {
+    public class PowerupAnimationInspector : Editor
+    {
         public override void OnInspectorGUI() {
             LootAnimation simpleAnimation = target as LootAnimation;
 
             EditorGUI.BeginChangeCheck();
-            bool newAnimateRotation = EditorGUILayout.Toggle("Animated Rotation", simpleAnimation.GetAnimateRotation());
+            bool newAnimateRotation = EditorGUILayout.Toggle("Animated Rotation", simpleAnimation.AnimateRotation);
             if (EditorGUI.EndChangeCheck()) {
-                simpleAnimation.SetAnimateRotation(newAnimateRotation);
+                simpleAnimation.AnimateRotation = newAnimateRotation;
             }
 
-            if (simpleAnimation.GetAnimateRotation()) {
+            if (simpleAnimation.AnimateRotation) {
                 EditorGUI.indentLevel++;
-                simpleAnimation.rotationSpeedsInDegreePerSecond = EditorGUILayout.Vector3Field("Rotation Speeds", simpleAnimation.rotationSpeedsInDegreePerSecond);
-                simpleAnimation.rotationType = (LootAnimation.RotationType)EditorGUILayout.EnumPopup("Rotation Axis", simpleAnimation.rotationType);
+                simpleAnimation.RotationDegrees = EditorGUILayout.Vector3Field("Rotation Speeds", simpleAnimation.RotationDegrees);
+                simpleAnimation.AnimationRotationType = (LootAnimation.RotationType)EditorGUILayout.EnumPopup("Rotation Axis", simpleAnimation.AnimationRotationType);
                 EditorGUI.indentLevel--;
             }
 
             GUILayout.Space(10f);
 
             EditorGUI.BeginChangeCheck();
-            bool newAnimateScale = EditorGUILayout.Toggle("Animated Scale", simpleAnimation.GetAnimateScale());
+            bool newAnimateScale = EditorGUILayout.Toggle("Animated Scale", simpleAnimation.AnimateScale);
             if (EditorGUI.EndChangeCheck()) {
-                simpleAnimation.SetAnimateScale(newAnimateScale);
+                simpleAnimation.AnimateScale = newAnimateScale;
             }
 
-            if (simpleAnimation.GetAnimateScale()) {
+            if (simpleAnimation.AnimateScale) {
                 EditorGUI.indentLevel++;
-                simpleAnimation.scaleMin = EditorGUILayout.FloatField("Min Scale", simpleAnimation.scaleMin);
-                simpleAnimation.scaleMax = EditorGUILayout.FloatField("Max Scale", simpleAnimation.scaleMax);
-                simpleAnimation.scaleCycleDuration = EditorGUILayout.FloatField("Scale Cycle Duration", simpleAnimation.scaleCycleDuration);
+                simpleAnimation.MinScale = EditorGUILayout.FloatField("Min Scale", simpleAnimation.MinScale);
+                simpleAnimation.MaxScale = EditorGUILayout.FloatField("Max Scale", simpleAnimation.MaxScale);
+                simpleAnimation.ScaleCycleDuration = EditorGUILayout.FloatField("Scale Cycle Duration", simpleAnimation.ScaleCycleDuration);
                 EditorGUI.indentLevel--;
             }
 
             GUILayout.Space(10f);
 
             EditorGUI.BeginChangeCheck();
-            bool newAnimateYOffset = EditorGUILayout.Toggle("Animated Y Offset", simpleAnimation.GetAnimateYOffset());
+            bool newAnimateYOffset = EditorGUILayout.Toggle("Animated Y Offset", simpleAnimation.AnimateOffset);
             if (EditorGUI.EndChangeCheck()) {
-                simpleAnimation.SetAnimateYOffset(newAnimateYOffset);
+                simpleAnimation.AnimateOffset = newAnimateYOffset;
             }
 
-            if (simpleAnimation.GetAnimateYOffset()) {
+            if (simpleAnimation.AnimateOffset) {
                 EditorGUI.indentLevel++;
-                simpleAnimation.yOffsetAmplitude = EditorGUILayout.FloatField("Amplitude", simpleAnimation.yOffsetAmplitude);
-                simpleAnimation.yOffsetCycleDuration = EditorGUILayout.FloatField("Y Offset Cycle Duration", simpleAnimation.yOffsetCycleDuration);
+                simpleAnimation.OffsetAmplitude = EditorGUILayout.FloatField("Amplitude", simpleAnimation.OffsetAmplitude);
+                simpleAnimation.OffsetCycleDuration = EditorGUILayout.FloatField("Y Offset Cycle Duration", simpleAnimation.OffsetCycleDuration);
                 EditorGUI.indentLevel--;
             }
 

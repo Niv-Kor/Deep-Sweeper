@@ -11077,6 +11077,7 @@ GameObject:
   - component: {fileID: 4489756531865085746}
   - component: {fileID: 2025037600048598187}
   - component: {fileID: 6233151062382001633}
+  - component: {fileID: 8210958658331852538}
   m_Layer: 0
   m_Name: Mine Grid
   m_TagString: Untagged
@@ -11248,6 +11249,28 @@ MonoBehaviour:
   size: 10
   defaultColor: {r: 1, g: 0.80729437, b: 0, a: 1}
   flaggedColor: {r: 1, g: 0, b: 0.32785606, a: 1}
+--- !u!114 &8210958658331852538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8776437339755074214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f237a1efb2730c5418cdc52f647591f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 6145379161122966066, guid: b478a23e7012b7645b0c968169d46858, type: 3}
+  collidableLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  positionOffset: {x: 0, y: 30, z: 0}
+  scale: 15
+  autoDrop: 0
+  dropChance: 1
+  inScaleTime: 0.5
+  outScaleTime: 0.07
 --- !u!1 &8788801433538985177
 GameObject:
   m_ObjectHideFlags: 0

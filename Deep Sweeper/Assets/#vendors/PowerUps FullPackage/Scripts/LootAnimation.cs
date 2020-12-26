@@ -1,99 +1,170 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace VisCircle
 {
     public class LootAnimation : MonoBehaviour
     {
-        [SerializeField]
-        private bool _animateRotation = true;
-        public Vector3 rotationSpeedsInDegreePerSecond;
-        public RotationType rotationType = RotationType.SelfAxis;
+        public enum RotationType {
+            SelfAxis,
+            WorldAxis
+        }
 
-        [SerializeField]
-        private bool _animateScale = true;
-        public float scaleMin = 0.5f, scaleMax = 1.5f, scaleCycleDuration = 5;
+        #region Exposed Editor Parameters
+        [Header("Rotation")]
+        [Tooltip("True to rotate the loot item.")]
+        [SerializeField] private bool animateRotation = true;
 
-        [SerializeField]
-        private bool _animateYOffset = true;
-        public float yOffsetAmplitude = 1, yOffsetCycleDuration = 5;
+        [Tooltip("The degrees of rotation per second.")]
+        [SerializeField] private Vector3 rotationDegrees;
 
-        private Vector3 _startLocalPosition;
-        private Quaternion _startLocalRotation;
-        private Vector3 _startLocalScale;
+        [Tooltip("The type of rotation (whether self or world axis rotation).")]
+        [SerializeField] private RotationType rotationType = RotationType.SelfAxis;
 
-        private Transform _transform;
+        [Header("Scale")]
+        [Tooltip("True to scale the loot item up and down.")]
+        [SerializeField] private bool animateScale = true;
 
-        void Awake() {
-            _transform = this.GetComponent<Transform>();
+        [Tooltip("The minimum and maximum scale change values of the item.")]
+        [SerializeField] private Vector2 scaleRange = new Vector2(0.5f, 1.5f);
 
-            _startLocalPosition = _transform.localPosition;
-            _startLocalRotation = _transform.localRotation;
-            _startLocalScale = _transform.localScale;
+        [Tooltip("The time it takes to scale down and up again.")]
+        [SerializeField] private float scaleCycleDuration = 5;
+
+        [Header("Offset")]
+        [Tooltip("True to apply a Y axis offset animation to the item.")]
+        [SerializeField] private bool animateYOffset = true;
+
+        [Tooltip("The entire amplitude of the Y axis offset.")]
+        [SerializeField] private float yOffsetAmplitude = 1;
+
+        [Tooltip("The cyclic time it takes to move the item across the Y axis.")]
+        [SerializeField] private float yOffsetCycleDuration = 5;
+        #endregion
+
+        #region Class Members
+        private Vector3 originPos;
+        private Quaternion originRot;
+        private Vector3 originScale;
+        private Space spaceAxis;
+        private float offsetTime;
+        #endregion
+
+        #region Properties
+        public bool AnimateRotation {
+            get { return animateRotation; }
+            set {
+                animateRotation = value;
+
+                //restore scale
+                if (!animateRotation && Application.isPlaying)
+                    transform.localRotation = originRot;
+            }
+        }
+
+        public Vector3 RotationDegrees {
+            get { return rotationDegrees; }
+            set { rotationDegrees = value; }
+        }
+
+        public RotationType AnimationRotationType {
+            get { return rotationType; }
+            set { rotationType = value; }
+        }
+
+        public float MinScale {
+            get { return scaleRange.x; }
+            set { scaleRange.x = value; }
+        }
+
+        public float MaxScale {
+            get { return scaleRange.y; }
+            set { scaleRange.y = value; }
+        }
+
+        public float ScaleCycleDuration {
+            get { return scaleCycleDuration; }
+            set { scaleCycleDuration = value; }
+        }
+
+        public bool AnimateScale {
+            get { return animateScale; }
+            set {
+                animateScale = value;
+
+                //restore scale
+                if (!animateScale && Application.isPlaying)
+                    transform.localScale = originScale;
+            }
+        }
+
+        public bool AnimateOffset {
+            get { return animateYOffset; }
+            set {
+                animateYOffset = value;
+
+                //restore scale
+                if (!animateYOffset && Application.isPlaying)
+                    transform.localRotation = originRot;
+            }
+        }
+
+        public float OffsetAmplitude {
+            get { return yOffsetAmplitude; }
+            set { yOffsetAmplitude = value; }
+        }
+
+        public float OffsetCycleDuration {
+            get { return yOffsetCycleDuration; }
+            set { yOffsetCycleDuration = value; }
+        }
+        #endregion
+
+        void Start() {
+            this.originPos = transform.localPosition;
+            this.originRot = transform.localRotation;
+            this.originScale = transform.localScale;
+
+            //initial rotation
+            switch (rotationType) {
+                case RotationType.WorldAxis: spaceAxis = Space.World; break;
+                case RotationType.SelfAxis: spaceAxis = Space.Self; break;
+                default: spaceAxis = Space.Self; break;
+            }
+
+            transform.Rotate(rotationDegrees * Random.value, spaceAxis);
+
+            //initial offset
+            this.offsetTime = Random.value * yOffsetAmplitude;
         }
 
         void Update() {
-            if (_animateYOffset) {
-                float yOff;
-                if (yOffsetCycleDuration != 0) {
-                    yOff = Mathf.Sin(Time.time / yOffsetCycleDuration * Mathf.PI * 2) * yOffsetAmplitude;
-                } else {
-                    yOff = 0;
-                }
+            //rotation
+            if (animateRotation) transform.Rotate(rotationDegrees * Time.deltaTime, spaceAxis);
 
-                this.transform.localPosition = _startLocalPosition + new Vector3(0, yOff, 0);
-            }
+            //scale
+            if (animateScale) {
+                float scale = 1;
 
-            if (_animateScale) {
-                float scale;
                 if (scaleCycleDuration != 0) {
                     float scaleT = Mathf.InverseLerp(-1, 1, Mathf.Sin(Time.time / scaleCycleDuration * Mathf.PI * 2));
-                    scale = Mathf.Lerp(scaleMin, scaleMax, scaleT);
-                } else {
-                    scale = 1;
+                    scale = Mathf.Lerp(MinScale, MaxScale, scaleT);
                 }
 
-                this.transform.localScale = scale * _startLocalScale;
+                transform.localScale = scale * originScale;
             }
 
-            if (_animateRotation) {
-                if (rotationType == RotationType.WorldAxis) {
+            //Y axis offset
+            if (animateYOffset) {
+                float yOff = 0;
 
-                    this.transform.Rotate(rotationSpeedsInDegreePerSecond * Time.deltaTime, Space.World);
-                } else {
-                    this.transform.Rotate(rotationSpeedsInDegreePerSecond * Time.deltaTime, Space.Self);
+                if (yOffsetCycleDuration != 0) {
+                    offsetTime += Time.deltaTime;
+                    float sineWave = Mathf.Sin(offsetTime / yOffsetCycleDuration * Mathf.PI * 2);
+                    yOff = sineWave * yOffsetAmplitude;
                 }
+
+                transform.localPosition = originPos + Vector3.up * yOff;
             }
         }
-
-        public bool GetAnimateScale() { return _animateScale; }
-        public void SetAnimateScale(bool newAnimateScale) {
-            this._animateScale = newAnimateScale;
-
-            if (!_animateScale && Application.isPlaying) {
-                this.transform.localScale = _startLocalScale;
-            }
-        }
-
-        public bool GetAnimateYOffset() { return _animateYOffset; }
-        public void SetAnimateYOffset(bool newAnimateYOffset) {
-            this._animateYOffset = newAnimateYOffset;
-
-            if (!_animateYOffset && Application.isPlaying) {
-                this.transform.localPosition = _startLocalPosition;
-            }
-        }
-
-
-        public bool GetAnimateRotation() { return _animateRotation; }
-        public void SetAnimateRotation(bool newAnimateRotation) {
-            this._animateRotation = newAnimateRotation;
-
-            if (!_animateRotation && Application.isPlaying) {
-                this.transform.localRotation = _startLocalRotation;
-            }
-        }
-
-        public enum RotationType { SelfAxis, WorldAxis }
     }
 }
