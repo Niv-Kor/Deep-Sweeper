@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3644475576330994562}
   - component: {fileID: 3662650829313674758}
+  - component: {fileID: 8459935591072340449}
   m_Layer: 0
   m_Name: Bullet Hit
   m_TagString: Untagged
@@ -44,6 +45,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ab8d25343e2a0f4ca1773bf0bc9c0bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8459935591072340449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863766518752388935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: hit
+    clip: {fileID: 8300000, guid: 6d2f4509f313e8643bd48911b3886ef4, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    cooldown: 0
+    loop: 0
+    playOnAwake: 1
+    detachFromObject: 0
+    genre: 0
 --- !u!1 &2479013012971417818
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,6 +80,7 @@ GameObject:
   - component: {fileID: 2479013012971417817}
   - component: {fileID: 2479013012971417816}
   - component: {fileID: 929101529587329341}
+  - component: {fileID: 8419654505504867441}
   m_Layer: 10
   m_Name: Dust
   m_TagString: Untagged
@@ -4811,3 +4836,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4ce7687b9235041bb66d890411c575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8419654505504867441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2479013012971417818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: dust_impact
+    clip: {fileID: 8300000, guid: ba7c5dc1c3aeb10419ccd247c6cbe1b5, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    cooldown: 0
+    loop: 0
+    playOnAwake: 1
+    detachFromObject: 0
+    genre: 0

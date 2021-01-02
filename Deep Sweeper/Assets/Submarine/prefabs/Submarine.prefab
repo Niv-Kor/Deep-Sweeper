@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782528527}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: -13, z: -24.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1643618614}
@@ -45,9 +45,9 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.7411765, g: 0.9607843, b: 1, a: 1}
-  m_Intensity: 0.8
-  m_Range: 580
-  m_SpotAngle: 82.49
+  m_Intensity: 0.8939996
+  m_Range: 2000
+  m_SpotAngle: 55
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
@@ -436,7 +436,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 393013
+    m_Bits: 1965877
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -655,7 +655,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: e52fb17f9b1e7fd48b8955f1391d3688, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.07
+  m_Radius: 1
   m_Height: 1.39
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
@@ -669,9 +669,9 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: e52fb17f9b1e7fd48b8955f1391d3688, type: 2}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 7
-  m_Height: 1.39
-  m_Direction: 2
+  m_Radius: 16.7
+  m_Height: 55.41
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &508468166
 MonoBehaviour:

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7836413652284180839}
   - component: {fileID: 7836413652284180856}
   - component: {fileID: 7836413652284180838}
+  - component: {fileID: 8206817003287585773}
   m_Layer: 13
   m_Name: Bullet
   m_TagString: Untagged
@@ -4770,3 +4771,25 @@ MonoBehaviour:
   hitParticlesPrefab: {fileID: 863766518752388935, guid: 22095c37b2ad7dd40a71d17bf26413bc,
     type: 3}
   timeToLive: 0.5
+--- !u!114 &8206817003287585773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836413652284180858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: torpedo_launch
+    clip: {fileID: 8300000, guid: 51240fd0192be544fb3caeaa437acf49, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    cooldown: 0.1
+    loop: 0
+    playOnAwake: 1
+    genre: 0

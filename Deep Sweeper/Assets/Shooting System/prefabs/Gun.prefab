@@ -9565,6 +9565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c1f8c4de1ffc847b98d6581d322c29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 7836413652284180858, guid: 8b1c2a84e047bab44be6f39ffaa0b1b7,
+    type: 3}
   recoil: 800
   speed: 400

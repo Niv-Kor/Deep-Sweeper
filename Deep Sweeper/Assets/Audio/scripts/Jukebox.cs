@@ -30,9 +30,6 @@ public class Jukebox : MonoBehaviour
 
     private void Awake() {
         this.limiter = TunesLimiter.Instance;
-    }
-
-    private void Start() {
         GameObject audioParent = new GameObject(PARENT_NAME);
         audioParent.transform.SetParent(transform);
 
@@ -43,7 +40,14 @@ public class Jukebox : MonoBehaviour
             audioSource.loop = tune.IsLoop;
             audioSource.outputAudioMixerGroup = VolumeController.Instance.GetGenreGroup(tune.Genre);
             limiter.Subscribe(tune);
+
+            //auto play the tune
+            if (tune.PlayOnAwake) Play(tune);
         }
+    }
+
+    private void OnDestroy() {
+        foreach (Tune tune in tunes) Stop(tune);
     }
 
     /// <param name="name">The name of the tune</param>
@@ -76,8 +80,9 @@ public class Jukebox : MonoBehaviour
     /// </summary>
     /// <param name="name">The tune's name</param>
     public void Stop(Tune tune) {
-        if (tune != null) {
+        if (tune != null && tune.Coroutine != null) {
             StopCoroutine(tune.Coroutine);
+            tune.Coroutine = null;
             tune.Stop();
         }
     }
@@ -92,6 +97,6 @@ public class Jukebox : MonoBehaviour
     /// <param name="seconds">Amount of seconds after which the tune is stopped</param>
     private IEnumerator StopAfterSeconds(Tune tune, float seconds) {
         yield return new WaitForSeconds(seconds);
-        tune.Stop();
+        if (tune.IsPlaying) tune.Stop();
     }
 }

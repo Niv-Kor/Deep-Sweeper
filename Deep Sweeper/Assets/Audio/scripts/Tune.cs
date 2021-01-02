@@ -24,8 +24,11 @@ public class Tune
     [Tooltip("The cooldown time within which the tune cannot be played twice.")]
     [SerializeField] private float cooldown = 0;
 
-    [Tooltip("True to play the tune infinitely.")]
+    [Tooltip("True to play this tune infinitely.")]
     [SerializeField] private bool loop = false;
+
+    [Tooltip("True to play this automatically as soon as it's created.")]
+    [SerializeField] private bool playOnAwake = false;
 
     [Tooltip("The mixer to which this tune belongs.")]
     [SerializeField] private Genre genre;
@@ -43,6 +46,7 @@ public class Tune
     public string Name { get { return name; } }
     public float Delay { get { return delay; } }
     public float Cooldown { get { return cooldown; } }
+    public bool PlayOnAwake { get { return playOnAwake; } }
     public Genre Genre { get { return genre; } }
     public AudioClip Clip { get { return clip; } }
     public Coroutine Coroutine { get; set; }
