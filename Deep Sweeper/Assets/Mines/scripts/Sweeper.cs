@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(MineExplosionPlayer))]
 public class Sweeper : MonoBehaviour
 {
     #region Exposed Editor Parameters
@@ -14,6 +15,7 @@ public class Sweeper : MonoBehaviour
     private MeshRenderer render;
     private SphereCollider col;
     private ParticleSystem[] particles;
+    private MineExplosionPlayer explosionPlayer;
     #endregion
 
     #region Events
@@ -29,6 +31,7 @@ public class Sweeper : MonoBehaviour
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();
         this.render = avatar.GetComponent<MeshRenderer>();
         this.col = avatar.GetComponentInChildren<SphereCollider>();
+        this.explosionPlayer = GetComponent<MineExplosionPlayer>();
         this.IsDismissed = false;
     }
 
@@ -60,6 +63,12 @@ public class Sweeper : MonoBehaviour
         float vanishTime = 0;
 
         if (explosion) {
+            //find distance from submarine and play explosion sound accordingly
+            Vector3 minePos = transform.position;
+            Vector3 submarinePos = Submarine.Instance.transform.position;
+            float mineDist = Vector3.Distance(minePos, submarinePos);
+            explosionPlayer.Play(mineDist);
+
             foreach (ParticleSystem part in particles) {
                 float animationTime = part.main.startDelay.constantMax + part.main.duration;
                 if (animationTime > vanishTime) vanishTime = animationTime;

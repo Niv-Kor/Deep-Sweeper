@@ -1,11 +1,44 @@
-﻿using Constants;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using VisCircle;
 
 public abstract class LootGeneratorObject : MonoBehaviour
 {
+    protected class LootItemPromise
+    {
+        #region Class Members
+        private GameObject parent;
+        private LootGeneratorObject generator;
+        private LootItem prefab;
+        private Vector3 position;
+        #endregion
+
+        /// <param name="generator">The loot generator that creates this promise</param>
+        /// <param name="prefab">The prefab of the loot item to instantiate</param>
+        /// <param name="pos">The intended position of the loot instance</param>
+        public LootItemPromise(LootGeneratorObject generator, LootItem prefab, Vector3 pos) {
+            this.parent = LootManager.Instance.gameObject;
+            this.generator = generator;
+            this.prefab = prefab;
+            this.position = pos;
+        }
+
+        /// <summary>
+        /// Create an instance of the loot.
+        /// </summary>
+        public void Resolve() {
+            GameObject instance = Instantiate(prefab.gameObject);
+            instance.transform.SetParent(parent.transform);
+            instance.transform.localPosition = Vector3.zero;
+            instance.transform.position = position;
+            instance.transform.localScale = Vector3.zero;
+
+            LootItem instanceCmp = instance.GetComponent<LootItem>();
+            instanceCmp.Generator = generator;
+            generator.Item = instanceCmp;
+        }
+    }
+
     #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The loot object's prefab.")]
@@ -36,18 +69,16 @@ public abstract class LootGeneratorObject : MonoBehaviour
     [SerializeField] protected float outScaleTime = 0;
     #endregion
 
-    #region Constants
-    protected static readonly string LOOT_PARENT_NAME = "Loots";
-    #endregion
-
     #region Class Members
     protected GameObject lootParent;
     protected GameObject lootItem;
     protected GameObject m_itemObj;
     protected GameObject prevItem;
     protected LootItem m_item;
+    protected LootItemPromise itemPromise;
     protected Vector3 originScale;
     protected bool m_enabled;
+    protected UnityAction collectAction;
     #endregion
 
     #region Events
@@ -56,38 +87,21 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     #region Properties
     public LayerMask CollideableLayers { get { return collidableLayers; } }
+    public float Chance {
+        get { return dropChance * 100; }
+        set { dropChance = Mathf.Clamp(value, 0f, 1f); }
+    }
+
     public LootItem Item {
         get { return m_item; }
-        set {
-            GameObject itemObj = value.gameObject;
-            if (prevItem == itemObj) return;
-
-            //remove existing items from parent
-            LootItem[] existingItems = GetComponentsInChildren<LootItem>();
-            foreach (LootItem child in existingItems) Destroy(child);
-
-            //create an instance of the item
-            m_itemObj = Instantiate(itemObj);
-            m_itemObj.transform.SetParent(lootParent.transform);
-            m_itemObj.transform.localPosition = Vector3.zero;
-            m_itemObj.transform.position += positionOffset;
-            m_itemObj.transform.localScale = Vector3.zero;
-            m_item = m_itemObj.GetComponent<LootItem>();
-            m_item.Generator = this;
-            m_item.CollisionEvent += Collect;
-            originScale = Vector3.one * scale;
-            prevItem = m_itemObj;
-
-            //drop the item if it's set to auto drop
-            if (!Enabled && autoDrop) Drop();
-            else BindDropEvent(Drop);
-        }
+        set { m_item = value; }
     }
 
     public bool Enabled {
         get { return m_enabled; }
         protected set {
-            if (m_enabled != value) {
+            if (m_enabled != value && itemPromise != null) {
+                if (value) itemPromise.Resolve(); //create loot
                 m_enabled = value;
                 StopAllCoroutines();
                 StartCoroutine(Scale(value));
@@ -98,20 +112,16 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     protected virtual void Awake() {
         this.m_enabled = false;
-
-        //create the parent of the loot objects
-        this.lootParent = new GameObject(LOOT_PARENT_NAME);
-        lootParent.transform.SetParent(transform);
-        lootParent.transform.localPosition = Vector3.zero;
-        lootParent.transform.localScale = Vector3.one;
+        this.lootParent = LootManager.Instance.gameObject;
+        this.originScale = Vector3.one * scale;
     }
 
     protected virtual void Start() {
-        if (item != null) Item = item;
+        if (item != null) SetPrefab(item);
     }
 
     protected virtual void OnValidate() {
-        if (Application.isPlaying && lootParent != null) Item = item;
+        if (Application.isPlaying && lootParent != null) SetPrefab(item);
     }
 
     /// <summary>
@@ -130,19 +140,24 @@ public abstract class LootGeneratorObject : MonoBehaviour
             Item.transform.localScale = scale;
             yield return null;
         }
-
-        if (!scaleIn) Destroy(Item.gameObject);
     }
 
     /// <summary>
     /// Dispose the item.
     /// </summary>
     /// <param name="collectingLayer">The layer of the object that had collected the item</param>
-    protected virtual void Collect(int collectingLayer) {
+    /// <param name="dispose">True to dispose the loot item</param>
+    public virtual void Collect(int collectingLayer, bool dispose = true) {
         Enabled = false;
         CollectedEvent?.Invoke();
         TakeEffect(collectingLayer);
+        if (dispose) Dispose();
     }
+
+    /// <summary>
+    /// Dispose the loot item.
+    /// </summary>
+    public virtual void Dispose() { Destroy(Item.gameObject); }
 
     /// <summary>
     /// Drop and expose the item.
@@ -150,6 +165,24 @@ public abstract class LootGeneratorObject : MonoBehaviour
     /// </summary>
     public virtual void Drop() {
         if (!Enabled && ChanceUtils.UnstableCondition(dropChance)) Enabled = true;
+    }
+
+    /// <summary>
+    /// Create a promise object that contains the information
+    /// needed to create a loot at runtime.
+    /// </summary>
+    /// <param name="prefab">The prefab of the loot item</param>
+    protected void SetPrefab(LootItem prefab) {
+        if (prevItem == prefab.gameObject) return;
+
+        //create an item promise
+        Vector3 pos = transform.position + positionOffset;
+        itemPromise = new LootItemPromise(this, prefab, pos);
+        prevItem = prefab.gameObject;
+
+        //drop the item if it's set to auto drop
+        if (!Enabled && autoDrop) Drop();
+        else BindDropEvent(Drop);
     }
 
     /// <summary>

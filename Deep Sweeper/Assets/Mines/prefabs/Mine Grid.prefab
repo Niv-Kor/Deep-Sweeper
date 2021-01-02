@@ -11078,6 +11078,8 @@ GameObject:
   - component: {fileID: 2025037600048598187}
   - component: {fileID: 6233151062382001633}
   - component: {fileID: 8210958658331852538}
+  - component: {fileID: 6924104458155657525}
+  - component: {fileID: 5458467339473399080}
   m_Layer: 0
   m_Name: Mine Grid
   m_TagString: Untagged
@@ -11265,12 +11267,54 @@ MonoBehaviour:
   collidableLayers:
     serializedVersion: 2
     m_Bits: 1024
-  positionOffset: {x: 0, y: 30, z: 0}
-  scale: 15
+  positionOffset: {x: 0, y: 20, z: 0}
+  scale: 40
   autoDrop: 0
   dropChance: 1
   inScaleTime: 0.5
   outScaleTime: 0.07
+--- !u!114 &6924104458155657525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8776437339755074214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: explosion
+    clip: {fileID: 8300000, guid: 25dc5429ab32e5a488606eb9a59c1264, type: 3}
+    volume: 0.7
+    pitch: 1
+    delay: 0
+    loop: 0
+    genre: 0
+  - name: flag_check
+    clip: {fileID: 8300000, guid: 564091c47f3229e4db42996d5246dfa6, type: 3}
+    volume: 0.2
+    pitch: 1
+    delay: 0
+    loop: 0
+    genre: 0
+--- !u!114 &5458467339473399080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8776437339755074214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b740fbcb056ca4443958055da9cb025f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tuneName: explosion
+  minMaxDistance: {x: 0, y: 250}
+  minMaxVolume: {x: 0.08, y: 0.7}
 --- !u!1 &8788801433538985177
 GameObject:
   m_ObjectHideFlags: 0

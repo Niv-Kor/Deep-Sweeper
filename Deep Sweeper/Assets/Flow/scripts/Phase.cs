@@ -61,9 +61,9 @@ public class Phase
     /// Activate or deactivate the phase's field.
     /// </summary>
     /// <param name="flag">True to activate or false to deactivate</param>
-    /// <param name="destoryField">True to permanently destory the mine field object</param>
-    public void ActivateField(bool flag, bool destoryField = false) {
-        if (!flag && destoryField) Field.DestroyField();
+    /// <param name="destroyField">True to permanently destory the mine field object</param>
+    public void ActivateField(bool flag, bool destroyField = false) {
+        if (!flag && destroyField) Console.WriteLine("field destroyed"); //Field.DestroyField();
         else if (flag) Field.Begin();
     }
 

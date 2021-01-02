@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5831139814204732041}
   - component: {fileID: 5141859976207494263}
   - component: {fileID: 6145379161122966066}
+  - component: {fileID: 1755982778935528493}
   m_Layer: 0
   m_Name: Coin Gold
   m_TagString: Untagged
@@ -102,7 +103,7 @@ MonoBehaviour:
   scaleRange: {x: 0.5, y: 1.5}
   scaleCycleDuration: 5
   animateYOffset: 1
-  yOffsetAmplitude: 1
+  yOffsetAmplitude: 2
   yOffsetCycleDuration: 3
 --- !u!135 &5141859976207494263
 SphereCollider:
@@ -129,6 +130,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb853b55ba4e89041b3669e0e750414c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1755982778935528493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5831139814214264101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: toss
+    clip: {fileID: 8300000, guid: 9fd9c661f391eb849b4a59608266ca26, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    loop: 0
+    genre: 0
 --- !u!1 &5831139814214264107
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(Sweeper))]
+[RequireComponent(typeof(MineSelector))]
+[RequireComponent(typeof(MineActivator))]
+[RequireComponent(typeof(LootGeneratorObject))]
 public class MineGrid : MonoBehaviour
 {
     #region Exposed Editor Parameters
@@ -23,6 +27,7 @@ public class MineGrid : MonoBehaviour
     public Sweeper Sweeper { get; private set; }
     public MineActivator Activator { get; private set; }
     public MineSelector Selector { get; private set; }
+    public LootGeneratorObject LootGenerator { get; private set; }
     public Indicator MinesIndicator { get; private set; }
     public float ExplosiveChance { get; private set; }
     public MineField Field { get; set; }
@@ -54,6 +59,7 @@ public class MineGrid : MonoBehaviour
     private void Awake() {
         this.Activator = GetComponent<MineActivator>();
         this.MinesIndicator = GetComponentInChildren<Indicator>();
+        this.LootGenerator = GetComponent<LootGeneratorObject>();
         this.Sweeper = GetComponent<Sweeper>();
         this.Selector = GetComponent<MineSelector>();
         this.mine = GetComponentInChildren<MineBouncer>();
@@ -115,7 +121,8 @@ public class MineGrid : MonoBehaviour
     /// </summary>
     /// <param name="explosion">True to activate an explosion effect on revelation</param>
     /// <param name="ignoreFlagged">True to do nothing if this mine is flagged</param>
-    private void Reveal(bool explosion, bool ignoreFlagged = false) {
+    /// <param name="allowDrop">True to allow the mine to drop an item</param>
+    private void Reveal(bool explosion, bool ignoreFlagged = false, bool allowDrop = true) {
         bool ignored = IsFlagged && ignoreFlagged;
         if (MinesIndicator.IsDisplayed() || ignored) return;
 
@@ -131,6 +138,7 @@ public class MineGrid : MonoBehaviour
             int neighbours = MinesIndicator.MinedNeighbours;
             List<MineGrid> section = Section;
 
+            if (!allowDrop) LootGenerator.Chance = 0;
             if (explosion) Sweeper.Explode();
             else Sweeper.Vanish();
             MineHitEvent?.Invoke();
@@ -138,7 +146,7 @@ public class MineGrid : MonoBehaviour
             //keep revealing grids recursively
             if (neighbours == 0)
                 foreach (MineGrid mineGrid in section)
-                    if (mineGrid != null) mineGrid.TriggerHit(BulletHitType.SingleHit, explosion);
+                    if (mineGrid != null) mineGrid.TriggerHit(BulletHitType.SingleHit, explosion, allowDrop);
 
             GameFlow.Instance.TryNextPhase();
         }
@@ -152,10 +160,11 @@ public class MineGrid : MonoBehaviour
     /// </summary>
     /// <param name="hitType">The type of hit that occured</param>
     /// <param name="explosion">True to activate an explosion effect on revelation</param>
-    public void TriggerHit(BulletHitType hitType, bool explosion) {
+    /// <param name="allowDrop">True to allow the mine to drop an item</param>
+    public void TriggerHit(BulletHitType hitType, bool explosion, bool allowDrop = true) {
         switch (hitType) {
             case BulletHitType.SingleHit:
-                Reveal(explosion);
+                Reveal(explosion, false, allowDrop);
                 break;
 
             case BulletHitType.SectionHit:

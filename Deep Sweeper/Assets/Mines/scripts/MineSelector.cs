@@ -33,7 +33,12 @@ public class MineSelector : MonoBehaviour
     [SerializeField] private float applyTime;
     #endregion
 
+    #region Constants
+    private static readonly string FLAG_CHECK_SFX = "flag_check";
+    #endregion
+
     #region Class Members
+    private Jukebox jukebox;
     private Material materialComponent;
     private Renderer render;
     private SelectionMode m_mode;
@@ -57,16 +62,22 @@ public class MineSelector : MonoBehaviour
             if (nextMat != null) {
                 bool fromFlagged = IsFlagMode(m_mode);
                 bool toFlagged = IsFlagMode(value);
+                bool flagChange = false;
                 bool permit = true;
 
                 //check flags permission
-                if (!fromFlagged && toFlagged)
+                if (!fromFlagged && toFlagged) {
                     permit = FlagsManager.Instance.TakeFlag();
-                else if (fromFlagged && !toFlagged)
+                    flagChange = true;
+                }
+                else if (fromFlagged && !toFlagged) {
                     permit = FlagsManager.Instance.ReturnFlag();
+                    flagChange = true;
+                }
 
                 //apply mode
                 if (permit) {
+                    if (flagChange) jukebox?.Play(FLAG_CHECK_SFX);
                     StopAllCoroutines();
                     StartCoroutine(Lerp(m_mode, value, nextMat));
                     m_mode = value;
@@ -78,6 +89,7 @@ public class MineSelector : MonoBehaviour
 
     private void Awake() {
         this.render = avatar.GetComponent<MeshRenderer>();
+        this.jukebox = GetComponent<Jukebox>();
         this.Mark = GetComponentInChildren<MineMark>();
         this.materialComponent = render.material;
         this.m_mode = SelectionMode.Default;
