@@ -13,6 +13,10 @@ public class Jukebox : MonoBehaviour
     private static readonly string PARENT_NAME = "Audio";
     #endregion
 
+    #region Class Members
+    private TunesLimiter limiter;
+    #endregion
+
     #region Properties
     public List<Tune> Tunes { get { return tunes; } }
     public List<string> TuneNames {
@@ -24,6 +28,10 @@ public class Jukebox : MonoBehaviour
     }
     #endregion
 
+    private void Awake() {
+        this.limiter = TunesLimiter.Instance;
+    }
+
     private void Start() {
         GameObject audioParent = new GameObject(PARENT_NAME);
         audioParent.transform.SetParent(transform);
@@ -34,6 +42,7 @@ public class Jukebox : MonoBehaviour
             tune.Source = audioSource;
             audioSource.loop = tune.IsLoop;
             audioSource.outputAudioMixerGroup = VolumeController.Instance.GetGenreGroup(tune.Genre);
+            limiter.Subscribe(tune);
         }
     }
 
@@ -48,7 +57,7 @@ public class Jukebox : MonoBehaviour
     /// </summary>
     /// <param name="tune">The tune to play</param>
     public void Play(Tune tune) {
-        if (tune != null) {
+        if (tune != null && limiter.GetPermission(tune)) {
             tune.Source.PlayDelayed(tune.Delay);
 
             if (!tune.IsLoop) {

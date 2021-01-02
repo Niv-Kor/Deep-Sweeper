@@ -21,6 +21,9 @@ public class Tune
     [Tooltip("A delay to add before the sound plays (in seconds).")]
     [SerializeField] private float delay = 0;
 
+    [Tooltip("The cooldown time within which the tune cannot be played twice.")]
+    [SerializeField] private float cooldown = 0;
+
     [Tooltip("True to play the tune infinitely.")]
     [SerializeField] private bool loop = false;
 
@@ -39,6 +42,7 @@ public class Tune
     #region Properties
     public string Name { get { return name; } }
     public float Delay { get { return delay; } }
+    public float Cooldown { get { return cooldown; } }
     public Genre Genre { get { return genre; } }
     public AudioClip Clip { get { return clip; } }
     public Coroutine Coroutine { get; set; }

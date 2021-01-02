@@ -11287,11 +11287,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tunes:
   - name: explosion
-    clip: {fileID: 8300000, guid: 25dc5429ab32e5a488606eb9a59c1264, type: 3}
-    volume: 0.7
+    clip: {fileID: 8300000, guid: 05b4e07d197e21c4abcad64aafd2ea5f, type: 3}
+    volume: 1
     pitch: 1
     delay: 0
     loop: 0
+    cooldown: 0.2
     genre: 0
   - name: flag_check
     clip: {fileID: 8300000, guid: 564091c47f3229e4db42996d5246dfa6, type: 3}
@@ -11299,6 +11300,7 @@ MonoBehaviour:
     pitch: 1
     delay: 0
     loop: 0
+    cooldown: 0
     genre: 0
 --- !u!114 &5458467339473399080
 MonoBehaviour:
@@ -11314,7 +11316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tuneName: explosion
   minMaxDistance: {x: 0, y: 250}
-  minMaxVolume: {x: 0.08, y: 0.7}
+  minMaxVolume: {x: 0.08, y: 1}
 --- !u!1 &8788801433538985177
 GameObject:
   m_ObjectHideFlags: 0

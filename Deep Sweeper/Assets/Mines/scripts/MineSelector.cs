@@ -49,6 +49,7 @@ public class MineSelector : MonoBehaviour
     public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationHalfwayEvent;
     #endregion
 
+    
     #region Public Properties
     public MineMark Mark { get; private set; }
     public SelectionMode Mode {
