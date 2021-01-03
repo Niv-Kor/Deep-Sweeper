@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 2399839787399006965}
   - component: {fileID: 2399839787399006968}
   - component: {fileID: 2399839787399006967}
+  - component: {fileID: 6468954093105291621}
   m_Layer: 18
   m_Name: Gate
   m_TagString: Untagged
@@ -243,3 +244,26 @@ MonoBehaviour:
   pauseBeforeCam: 1
   pauseBeforeOpen: 1
   pauseAfterOpen: 1
+--- !u!114 &6468954093105291621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2399839787399006964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tunes:
+  - name: gate_open
+    clip: {fileID: 8300000, guid: 1af1aaa8d175bee4e896991ee86de4a6, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    cooldown: 0
+    loop: 0
+    playOnAwake: 0
+    relateOnDistance: 0
+    genre: 0

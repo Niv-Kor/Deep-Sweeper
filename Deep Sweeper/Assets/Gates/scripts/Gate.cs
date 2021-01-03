@@ -35,9 +35,14 @@ public class Gate : MonoBehaviour
     [SerializeField] private float pauseAfterOpen;
     #endregion
 
+    #region Constants
+    private static readonly string GATE_OPEN_SFX = "gate_open";
+    #endregion
+
     #region Class Members
     private LineRenderer upperEdge;
     private Camera cam;
+    private Jukebox jukebox;
     private ForceField forceField;
     private Transform emblem;
     private SubmarineMovementController submarine;
@@ -63,6 +68,7 @@ public class Gate : MonoBehaviour
     private void Start() {
         this.submarine = FindObjectOfType<SubmarineMovementController>();
         this.camController = FindObjectOfType<CameraController>();
+        this.jukebox = GetComponent<Jukebox>();
         this.initiated = false;
     }
 
@@ -175,6 +181,7 @@ public class Gate : MonoBehaviour
     /// Dismiss the force field.
     /// </summary>
     private IEnumerator ShutForceField() {
+        jukebox.Play(GATE_OPEN_SFX);
         forceField.ShutFieldEmission(forceFieldShutTime);
         yield return new WaitForSeconds(3);
         Destroy(forceField.ParticleSystem);
