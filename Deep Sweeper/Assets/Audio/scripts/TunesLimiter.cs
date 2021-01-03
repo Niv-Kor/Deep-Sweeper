@@ -16,7 +16,7 @@ public class TunesLimiter : Singleton<TunesLimiter>
         public TuneLimitData(Tune tune) {
             this.Tune = tune;
             this.Cooldown = tune.Cooldown;
-            ResetTime();
+            this.RemainTime = 0;
         }
 
         /// <summary>

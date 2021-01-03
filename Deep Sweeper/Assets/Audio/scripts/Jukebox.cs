@@ -15,6 +15,7 @@ public class Jukebox : MonoBehaviour
 
     #region Class Members
     private TunesLimiter limiter;
+    private DistantVolumeController volumeController;
     #endregion
 
     #region Properties
@@ -28,10 +29,12 @@ public class Jukebox : MonoBehaviour
     }
     #endregion
 
-    private void Awake() {
+    private void Start() {
         this.limiter = TunesLimiter.Instance;
+        this.volumeController = DistantVolumeController.Instance;
         GameObject audioParent = new GameObject(PARENT_NAME);
         audioParent.transform.SetParent(transform);
+        audioParent.transform.localPosition = Vector3.zero;
 
         //create an audio source component for each tune
         foreach (Tune tune in tunes) {
@@ -62,8 +65,16 @@ public class Jukebox : MonoBehaviour
     /// <param name="tune">The tune to play</param>
     public void Play(Tune tune) {
         if (tune != null && limiter.GetPermission(tune)) {
+            //change tune's volume according to its distance from the scene anchor
+            if (tune.RelateOnDistance) {
+                float originVolume = tune.Volume;
+                tune.Volume = volumeController.CalcVolume(tune);
+                tune.StopEvent += delegate { tune.Volume = originVolume; };
+            }
+
             tune.Source.PlayDelayed(tune.Delay);
 
+            //schedule the tune's stop trigger
             if (!tune.IsLoop) {
                 float time = tune.Delay + tune.Duration;
                 tune.Coroutine = StartCoroutine(StopAfterSeconds(tune, time));
