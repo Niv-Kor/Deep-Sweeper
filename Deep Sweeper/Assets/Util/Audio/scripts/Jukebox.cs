@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Jukebox : MonoBehaviour
@@ -53,10 +54,26 @@ public class Jukebox : MonoBehaviour
         foreach (Tune tune in tunes) Stop(tune);
     }
 
+    /// <summary>
+    /// Get a tune with a specific name.
+    /// If there are multiple tunes that use the same name,
+    /// this method returns one of them randomly.
+    /// </summary>
     /// <param name="name">The name of the tune</param>
-    /// <returns>The correct tune, or null if it doesn't exist.</returns>
+    /// <returns>
+    /// A random tune that consists of the specified name,
+    /// or null if nont exist.
+    /// </returns>
     public Tune Get(string name) {
-        return tunes.Find(x => x.Name == name);
+        List<Tune> list = (from Tune tune in tunes
+                           where tune.Name == name
+                           select tune).ToList();
+
+        if (list.Count > 0) {
+            int index = Random.Range(0, list.Count);
+            return list[index];
+        }
+        else return null;
     }
 
     /// <summary>
