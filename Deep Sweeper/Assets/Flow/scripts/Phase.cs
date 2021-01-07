@@ -1,19 +1,33 @@
-﻿using System;
-
-public class Phase
+﻿public class Phase
 {
     #region Class Members
-    public Phase PreviousPhase { get; private set; }
-    public Phase FollowPhase { get; set; }
-    public MineField Field { get; private set; }
-    public Gate EntranceGate { get; private set; }
-    public Gate ExitGate { get; private set; }
+    private Gate m_entranceGate;
     #endregion
 
     #region Properties
+    public Phase PreviousPhase { get; private set; }
+    public Phase FollowPhase { get; set; }
+    public MineField Field { get; private set; }
+    public Gate ExitGate { get; private set; }
     public string MapName { get; private set; }
     public int Index { get; private set; }
     public PhaseConfig Config { get; private set; }
+    public PhaseDifficultyConfig DifficultyConfig {
+        get {
+            DifficultyLevel difficulty = Contract.Instance.Difficulty;
+            return Config.Levels.Find(x => x.Difficulty == difficulty);
+        }
+    }
+
+    public Gate EntranceGate {
+        get { return m_entranceGate; }
+        private set {
+            if (value != null) {
+                m_entranceGate = value;
+                m_entranceGate.GateCrossEvent += Begin;
+            }
+        }
+    }
     #endregion
 
     /// <param name="index">The index of the phase (0 based)</param>
@@ -31,7 +45,6 @@ public class Phase
         this.ExitGate = config.Gate;
         this.EntranceGate = prevPhase?.ExitGate;
         this.PreviousPhase = prevPhase;
-        ActivateField(false);
 
         if (config.Gate != null) config.Gate.Phase = this;
     }
@@ -49,22 +62,12 @@ public class Phase
     /// The phase must first be initialized.
     /// </summary>
     /// <param name="difficulty">The difficulty of the phase</param>
-    public void Begin(DifficultyLevel difficulty) {
-        ActivateField(true);
-        PhaseDifficultyConfig diffConfig = Config.Levels.Find(x => x.Difficulty == difficulty);
-        int levelTimer = diffConfig.Clock;
+    public void Begin() {
+        DifficultyLevel difficulty = Contract.Instance.Difficulty;
+        int levelTimer = DifficultyConfig.Clock;
         SpatialsManager.Instance.Activate(difficulty, levelTimer);
-        GameFlow.Instance.ReportPhaseUpdated(Config, diffConfig, Index);
-    }
-
-    /// <summary>
-    /// Activate or deactivate the phase's field.
-    /// </summary>
-    /// <param name="flag">True to activate or false to deactivate</param>
-    /// <param name="destroyField">True to permanently destory the mine field object</param>
-    public void ActivateField(bool flag, bool destroyField = false) {
-        if (!flag && destroyField) Console.WriteLine("field destroyed"); //Field.DestroyField();
-        else if (flag) Field.Begin();
+        GameFlow.Instance.ReportPhaseUpdated(Config, DifficultyConfig, Index);
+        Field.Activate();
     }
 
     /// <summary>
@@ -74,7 +77,6 @@ public class Phase
         if (ExitGate != null) {
             SpatialsManager.Instance.Deactivate();
             ExitGate.RequestOpen(true);
-            ActivateField(false, true);
         }
         else {
             ///TODO win

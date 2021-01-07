@@ -4,8 +4,8 @@ public class SubmarineMinimapActor : MinimapActor
 {
     private Camera FPCam;
 
-    protected override void Start() {
-        base.Start();
+    protected override void Awake() {
+        base.Awake();
         this.FPCam = CameraManager.Instance.FPCam;
     }
 

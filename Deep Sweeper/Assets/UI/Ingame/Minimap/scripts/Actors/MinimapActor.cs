@@ -50,11 +50,14 @@ public class MinimapActor : MonoBehaviour
 
     public Sprite Sprite {
         get { return spriteRenderer?.sprite; }
-        set { if (spriteRenderer != null) spriteRenderer.sprite = value; }
+        set {
+            if (spriteRenderer != null)
+                spriteRenderer.sprite = value;
+        }
     }
     #endregion
 
-    protected virtual void Start() {
+    protected virtual void Awake() {
         this.iconObj = InstantiateIconObj(sprite != null);
         ApplyMinimapLayer(immediateDisplay);
     }

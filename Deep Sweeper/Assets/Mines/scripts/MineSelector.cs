@@ -48,13 +48,14 @@ public class MineSelector : MonoBehaviour
     public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationStartEvent;
     public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationHalfwayEvent;
     #endregion
-
     
     #region Public Properties
     public MineMark Mark { get; private set; }
     public SelectionMode Mode {
         get { return m_mode; }
         set {
+            if (m_mode == value) return;
+
             SelectionConfig config = GetConfiguration(value);
             Material nextMat = config.Material;
             Sprite sprite = config.Sprite;

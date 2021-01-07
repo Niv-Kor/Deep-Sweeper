@@ -11262,14 +11262,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f237a1efb2730c5418cdc52f647591f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 6145379161122966066, guid: b478a23e7012b7645b0c968169d46858, type: 3}
+  items:
+  - {fileID: 3085288460733025708, guid: 847712cb627360447ba1583262c973ce, type: 3}
+  - {fileID: -8840602352513889329, guid: c6c7267c2022c0c48aa9bbb9709ddc6f, type: 3}
+  - {fileID: 6556340708438427914, guid: b478a23e7012b7645b0c968169d46858, type: 3}
   collidableLayers:
     serializedVersion: 2
     m_Bits: 1024
   positionOffset: {x: 0, y: 20, z: 0}
   scale: 40
   autoDrop: 0
-  dropChance: 1
+  dropChance: 0.7
   inScaleTime: 0.5
   outScaleTime: 0.07
 --- !u!114 &6924104458155657525

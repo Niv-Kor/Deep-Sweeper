@@ -2341,7 +2341,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7318998236585986697}
-  - component: {fileID: 1629682381246647358}
   m_Layer: 5
   m_Name: Promts
   m_TagString: Untagged
@@ -2368,23 +2367,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1629682381246647358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7890944178171054014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be817c7291b31164f8ec6ec1e4fac168, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windows:
-  - Type: 0
-    WindowPrefab: {fileID: 9099859371439470268, guid: 81ade5375a11c6c479ecb1ae25cb4566,
-      type: 3}
-  scaleTime: 0.15
 --- !u!1 &8247457643987969534
 GameObject:
   m_ObjectHideFlags: 0

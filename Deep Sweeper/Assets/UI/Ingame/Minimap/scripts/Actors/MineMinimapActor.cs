@@ -7,10 +7,13 @@ public class MineMinimapActor : MinimapActor
     [SerializeField] private Color flaggedColor;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
+
         MineGrid grid = GetComponent<MineGrid>();
         MineSelector selector = grid.Selector;
         Sweeper sweeper = grid.Sweeper;
+        if (sweeper.IsDismissed) Sprite = null;
 
         //bind events
         sweeper.MineDisposalStartEvent += delegate { Sprite = null; };

@@ -9,6 +9,14 @@ using VisCircle;
 [RequireComponent(typeof(Jukebox))]
 public class LootItem : MonoBehaviour
 {
+    #region Exposed Editor Parameters
+    [Tooltip("The unique name of the item.")]
+    [SerializeField] private string itemName;
+
+    [Tooltip("The type of the loot item.")]
+    [SerializeField] private LootType type;
+    #endregion
+
     #region Class Members
     private Jukebox jukebox;
     private Tune tune;
@@ -23,11 +31,15 @@ public class LootItem : MonoBehaviour
     #endregion
 
     #region Properties
+    public long Value { get; private set; }
+    public string ItemName { get { return itemName; } }
+    public LootType Type { get { return type; } }
     public LootGeneratorObject Generator {
         set {
             if (!generatorSet) {
                 lootGenerator = value;
                 collideableLayers = lootGenerator.CollideableLayers;
+                Value = lootGenerator.ItemValue;
 
                 //bind events
                 CollisionEvent += delegate(int layer) {
@@ -52,6 +64,8 @@ public class LootItem : MonoBehaviour
         this.tune = (collectionTracks.Count > 0) ? collectionTracks[trackIndex] : null;
         this.generatorSet = false;
         this.collided = false;
+
+        transform.localScale = Vector3.zero;
     }
 
     private void OnTriggerEnter(Collider col) {
@@ -67,7 +81,5 @@ public class LootItem : MonoBehaviour
     /// <summary>
     /// Play the collection track of this loot item.
     /// </summary>
-    private void PlaySound() {
-        jukebox.Play(tune);
-    }
+    private void PlaySound() { jukebox.Play(tune); }
 }

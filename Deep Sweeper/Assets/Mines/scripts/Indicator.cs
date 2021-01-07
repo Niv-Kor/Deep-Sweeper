@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Constants;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -36,6 +37,19 @@ public class Indicator : MonoBehaviour
         this.player = Submarine.Instance;
         this.sphereCol = GetComponent<SphereCollider>();
         this.allowReveal = false;
+    }
+
+    /// <summary>
+    /// Activate the indicator so that it can be interactable with the player.
+    /// </summary>
+    public void Activate() {
+        void SetActiveLayer() {
+            gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
+        }
+
+        Phase currentPhase = GameFlow.Instance.CurrentPhase;
+        if (currentPhase != null && currentPhase.Field == grid.Field) SetActiveLayer();
+        else grid.Field.FieldActivatedEvent += SetActiveLayer;
     }
 
     /// <summary>

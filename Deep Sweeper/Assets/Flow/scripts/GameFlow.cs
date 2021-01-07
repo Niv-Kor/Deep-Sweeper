@@ -128,17 +128,14 @@ public class GameFlow : Singleton<GameFlow>
             if (i == 0) phaseObj = new Phase(i, mineFieldCmp, initialGate, phaseConfig);
             else phaseObj = new Phase(i, mineFieldCmp, prevPhase, phaseConfig);
 
-            //pop a window promt when the entrance gate is crossed.
-            void openPromt() {
-                IngameWindowManager.Instance.Pop(PromtTypes.FieldMeta);
-                phaseObj.EntranceGate.GateCrossEvent -= openPromt;
-            }
-            phaseObj.EntranceGate.GateCrossEvent += openPromt;
-            
             if (prevPhase != null) prevPhase.FollowPhase = phaseObj;
             prevPhase = phaseObj;
             Phases.Add(phaseObj);
         }
+
+        //init all fields
+        foreach (Phase phase in Phases)
+            phase.Field.Init(phase.DifficultyConfig);
     }
 
     /// <summary>

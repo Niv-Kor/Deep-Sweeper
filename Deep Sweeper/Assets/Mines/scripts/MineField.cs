@@ -1,5 +1,6 @@
 ﻿using Constants;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,6 +15,10 @@ public class MineField : ConfinedArea
     [SerializeField] private float gridSpace;
     #endregion
 
+    #region Constants
+    private static readonly float COIN_VALUE_EPSILON_PERCENT = .5f;
+    #endregion
+
     #region Class Members
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
@@ -23,14 +28,14 @@ public class MineField : ConfinedArea
     #endregion
 
     #region Events
-    public event UnityAction FieldReadyEvent;
+    public event UnityAction FieldActivatedEvent;
     #endregion
 
     #region Public Properties
     public List<MineGrid> Grids { get; private set; }
     public int MinesAmount { get; private set; }
-    public long TotalReward { get; private set; }
-    public bool IsReady { get; private set; }
+    public int TotalReward { get; private set; }
+    public bool IsActivated { get; private set; }
     public Vector2Int MatrixSize { get; private set; }
     public Vector3 Center {
         get {
@@ -46,7 +51,7 @@ public class MineField : ConfinedArea
         this.terrain = WaterPhysics.Instance.Terrain;
         this.Grids = new List<MineGrid>();
         this.raycastHeight = terrain.terrainData.size.y;
-        this.IsReady = false;
+        this.IsActivated = false;
     }
 
     /// <summary>
@@ -59,9 +64,6 @@ public class MineField : ConfinedArea
         this.gridsMatrix = new MineGrid[MatrixSize.x, MatrixSize.y];
         this.gridsAmount = MatrixSize.x * MatrixSize.y;
         LayoutMatrix();
-
-        IsReady = true;
-        FieldReadyEvent?.Invoke();
     }
 
     /// <summary>
@@ -69,26 +71,28 @@ public class MineField : ConfinedArea
     /// This method only works after defining the field's area.
     /// <see cref="DefineArea(Confine)"/>
     /// </summary>
-    /// <param name="minesAmount">Amount of real mines in the field</param>
-    /// <param name="totalReward">Total reward value for the entire field</param>
-    /// <returns>True if the field has initiated successfully.</returns>
-    public bool Init(int minesAmount, long totalReward) {
-        if (!IsReady) return false;
+    public void Init(PhaseDifficultyConfig difficultyConfig) {
+        //find mines amount
+        float minesPercent = difficultyConfig.MinesPercent / 100f;
+        MinesAmount = (int) (minesPercent * gridsAmount);
 
-        MinesAmount = minesAmount;
-        TotalReward = totalReward;
+        //init field
         SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
-        ActivateGrids();
-        return true;
+        GenerateLootValues();
+        CarpetBounce();
     }
 
     /// <summary>
-    /// Begin mines animation and ingame events.
+    /// Activate the field.
+    /// If this method is not called, the field grids
+    /// will not be interactable by the player.
     /// </summary>
-    public void Begin() {
-        if (IsReady) CarpetBounce();
+    public void Activate() {
+        ActivateGrids();
+        IsActivated = true;
+        FieldActivatedEvent?.Invoke();
     }
 
     /// <summary>
@@ -281,11 +285,71 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
+    /// Generate and distribute coin values across the grids.
+    /// </summary>
+    public void GenerateLootValues() {
+        List<MineField> allFields = (from Phase phase in GameFlow.Instance.Phases
+                                     select phase.Field).ToList();
+        int allMissionGrids = allFields.Sum(x => x.gridsAmount);
+        float fieldGridsPercent = (float) gridsAmount / allMissionGrids;
+        TotalReward = (int) (fieldGridsPercent * Contract.Instance.BasePayment);
+
+        //copunt the grids that will drop a loot
+        List<MineGrid> droppingGrids = new List<MineGrid>();
+        while (droppingGrids.Count == 0) {
+            foreach (MineGrid grid in Grids) {
+                if (grid.IsMined || grid.Sweeper.IsDismissed) continue;
+
+                LootGeneratorObject generator = grid.LootGenerator;
+                if (generator.WillDrop) droppingGrids.Add(grid);
+            }
+
+            //reroll all
+            if (droppingGrids.Count == 0) {
+                foreach (MineGrid grid in Grids) {
+                    LootGeneratorObject generator = grid.LootGenerator;
+                    generator.RerollChance();
+                }
+            }
+        }
+
+        //each grid should drop a coin with a value of at least 1
+        TotalReward = Mathf.Max(TotalReward, droppingGrids.Count);
+
+        //distribute reward values unevenly
+        int remainAmount = TotalReward;
+        int droppingGridsAmount = droppingGrids.Count;
+        int avgAmount = remainAmount / droppingGridsAmount;
+        bool positiveEpsilon = true;
+        float selectedEpsilon = 0;
+
+        for (int i = 0; i < droppingGridsAmount; i++) {
+            int selectedAmount = 0;
+
+            //last value to distribute
+            if (i == droppingGridsAmount - 1) selectedAmount = remainAmount;
+            else {
+                //generate new epsilon
+                if (positiveEpsilon)
+                    selectedEpsilon = Random.Range(0, COIN_VALUE_EPSILON_PERCENT);
+
+                positiveEpsilon ^= true;
+                int epsilonMultiplier = positiveEpsilon ? 1 : -1;
+                int epsilon = (int) (selectedEpsilon * avgAmount);
+                selectedAmount = avgAmount + epsilon * epsilonMultiplier;
+                remainAmount -= selectedAmount;
+            }
+
+            droppingGrids[i].LootGenerator.ItemValue = selectedAmount;
+        }
+    }
+
+    /// <summary>
     /// Check if the field is clear, and only left with real mines.
     /// </summary>
     /// <returns>True if all dismissable mines are indeed dismissed.</returns>
     public bool IsClear() {
-        if (!IsReady) return false;
+        if (!IsActivated) return false;
 
         foreach (MineGrid grid in Grids)
             if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;

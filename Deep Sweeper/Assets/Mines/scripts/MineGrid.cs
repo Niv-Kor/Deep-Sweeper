@@ -131,7 +131,7 @@ public class MineGrid : MonoBehaviour
         }
         else {
             MinesIndicator.AllowRevelation(true);
-            MinesIndicator.gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
+            MinesIndicator.Activate();
             Activator.ActivateAndLock();
             IsFlagged = false;
 

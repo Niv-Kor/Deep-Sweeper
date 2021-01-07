@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MineBouncer : MonoBehaviour
 {
+    #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The mine's grounding chain joint.")]
     [SerializeField] private GameObject baseChainJoint;
@@ -20,24 +21,26 @@ public class MineBouncer : MonoBehaviour
     [Header("Rotation")]
     [Tooltip("The angle at which the mine yaws for each frame.")]
     [SerializeField] private float yawAlpha;
+    #endregion
 
+    #region Constants
     private static readonly float MAX_DELAY = 1;
+    #endregion
 
+    #region Class Members
     private float chainLength;
     private Transform chain;
+    #endregion
 
+    #region Properties
     public float BouncingSpeed { get { return speed; } }
     public bool IsBouncing { get; set; }
-
-    private void OnEnable() {
-        if (IsBouncing) Bounce(Random.Range(0, MAX_DELAY));
-    }
+    #endregion
 
     private void Awake() {
         Renderer chainJointRenderer = baseChainJoint.GetComponent<Renderer>();
         Sweeper sweeper = GetComponentInParent<Sweeper>();
         sweeper.MineDisposalEndEvent += StopAllCoroutines;
-
         float jointLength = chainJointRenderer.bounds.size.y;
         this.chain = baseChainJoint.transform.parent;
         this.chainLength = chain.childCount * jointLength;

@@ -586,6 +586,7 @@ GameObject:
   - component: {fileID: 6928293508665373350}
   - component: {fileID: 508468166}
   - component: {fileID: 1803928257}
+  - component: {fileID: 1907832612203310886}
   m_Layer: 10
   m_Name: Submarine
   m_TagString: Player
@@ -695,6 +696,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 366ba0b3339d2714787f18c307410805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1907832612203310886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656385977427607246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2186382fc601748b63a46155c4981d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5294750883743177938

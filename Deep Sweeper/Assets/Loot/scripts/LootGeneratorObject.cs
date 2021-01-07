@@ -1,11 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class LootGeneratorObject : MonoBehaviour
 {
-    protected class LootItemPromise
-    {
+    protected class LootItemPromise {
         #region Class Members
         private GameObject parent;
         private LootGeneratorObject generator;
@@ -42,7 +42,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
     #region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The loot object's prefab.")]
-    [SerializeField] protected LootItem item;
+    [SerializeField] protected List<LootItem> items;
 
     [Header("Settings")]
     [Tooltip("The layers that may collide with the loot object.")]
@@ -70,13 +70,14 @@ public abstract class LootGeneratorObject : MonoBehaviour
     #endregion
 
     #region Class Members
+    protected LootItem selectedItem;
     protected GameObject lootParent;
     protected GameObject lootItem;
     protected GameObject m_itemObj;
     protected GameObject prevItem;
-    protected LootItem m_item;
     protected LootItemPromise itemPromise;
     protected Vector3 originScale;
+    protected int m_itemValue;
     protected bool m_enabled;
     protected UnityAction collectAction;
     #endregion
@@ -87,14 +88,22 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     #region Properties
     public LayerMask CollideableLayers { get { return collidableLayers; } }
+    public bool WillDrop { get; set; }
+    public LootItem Item { get; set; }
     public float Chance {
-        get { return dropChance * 100; }
-        set { dropChance = Mathf.Clamp(value, 0f, 1f); }
+        get { return dropChance; }
+        set {
+            dropChance = Mathf.Clamp(value, 0f, 1f);
+            WillDrop = ChanceUtils.UnstableCondition(dropChance);
+        }
     }
 
-    public LootItem Item {
-        get { return m_item; }
-        set { m_item = value; }
+    public int ItemValue {
+        get { return m_itemValue; }
+        set {
+            m_itemValue = value;
+            InitItem();
+        }
     }
 
     public bool Enabled {
@@ -114,14 +123,29 @@ public abstract class LootGeneratorObject : MonoBehaviour
         this.m_enabled = false;
         this.lootParent = LootManager.Instance.gameObject;
         this.originScale = Vector3.one * scale;
+        this.Chance = dropChance;
+        this.m_itemValue = 0;
     }
 
     protected virtual void Start() {
-        if (item != null) SetPrefab(item);
+        InitItem();
     }
 
     protected virtual void OnValidate() {
-        if (Application.isPlaying && lootParent != null) SetPrefab(item);
+        if (Application.isPlaying && lootParent != null) InitItem();
+    }
+
+    /// <summary>
+    /// Initialize the item that this generator will generate.
+    /// </summary>
+    private void InitItem() {
+        switch (items.Count) {
+            case 0: selectedItem = null; break;
+            case 1: selectedItem = items[0]; break;
+            default: selectedItem = SelectItem(items); break;
+        }
+
+        if (selectedItem != null) SetPrefab(selectedItem);
     }
 
     /// <summary>
@@ -151,6 +175,17 @@ public abstract class LootGeneratorObject : MonoBehaviour
         Enabled = false;
         CollectedEvent?.Invoke();
         TakeEffect(collectingLayer);
+
+        //collect into suitcase
+        if (Suitcase.Instance != null) {
+            LootInfo info;
+            info.Type = Item.Type;
+            info.Value = Item.Value;
+            Suitcase.Instance.Collect(info);
+
+            print("Overall suitcase: " + Suitcase.Instance.CashValue);
+        }
+
         if (dispose) Dispose();
     }
 
@@ -160,11 +195,20 @@ public abstract class LootGeneratorObject : MonoBehaviour
     public virtual void Dispose() { Destroy(Item.gameObject); }
 
     /// <summary>
+    /// Reroll the chance of the generator to drop an item.
+    /// This method rerolls the 'WillDrop' property's value based on the item's drop chance.
+    /// </summary>
+    public void RerollChance() { Chance = Chance; }
+
+    /// <summary>
     /// Drop and expose the item.
     /// This method works at a random rate based on 'dropChance'.
     /// </summary>
     public virtual void Drop() {
-        if (!Enabled && ChanceUtils.UnstableCondition(dropChance)) Enabled = true;
+        if (Enabled) return;
+        
+        if (WillDrop) Enabled = true;
+        else RerollChance();
     }
 
     /// <summary>
@@ -184,6 +228,13 @@ public abstract class LootGeneratorObject : MonoBehaviour
         if (!Enabled && autoDrop) Drop();
         else BindDropEvent(Drop);
     }
+
+    /// <summary>
+    /// Select the correct item from the list.
+    /// </summary>
+    /// <param name="items">The list of items from which the loot item should be selected</param>
+    /// <returns>The correct item from the list.</returns>
+    protected abstract LootItem SelectItem(List<LootItem> items);
 
     /// <summary>
     /// This method determines the effect of the loot when collected.
