@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class PhaseNameSpatial : PhaseSpatial<PhaseNameSpatial>
+public class PhaseNameSpatial : Spatial<PhaseNameSpatial>
 {
     #region Exposed Editor Parameters
     [Header("Prefabs")]

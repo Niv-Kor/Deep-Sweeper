@@ -128,6 +128,7 @@ public class MineGrid : MonoBehaviour
 
         if (IsMined) {
             ///TODO explode and lose
+            GameFlow.Instance.Lose();
         }
         else {
             MinesIndicator.AllowRevelation(true);

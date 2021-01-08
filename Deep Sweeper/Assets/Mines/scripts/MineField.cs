@@ -71,6 +71,7 @@ public class MineField : ConfinedArea
     /// This method only works after defining the field's area.
     /// <see cref="DefineArea(Confine)"/>
     /// </summary>
+    /// <param name="difficultyConfig">The difficulty configuration of this field's phase</param>
     public void Init(PhaseDifficultyConfig difficultyConfig) {
         //find mines amount
         float minesPercent = difficultyConfig.MinesPercent / 100f;

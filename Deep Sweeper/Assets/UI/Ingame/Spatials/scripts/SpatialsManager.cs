@@ -6,6 +6,7 @@
     /// <param name="difficulty">Current phase's difficulty level</param>
     /// <param name="timer">Currernt phase's timer (in integer seconds)</param>
     public void Activate(DifficultyLevel difficulty, int timer) {
+        canvas.alpha = 0;
         PhaseTimerSpatial.Instance.Set(difficulty, timer);
         PhaseNameSpatial.Instance.Display(true);
         FlagsGaugeSpatial.Instance.Display(true);

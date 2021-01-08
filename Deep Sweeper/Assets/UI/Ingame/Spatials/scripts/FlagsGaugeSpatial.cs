@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
+public class FlagsGaugeSpatial : Spatial<FlagsGaugeSpatial>
 {
     [Serializable]
     protected struct CounterSettings

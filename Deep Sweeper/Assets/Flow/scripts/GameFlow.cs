@@ -1,4 +1,5 @@
-﻿using Constants;
+﻿using com.ootii.Cameras;
+using Constants;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -25,6 +26,14 @@ public class GameFlow : Singleton<GameFlow>
     [Header("Phases")]
     [Tooltip("A list of mine fields.\nEach field represents a level phase.")]
     [SerializeField] private PhaseConfig[] phases;
+
+    [Header("Death")]
+    [Tooltip("The time it takes to get to a fully blank screen when losing.")]
+    [SerializeField] private float blankScreenLerpTime;
+
+    [Tooltip("The time it takes to start lerping again after "
+           + "reaching a fully blank screen when losing.")]
+    [SerializeField] private float blankScreenPauseTime;
     #endregion
 
     #region Constants
@@ -173,5 +182,45 @@ public class GameFlow : Singleton<GameFlow>
     public void ReportPhaseUpdated(PhaseConfig phaseConfig, PhaseDifficultyConfig difficultyConfig, int index) {
         PhaseUpdatedEvent?.Invoke(phaseConfig, difficultyConfig, index);
         DuringPhase = true;
+    }
+
+    /// <summary>
+    /// Retreat to the start of the current stage or start the Game Over scenario.
+    /// </summary>
+    public void Lose() {
+        //retreat to the entrance gate and start over
+        if (LifeSupply.Instance.LifeDown()) {
+            SpatialsManager.Instance.Deactivate();
+            CameraController camContrller = FindObjectOfType<CameraController>();
+            camContrller.enabled = false;
+
+            void FullyBlank() {
+                Gate entranceGate = CurrentPhase.EntranceGate;
+                Vector3 gatePos = entranceGate.transform.position;
+                Vector3 lookPos = CurrentPhase.Field.Center;
+                Transform rig = CameraManager.Instance.Rig.transform;
+                Transform player = Submarine.Instance.transform;
+                player.position = gatePos;
+                rig.LookAt(lookPos);
+                Vector3 rot = rig.rotation.eulerAngles;
+                rig.rotation = Quaternion.Euler(0, rot.y, rot.z);
+            }
+
+            void FullyTransparent() {
+                DifficultyLevel difficulty = Contract.Instance.Difficulty;
+                int timer = CurrentPhase.DifficultyConfig.Clock;
+                SpatialsManager.Instance.Activate(difficulty, timer);
+                camContrller.enabled = true;
+            }
+
+            //blank screen
+            float lerpTime = blankScreenLerpTime;
+            float pauseTime = blankScreenPauseTime;
+            BlankScreen.Instance.Apply(lerpTime, pauseTime, FullyBlank, FullyTransparent);
+        }
+        //game over
+        else {
+            ///TODO
+        }
     }
 }
