@@ -28,7 +28,7 @@ public class MineGrid : MonoBehaviour
     public MineActivator Activator { get; private set; }
     public MineSelector Selector { get; private set; }
     public LootGeneratorObject LootGenerator { get; private set; }
-    public Indicator MinesIndicator { get; private set; }
+    public Indicator Indicator { get; private set; }
     public float ExplosiveChance { get; private set; }
     public MineField Field { get; set; }
     public Vector2Int Position { get; set; }
@@ -58,7 +58,7 @@ public class MineGrid : MonoBehaviour
 
     private void Awake() {
         this.Activator = GetComponent<MineActivator>();
-        this.MinesIndicator = GetComponentInChildren<Indicator>();
+        this.Indicator = GetComponentInChildren<Indicator>();
         this.LootGenerator = GetComponent<LootGeneratorObject>();
         this.Sweeper = GetComponent<Sweeper>();
         this.Selector = GetComponent<MineSelector>();
@@ -124,19 +124,21 @@ public class MineGrid : MonoBehaviour
     /// <param name="allowDrop">True to allow the mine to drop an item</param>
     private void Reveal(bool explosion, bool ignoreFlagged = false, bool allowDrop = true) {
         bool ignored = IsFlagged && ignoreFlagged;
-        if (MinesIndicator.IsDisplayed() || ignored) return;
+        if (Indicator.IsDisplayed() || ignored) return;
 
+        //lose
         if (IsMined) {
-            ///TODO explode and lose
+            Sweeper.Explode();
+            //DeathTint.Instance.Tint();
             GameFlow.Instance.Lose();
         }
         else {
-            MinesIndicator.AllowRevelation(true);
-            MinesIndicator.Activate();
+            Indicator.AllowRevelation(true);
+            Indicator.Activate();
             Activator.ActivateAndLock();
             IsFlagged = false;
 
-            int neighbours = MinesIndicator.MinedNeighbours;
+            int neighbours = Indicator.MinedNeighbours;
             List<MineGrid> section = Section;
 
             if (!allowDrop) LootGenerator.Chance = 0;
@@ -177,7 +179,7 @@ public class MineGrid : MonoBehaviour
                     if (mineGrid != null && mineGrid.IsFlagged) flaggedCounter++;
 
                 //reveal each available grid in the section
-                if (flaggedCounter == MinesIndicator.MinedNeighbours)
+                if (flaggedCounter == Indicator.MinedNeighbours)
                     foreach (MineGrid mineGrid in section)
                         if (mineGrid != null) mineGrid.Reveal(explosion, true);
 
@@ -203,7 +205,7 @@ public class MineGrid : MonoBehaviour
             if (neighbour == null) continue;
 
             bool dismissed = neighbour.Sweeper.IsDismissed;
-            int number = neighbour.MinesIndicator.MinedNeighbours;
+            int number = neighbour.Indicator.MinedNeighbours;
 
             if (dismissed && number > 0) {
                 List<MineGrid> neighbourSection = neighbour.Section;

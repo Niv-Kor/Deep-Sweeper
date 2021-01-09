@@ -5,9 +5,9 @@ using UnityEngine.Events;
 
 public abstract class LootGeneratorObject : MonoBehaviour
 {
-    protected class LootItemPromise {
+    protected class LootItemPromise
+    {
         #region Class Members
-        private GameObject parent;
         private LootGeneratorObject generator;
         private LootItem prefab;
         private Vector3 position;
@@ -17,7 +17,6 @@ public abstract class LootGeneratorObject : MonoBehaviour
         /// <param name="prefab">The prefab of the loot item to instantiate</param>
         /// <param name="pos">The intended position of the loot instance</param>
         public LootItemPromise(LootGeneratorObject generator, LootItem prefab, Vector3 pos) {
-            this.parent = LootManager.Instance.gameObject;
             this.generator = generator;
             this.prefab = prefab;
             this.position = pos;
@@ -27,15 +26,9 @@ public abstract class LootGeneratorObject : MonoBehaviour
         /// Create an instance of the loot.
         /// </summary>
         public void Resolve() {
-            GameObject instance = Instantiate(prefab.gameObject);
-            instance.transform.SetParent(parent.transform);
-            instance.transform.localPosition = Vector3.zero;
-            instance.transform.position = position;
-            instance.transform.localScale = Vector3.zero;
-
-            LootItem instanceCmp = instance.GetComponent<LootItem>();
-            instanceCmp.Generator = generator;
-            generator.Item = instanceCmp;
+            LootItem instance = LootManager.Instance.DropItem(prefab, position);
+            instance.Generator = generator;
+            generator.Item = instance;
         }
     }
 
@@ -71,7 +64,6 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     #region Class Members
     protected LootItem selectedItem;
-    protected GameObject lootParent;
     protected GameObject lootItem;
     protected GameObject m_itemObj;
     protected GameObject prevItem;
@@ -80,6 +72,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
     protected int m_itemValue;
     protected bool m_enabled;
     protected UnityAction collectAction;
+    private bool initialized;
     #endregion
 
     #region Events
@@ -121,10 +114,10 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     protected virtual void Awake() {
         this.m_enabled = false;
-        this.lootParent = LootManager.Instance.gameObject;
         this.originScale = Vector3.one * scale;
         this.Chance = dropChance;
         this.m_itemValue = 0;
+        this.initialized = true;
     }
 
     protected virtual void Start() {
@@ -132,7 +125,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
     }
 
     protected virtual void OnValidate() {
-        if (Application.isPlaying && lootParent != null) InitItem();
+        if (Application.isPlaying && initialized) InitItem();
     }
 
     /// <summary>
@@ -178,9 +171,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
         //collect into suitcase
         if (Suitcase.Instance != null) {
-            LootInfo info;
-            info.Type = Item.Type;
-            info.Value = Item.Value;
+            LootInfo info = LootManager.Instance.GetInfo(Item);
             Suitcase.Instance.Collect(info);
 
             print("Overall suitcase: " + Suitcase.Instance.CashValue);
@@ -192,7 +183,9 @@ public abstract class LootGeneratorObject : MonoBehaviour
     /// <summary>
     /// Dispose the loot item.
     /// </summary>
-    public virtual void Dispose() { Destroy(Item.gameObject); }
+    public virtual void Dispose() {
+        LootManager.Instance.DisposeItem(Item);
+    }
 
     /// <summary>
     /// Reroll the chance of the generator to drop an item.

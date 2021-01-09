@@ -11288,7 +11288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tunes:
-  - name: explosion
+  - name: dig
     clip: {fileID: 8300000, guid: 05b4e07d197e21c4abcad64aafd2ea5f, type: 3}
     volume: 1
     pitch: 1
@@ -11298,6 +11298,18 @@ MonoBehaviour:
     playOnAwake: 0
     relateOnDistance: 1
     genre: 0
+    exportAsExternal: 0
+  - name: explosion
+    clip: {fileID: 8300000, guid: 1604004412ce23349a6482ab74901898, type: 3}
+    volume: 1
+    pitch: 1
+    delay: 0
+    cooldown: 0.2
+    loop: 0
+    playOnAwake: 0
+    relateOnDistance: 0
+    genre: 0
+    exportAsExternal: 1
   - name: flag_check
     clip: {fileID: 8300000, guid: 564091c47f3229e4db42996d5246dfa6, type: 3}
     volume: 0.2
@@ -11308,6 +11320,8 @@ MonoBehaviour:
     playOnAwake: 0
     relateOnDistance: 0
     genre: 0
+    exportAsExternal: 0
+  destroyStoppedTunes: 0
 --- !u!1 &8788801433538985177
 GameObject:
   m_ObjectHideFlags: 0

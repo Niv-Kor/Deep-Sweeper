@@ -9,7 +9,7 @@ public class BlankScreen : Singleton<BlankScreen>
     [Tooltip("The color into which the blank screen transforms on blank application.")]
     [SerializeField] private Color blankColor;
 
-    [Header("Timing")]
+    [Header("Default Timing")]
     [Tooltip("The time it takes to lerp from a transparent screen to a fully blank screen, or the opposite.")]
     [SerializeField] private float defOneWayLerpTime = 1;
 

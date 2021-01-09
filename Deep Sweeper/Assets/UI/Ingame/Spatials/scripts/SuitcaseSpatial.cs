@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-public class SuitcaseSpatial : Spatial<SuitcaseSpatial>
+public class SuitcaseSpatial : PhaseSpatial<SuitcaseSpatial>
 {
     #region Exposed Editor Parameters
     [Header("Prefabs")]

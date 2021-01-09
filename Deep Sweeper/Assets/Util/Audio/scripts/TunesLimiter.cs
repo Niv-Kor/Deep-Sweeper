@@ -70,6 +70,14 @@ public class TunesLimiter : Singleton<TunesLimiter>
     }
 
     /// <summary>
+    /// Unsubscribe a tune.
+    /// </summary>
+    /// <param name="tune">The tune of which to remove the subscription</param>
+    public void Unsubscribe(Tune tune) {
+        if (Exists(tune)) subscriptors.Remove(tune.Name);
+    }
+
+    /// <summary>
     /// Check if a tune is already allowed to be used again.
     /// </summary>
     /// <param name="tune">The tune to check</param>

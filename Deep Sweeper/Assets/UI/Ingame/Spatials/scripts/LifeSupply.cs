@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class LifeSupply : Spatial<LifeSupply>
+public class LifeSupply : PhaseSpatial<LifeSupply>
 {
     #region Exposed Editor Parameters
     [Header("Prefabs")]
@@ -29,7 +29,9 @@ public class LifeSupply : Spatial<LifeSupply>
     public int RemainingLives { get; private set; }
     #endregion
 
-    private void Start() {
+    protected override void Start() {
+        base.Start();
+
         RectTransform lifeBitTransform = lifeBitPrefab.GetComponent<RectTransform>();
         this.lifeBitSize = lifeBitTransform.sizeDelta;
         this.lifeBits = new Stack<LifeBit>();
@@ -77,7 +79,7 @@ public class LifeSupply : Spatial<LifeSupply>
     /// <param name="amount">Amout of life supplies to remove</param>
     /// <returns>True if the are still life bits remaining following by the decrease.</returns>
     public bool LifeDown(int amount) {
-        for (int i = 0; i < amount && lifeBits.Count > 0; i++) {
+        for (int i = 0; i < amount; i++) {
             LifeBit bit = lifeBits.Pop();
             bit.Dispose(true);
         }

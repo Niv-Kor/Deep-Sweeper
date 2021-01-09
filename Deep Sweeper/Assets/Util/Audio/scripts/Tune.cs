@@ -33,6 +33,12 @@ public class Tune
     [Tooltip("True to set the volume of the tune relative to the distance of its object from the scene anchor.")]
     [SerializeField] private bool relateOnDistance = false;
 
+    [Tooltip("True to export this tune to an extenral source.\n"
+           + "Use this flag for tunes that are ought to continue playing "
+           + "even after their object is destroyed.\n"
+           + "Exporting too many tunes might result in performance issues.")]
+    [SerializeField] private bool exportAsExternal = false;
+
     [Tooltip("The mixer to which this tune belongs.")]
     [SerializeField] private Genre genre;
     #endregion
@@ -51,6 +57,7 @@ public class Tune
     public float Cooldown { get { return cooldown; } }
     public bool PlayOnAwake { get { return playOnAwake; } }
     public bool RelateOnDistance { get { return relateOnDistance; } }
+    public bool IsExternal { get { return exportAsExternal; } }
     public Genre Genre { get { return genre; } }
     public AudioClip Clip { get { return clip; } }
     public Coroutine Coroutine { get; set; }

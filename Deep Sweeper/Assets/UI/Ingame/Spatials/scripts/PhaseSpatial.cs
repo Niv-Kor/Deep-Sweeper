@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public abstract class Spatial<T> : Singleton<T> where T : MonoBehaviour
+public abstract class PhaseSpatial<T> : Singleton<T> where T : MonoBehaviour
 {
     #region Exposed Editor Parameters
     [Header("Text Pump Effect")]

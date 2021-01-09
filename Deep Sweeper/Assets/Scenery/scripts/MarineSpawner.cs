@@ -51,8 +51,8 @@ public abstract class MarineSpawner : ConfinedArea
     protected virtual void Spawn(int amount) {
         for (int i = 0; i < amount; i++) {
             GameObject instance = RandomlyInstantiate();
-            instance.transform.position = GeneratePosition();
             instance.transform.SetParent(parent.transform);
+            instance.transform.position = GeneratePosition();
             ApplyEmission(instance, emission);
         }
     }

@@ -190,27 +190,38 @@ public class GameFlow : Singleton<GameFlow>
     public void Lose() {
         //retreat to the entrance gate and start over
         if (LifeSupply.Instance.LifeDown()) {
+            print("w");
             SpatialsManager.Instance.Deactivate();
             CameraController camContrller = FindObjectOfType<CameraController>();
+            MineField currentField = CurrentPhase.Field;
             camContrller.enabled = false;
 
             void FullyBlank() {
+                print("h");
+                //move player back to the entrance gate and rotate it
                 Gate entranceGate = CurrentPhase.EntranceGate;
                 Vector3 gatePos = entranceGate.transform.position;
-                Vector3 lookPos = CurrentPhase.Field.Center;
+                Vector3 lookPos = currentField.Center;
                 Transform rig = CameraManager.Instance.Rig.transform;
                 Transform player = Submarine.Instance.transform;
                 player.position = gatePos;
                 rig.LookAt(lookPos);
                 Vector3 rot = rig.rotation.eulerAngles;
                 rig.rotation = Quaternion.Euler(0, rot.y, rot.z);
+
+                //reset field and clear loot history
+                currentField.ResetAll();
+                LootManager.Instance.ClearPhaseItems(phaseIndex);
+                Suitcase.Instance.RemovePhaseItems(phaseIndex);
+
+                camContrller.enabled = true;
+                print("a");
             }
 
             void FullyTransparent() {
                 DifficultyLevel difficulty = Contract.Instance.Difficulty;
                 int timer = CurrentPhase.DifficultyConfig.Clock;
                 SpatialsManager.Instance.Activate(difficulty, timer);
-                camContrller.enabled = true;
             }
 
             //blank screen

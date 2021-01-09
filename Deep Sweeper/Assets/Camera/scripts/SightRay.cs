@@ -19,7 +19,7 @@ public class SightRay : Singleton<SightRay>
             this.Avatar = mine;
             this.Grid = mine.GetComponentInParent<MineGrid>();
             this.Activator = Grid.Activator;
-            this.Indicator = Grid.MinesIndicator;
+            this.Indicator = Grid.Indicator;
             this.Selector = Grid.GetComponent<MineSelector>();
         }
 
@@ -170,7 +170,7 @@ public class SightRay : Singleton<SightRay>
         if (indicatorHit) {
             GameObject hitObj = hitInfo.collider.gameObject;
             MineGrid grid = hitObj.GetComponentInParent<MineGrid>();
-            Indicator indicator = grid.MinesIndicator;
+            Indicator indicator = grid.Indicator;
 
             //only fire the bullets if the indicator is fulfilled
             if (indicator.IsIndicationFulfilled()) {

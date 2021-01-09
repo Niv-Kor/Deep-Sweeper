@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class PhaseTimerSpatial : Spatial<PhaseTimerSpatial>
+public class PhaseTimerSpatial : PhaseSpatial<PhaseTimerSpatial>
 {
     #region Exposed Editor Parameters
     [Header("Prefabs")]

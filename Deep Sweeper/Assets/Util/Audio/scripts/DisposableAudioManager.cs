@@ -1,21 +1,33 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-public class DisposableAudioManager : Singleton<DisposableAudioManager>
+﻿public class DisposableAudioManager : Singleton<DisposableAudioManager>
 {
-    private List<AudioSource> list;
+    #region Class Members
+    private Jukebox jukebox;
+    #endregion
 
     private void Awake() {
-        this.list = new List<AudioSource>();
+        this.jukebox = GetComponent<Jukebox>();
     }
 
     /// <summary>
     /// Create a new disposable AudioSource component.
     /// </summary>
-    /// <returns>A new disposable AudioSource component.</returns>
-    public AudioSource CreateSource() {
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        list.Add(source);
-        return source;
+    public void ExportTune(Tune tune) {
+        jukebox.Add(tune);
+    }
+
+    /// <summary>
+    /// Play a tune.
+    /// </summary>
+    /// <param name="tune">The tune to play</param>
+    public void Play(Tune tune) {
+        jukebox.Play(tune);
+    }
+
+    /// <summary>
+    /// Stop a tune.
+    /// </summary>
+    /// <param name="tune">The tune to stop</param>
+    public void Stop(Tune tune) {
+        jukebox.Stop(tune);
     }
 }

@@ -43,6 +43,7 @@ public class CameraShaker : MonoBehaviour
         }
     }
 
+    #region Exposed Editor Parameters
     [Header("Wave Physics")]
     [Tooltip("The minimum possible distance that the camera will move while shaking.\n"
            + "The actual value is determined according to the intensity of the shake.")]
@@ -91,12 +92,15 @@ public class CameraShaker : MonoBehaviour
 
     [Tooltip("The size of the len's aperture.")]
     [SerializeField] private float aperture;
+    #endregion
 
+    #region Class Members
     private Vector3 originPos;
     private EffectFloatParameter ambientOcclusion;
     private EffectFloatParameter chromaticAberration;
     private EffectFloatParameter depthOfField;
     private EffectFloatParameter bloom;
+    #endregion
 
     private void Start() {
         this.originPos = transform.localPosition;
@@ -119,9 +123,8 @@ public class CameraShaker : MonoBehaviour
         float dirX = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
         float dirY = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
         float dirZ = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
-        float clampIntensity = Mathf.Clamp(intensity, 0, 1);
         Vector3 direction = new Vector3(dirX, dirY, dirZ);
-        Vector3 waveLength = RangeMath.PercentOfVectorRange(clampIntensity, minIntensity, maxIntensity);
+        Vector3 waveLength = RangeMath.PercentOfVectorRange(intensity, minIntensity, maxIntensity);
 
         do {
             timer += Time.deltaTime;

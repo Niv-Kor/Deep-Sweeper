@@ -37,6 +37,7 @@ public class MineField : ConfinedArea
     public int TotalReward { get; private set; }
     public bool IsActivated { get; private set; }
     public Vector2Int MatrixSize { get; private set; }
+    public PhaseDifficultyConfig DifficultyConfig { get; private set; }
     public Vector3 Center {
         get {
             float height = terrain.terrainData.size.y;
@@ -73,6 +74,8 @@ public class MineField : ConfinedArea
     /// </summary>
     /// <param name="difficultyConfig">The difficulty configuration of this field's phase</param>
     public void Init(PhaseDifficultyConfig difficultyConfig) {
+        DifficultyConfig = difficultyConfig;
+
         //find mines amount
         float minesPercent = difficultyConfig.MinesPercent / 100f;
         MinesAmount = (int) (minesPercent * gridsAmount);
@@ -81,6 +84,7 @@ public class MineField : ConfinedArea
         SpreadMines(MinesAmount);
         CountNeighbours();
         OpenInitial();
+        DisableRealMineLoots();
         GenerateLootValues();
         CarpetBounce();
     }
@@ -91,6 +95,9 @@ public class MineField : ConfinedArea
     /// will not be interactable by the player.
     /// </summary>
     public void Activate() {
+        //clear all existing listeners
+        if (IsActivated) FieldActivatedEvent = null;
+
         ActivateGrids();
         IsActivated = true;
         FieldActivatedEvent?.Invoke();
@@ -174,7 +181,7 @@ public class MineField : ConfinedArea
                 MineGrid grid = gridsMatrix[i, j];
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.MinesIndicator.MinedNeighbours = minedNeighbours;
+                grid.Indicator.MinedNeighbours = minedNeighbours;
             }
         }
     }
@@ -204,7 +211,7 @@ public class MineField : ConfinedArea
             indicesPool.RemoveAt(poolIndex);
             grid = Grids[gridIndex];
         }
-        while (grid.IsMined || (grid.MinesIndicator.MinedNeighbours != 0 && !lowerStandard));
+        while (grid.IsMined || (grid.Indicator.MinedNeighbours != 0 && !lowerStandard));
         grid.TriggerHit(BulletHitType.SingleHit, false, false);
     }
 
@@ -286,9 +293,17 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
+    /// Prevent real mines from dropping loot items.
+    /// </summary>
+    private void DisableRealMineLoots() {
+        foreach (MineGrid grid in Grids)
+            grid.LootGenerator.Chance = 0;
+    }
+
+    /// <summary>
     /// Generate and distribute coin values across the grids.
     /// </summary>
-    public void GenerateLootValues() {
+    private void GenerateLootValues() {
         List<MineField> allFields = (from Phase phase in GameFlow.Instance.Phases
                                      select phase.Field).ToList();
         int allMissionGrids = allFields.Sum(x => x.gridsAmount);
@@ -356,6 +371,19 @@ public class MineField : ConfinedArea
             if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
 
         return true;
+    }
+
+    /// <summary>
+    /// Reset the field's and its grids' state.
+    /// </summary>
+    public void ResetAll() {
+        if (!IsActivated) return;
+
+        foreach (MineGrid grid in Grids) Destroy(grid.gameObject);
+        Grids.Clear();
+        LayoutMatrix();
+        Init(DifficultyConfig);
+        Activate();
     }
 
     /// <summary>

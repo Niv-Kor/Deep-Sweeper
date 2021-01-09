@@ -88,4 +88,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleUpTime: 0.5
-  scaleDownTime: 0.12
+  scaleDownTime: 1

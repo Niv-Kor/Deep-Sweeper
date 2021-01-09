@@ -41,14 +41,14 @@ public class MarineLifeSpawner : MarineSpawner
         this.pack = subParent.AddComponent<FishPack>();
         pack.PackDeadEvent += OnPackDies;
 
+        //emit pack members
+        for (int i = 0; i < emission - 1; i++)
+            StartCoroutine(Emit(instance, subParent, MAX_EMISSION_DELAY_TIME));
+
         //emit leader
         instance.transform.SetParent(subParent.transform);
         instance.name = RemoveCloneTag(instance.name) + "_" + INSTANCE_NAME_TAG;
         OnEmissionFinish(marineLifeCmp);
-
-        //emit pack members
-        for (int i = 0; i < emission - 1; i++)
-            StartCoroutine(Emit(instance, subParent, MAX_EMISSION_DELAY_TIME));
     }
 
     /// <inheritdoc/>
@@ -69,9 +69,8 @@ public class MarineLifeSpawner : MarineSpawner
     /// Activate when the pack members are dead.
     /// This function respawns the pack.
     /// </summary>
-    /// <param name="members">Amount of members in the dead pack</param>
-    private void OnPackDies(int members) {
-        base.Spawn(members);
+    private void OnPackDies(int _ = 0) {
+        base.Spawn(1);
     }
 
     /// <summary>

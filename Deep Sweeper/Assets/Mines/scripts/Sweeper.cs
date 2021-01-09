@@ -11,6 +11,7 @@ public class Sweeper : MonoBehaviour
     #endregion
 
     #region Constants
+    private static readonly string DIG_SFX = "dig";
     private static readonly string EXPLOSION_SFX = "explosion";
     #endregion
 
@@ -19,6 +20,7 @@ public class Sweeper : MonoBehaviour
     private MeshRenderer render;
     private SphereCollider col;
     private ParticleSystem[] particles;
+    private bool isMined;
     #endregion
 
     #region Events
@@ -39,34 +41,55 @@ public class Sweeper : MonoBehaviour
     }
 
     private void Start() {
+        this.isMined = GetComponentInParent<MineGrid>().IsMined;
+
         //assign an event trigger to the main camera
+        MineDisposalStartEvent += ShakeCamera;
+    }
+
+    /// <summary>
+    /// Shake the camera as an explosion effect.
+    /// </summary>
+    /// <param name="maxForce">
+    /// True if the camera should shake at max force,
+    /// or false if it should be relative to the mine's distance
+    /// </param>
+    private void ShakeCamera() {
         CameraShaker camShaker = CameraManager.Instance.FPCam.GetComponent<CameraShaker>();
         SightRay ray = SightRay.Instance;
 
-        if (camShaker != null) MineDisposalStartEvent += delegate() {
-            float dist = Vector3.Distance(transform.position, camShaker.transform.position);
-            float clampedDist = Mathf.Clamp(dist, 0, ray.MaxDistance);
-            float shakeStrength = 1 - RangeMath.NumberOfRange(clampedDist, 0, ray.MaxDistance);
+        if (camShaker != null) {
+            float shakeStrength = 5; //max force
+            
+            //relative to distance from mine
+            if (!isMined) {
+                Transform player = Submarine.Instance.transform;
+                float dist = Vector3.Distance(transform.position, player.position);
+                float clampedDist = Mathf.Clamp(dist, 0, ray.MaxDistance);
+                shakeStrength = 1 - RangeMath.NumberOfRange(clampedDist, 0, ray.MaxDistance);
+            }
+
             camShaker.Shake(shakeStrength);
-        };
+        }
     }
 
     /// <summary>
     /// Vanish the mine.
     /// </summary>
     /// <param name="explosion">True to explode the mine using particle effects</param>
-    /// <param name="breakChain">True to break the chain and release the mine</param>
-    private IEnumerator Dismiss(bool explosion, bool breakChain) {
+    /// <param name="realMine">True if the grid is mined</param>
+    private IEnumerator Dismiss(bool explosion) {
         if (IsDismissed) yield break;
 
         MineDisposalStartEvent?.Invoke();
-        render.enabled = breakChain;
+        render.enabled = false;
         col.enabled = false;
         IsDismissed = true;
         float vanishTime = 0;
 
         if (explosion) {
-            jukebox.Play(EXPLOSION_SFX);
+            if (isMined) jukebox.Play(EXPLOSION_SFX);
+            else jukebox.Play(DIG_SFX);
 
             foreach (ParticleSystem part in particles) {
                 float animationTime = part.main.startDelay.constantMax + part.main.duration;
@@ -83,15 +106,11 @@ public class Sweeper : MonoBehaviour
     /// <summary>
     /// Explode the mine.
     /// </summary>
-    public void Explode() { StartCoroutine(Dismiss(true, false)); }
+    /// <param name="realMine">True if the grid is mined</param>
+    public void Explode() { StartCoroutine(Dismiss(true)); }
 
     /// <summary>
     /// Quietly vanish the mine without explision.
     /// </summary>
-    public void Vanish() { StartCoroutine(Dismiss(false, false)); }
-
-    /// <summary>
-    /// Break the mine's chain and release it to the surface.
-    /// </summary>
-    public void BreakChain() { StartCoroutine(Dismiss(false, true)); }
+    public void Vanish() { StartCoroutine(Dismiss(false)); }
 }

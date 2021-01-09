@@ -22,6 +22,7 @@ public class LootItem : MonoBehaviour
     private Tune tune;
     private LootGeneratorObject lootGenerator;
     private LayerMask collideableLayers;
+    private int m_value;
     private bool generatorSet;
     private bool collided;
     #endregion
@@ -31,9 +32,20 @@ public class LootItem : MonoBehaviour
     #endregion
 
     #region Properties
-    public long Value { get; private set; }
     public string ItemName { get { return itemName; } }
-    public LootType Type { get { return type; } }
+    public LootType Type {
+        get { return type; }
+        private set { LootManager.Instance.UpdateInfo(this); }
+    }
+
+    public int Value {
+        get { return m_value; }
+        private set {
+            m_value = value;
+            LootManager.Instance.UpdateInfo(this);
+        }
+    }
+
     public LootGeneratorObject Generator {
         set {
             if (!generatorSet) {
