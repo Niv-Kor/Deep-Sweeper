@@ -50,7 +50,6 @@ public class Suitcase : Singleton<Suitcase>
         while (newStack.Count > 0)
             items.Push(newStack.Pop());
 
-        print("new suitcase: " + CashValue + "!!!");
         return amount;
     }
 }

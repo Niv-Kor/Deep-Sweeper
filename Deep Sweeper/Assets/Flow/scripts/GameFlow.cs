@@ -190,14 +190,12 @@ public class GameFlow : Singleton<GameFlow>
     public void Lose() {
         //retreat to the entrance gate and start over
         if (LifeSupply.Instance.LifeDown()) {
-            print("w");
             SpatialsManager.Instance.Deactivate();
             CameraController camContrller = FindObjectOfType<CameraController>();
             MineField currentField = CurrentPhase.Field;
             camContrller.enabled = false;
 
             void FullyBlank() {
-                print("h");
                 //move player back to the entrance gate and rotate it
                 Gate entranceGate = CurrentPhase.EntranceGate;
                 Vector3 gatePos = entranceGate.transform.position;
@@ -215,7 +213,6 @@ public class GameFlow : Singleton<GameFlow>
                 Suitcase.Instance.RemovePhaseItems(phaseIndex);
 
                 camContrller.enabled = true;
-                print("a");
             }
 
             void FullyTransparent() {

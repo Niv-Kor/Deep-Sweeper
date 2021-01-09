@@ -173,8 +173,6 @@ public abstract class LootGeneratorObject : MonoBehaviour
         if (Suitcase.Instance != null) {
             LootInfo info = LootManager.Instance.GetInfo(Item);
             Suitcase.Instance.Collect(info);
-
-            print("Overall suitcase: " + Suitcase.Instance.CashValue);
         }
 
         if (dispose) Dispose();
