@@ -23,6 +23,8 @@ public class MineField : ConfinedArea
     private Terrain terrain;
     private MineGrid[,] gridsMatrix;
     private Vector3 gridSize;
+    private List<Vector2Int> mineSetting;
+    private Vector2Int? initialGridPos;
     private float raycastHeight;
     private int gridsAmount;
     #endregion
@@ -80,10 +82,16 @@ public class MineField : ConfinedArea
         float minesPercent = difficultyConfig.MinesPercent / 100f;
         MinesAmount = (int) (minesPercent * gridsAmount);
 
-        //init field
-        SpreadMines(MinesAmount);
+        //spread mines
+        if (mineSetting != null) SpreadMines(mineSetting); 
+        else mineSetting = SpreadMines(MinesAmount);
+
         CountNeighbours();
-        OpenInitial();
+
+        //open initial grids
+        if (initialGridPos != null) OpenInitially(initialGridPos);
+        else initialGridPos = OpenInitially();
+
         DisableRealMineLoots();
         GenerateLootValues();
         CarpetBounce();
@@ -154,10 +162,12 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Spread mines randomly in the matrix grids.
+    /// Spread mines randomly in the grids matrix.
     /// </summary>
     /// <param name="amount">Amount of mines to spread</param>
-    private void SpreadMines(int amount) {
+    /// <returns>A list of the randomly selected mined grids' positions</returns>
+    private List<Vector2Int> SpreadMines(int amount) {
+        List<Vector2Int> positions = new List<Vector2Int>();
         amount = Mathf.Min(amount, gridsAmount);
         List<int> numsStock = new List<int>();
 
@@ -168,8 +178,21 @@ public class MineField : ConfinedArea
             int randomIndex = Random.Range(0, numsStock.Count);
             int num = numsStock[randomIndex];
             numsStock.Remove(num);
-            Grids[num].IsMined = true;
+            MineGrid selected = Grids[num];
+            selected.IsMined = true;
+            positions.Add(selected.Position);
         }
+
+        return positions;
+    }
+
+    /// <summary>
+    /// Spread mines in the grids matrix.
+    /// </summary>
+    /// <param name="positions">A list of positions that indicate the mined grids</param>
+    private void SpreadMines(List<Vector2Int> positions) {
+        List<MineGrid> selected = GetGridsByPositions(positions);
+        foreach (MineGrid grid in selected) grid.IsMined = true;
     }
 
     /// <summary>
@@ -187,32 +210,47 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Intially open a random section of mines-free grids.
+    /// Intially open a section of mine-free grids.
     /// </summary>
-    private void OpenInitial() {
-        if (gridsAmount == 0 || MinesAmount >= gridsAmount) return;
-
-        //fill indices pool
-        List<int> indicesPool = new List<int>();
-        for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
-
+    /// <param name="grid">
+    /// The position of the grid to sweep.
+    /// If set to null, a mine-free grid is randomly selected.
+    /// </param>
+    /// <returns>
+    /// The position of the grid that had been sweeped,
+    /// or null if there is none for some reason.
+    /// </returns>
+    private Vector2Int? OpenInitially(Vector2Int? gridPos = null) {
+        if (gridsAmount == 0 || MinesAmount >= gridsAmount) return null;
         MineGrid grid;
-        bool lowerStandard = false;
 
-        do {
-            //fill pool again and now ignore the mined neighbours condition
-            if (!lowerStandard && indicesPool.Count == 0) {
-                for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
-                lowerStandard = true;
+        //find grid randomly
+        if (gridPos == null) {
+            //fill indices pool
+            List<int> indicesPool = new List<int>();
+            for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
+            bool lowerStandard = false;
+
+            do {
+                //fill pool again and now ignore the mined neighbours condition
+                if (!lowerStandard && indicesPool.Count == 0) {
+                    for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
+                    lowerStandard = true;
+                }
+
+                int poolIndex = Random.Range(0, indicesPool.Count);
+                int gridIndex = indicesPool[poolIndex];
+                indicesPool.RemoveAt(poolIndex);
+                grid = Grids[gridIndex];
+                gridPos = grid.Position;
             }
-
-            int poolIndex = Random.Range(0, indicesPool.Count);
-            int gridIndex = indicesPool[poolIndex];
-            indicesPool.RemoveAt(poolIndex);
-            grid = Grids[gridIndex];
+            while (grid.IsMined || (grid.Indicator.MinedNeighbours != 0 && !lowerStandard));
         }
-        while (grid.IsMined || (grid.Indicator.MinedNeighbours != 0 && !lowerStandard));
+        //find grid by position
+        else grid = Grids.Find(x => x.Position == gridPos);
+
         grid.TriggerHit(BulletHitType.SingleHit, false, false);
+        return gridPos;
     }
 
     /// <summary>
@@ -240,6 +278,17 @@ public class MineField : ConfinedArea
             mine.Bounce(delay);
             delay += .1f;
         }
+    }
+
+    /// <summary>
+    /// Get a list of grids by their positions.
+    /// </summary>
+    /// <param name="positions">A list of the grids positions</param>
+    /// <returns>A list of the corresponding grids in the matrix.</returns>
+    public List<MineGrid> GetGridsByPositions(List<Vector2Int> positions) {
+        return (from MineGrid grid in Grids
+                where positions.Contains(grid.Position)
+                select grid).ToList();
     }
 
     /// <summary>
@@ -296,8 +345,12 @@ public class MineField : ConfinedArea
     /// Prevent real mines from dropping loot items.
     /// </summary>
     private void DisableRealMineLoots() {
-        foreach (MineGrid grid in Grids)
-            grid.LootGenerator.Chance = 0;
+        List<LootGeneratorObject> mined = (from MineGrid grid in Grids
+                                           where grid.IsMined
+                                           select grid.LootGenerator).ToList();
+
+        foreach (LootGeneratorObject generator in mined)
+            generator.Chance = 0;
     }
 
     /// <summary>
@@ -310,15 +363,12 @@ public class MineField : ConfinedArea
         float fieldGridsPercent = (float) gridsAmount / allMissionGrids;
         TotalReward = (int) (fieldGridsPercent * Contract.Instance.BasePayment);
 
-        //copunt the grids that will drop a loot
+        //count the grids that will drop a loot
         List<MineGrid> droppingGrids = new List<MineGrid>();
         while (droppingGrids.Count == 0) {
-            foreach (MineGrid grid in Grids) {
-                if (grid.IsMined || grid.Sweeper.IsDismissed) continue;
-
-                LootGeneratorObject generator = grid.LootGenerator;
-                if (generator.WillDrop) droppingGrids.Add(grid);
-            }
+            droppingGrids = (from MineGrid grid in Grids
+                             where !grid.IsMined && !grid.Sweeper.IsDismissed && grid.LootGenerator.WillDrop
+                             select grid).ToList();
 
             //reroll all
             if (droppingGrids.Count == 0) {
@@ -379,7 +429,8 @@ public class MineField : ConfinedArea
     public void ResetAll() {
         if (!IsActivated) return;
 
-        foreach (MineGrid grid in Grids) Destroy(grid.gameObject);
+        Queue<MineGrid> gridsQueue = new Queue<MineGrid>(Grids);
+        while (gridsQueue.Count > 0) Destroy(gridsQueue.Dequeue().gameObject);
         Grids.Clear();
         LayoutMatrix();
         Init(DifficultyConfig);

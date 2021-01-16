@@ -195,8 +195,8 @@ public class GameFlow : Singleton<GameFlow>
             MineField currentField = CurrentPhase.Field;
             camContrller.enabled = false;
 
-            void FullyBlank() {
-                //move player back to the entrance gate and rotate it
+            //move player back to the entrance gate and rotate it
+            void PlayerRelocation() {
                 Gate entranceGate = CurrentPhase.EntranceGate;
                 Vector3 gatePos = entranceGate.transform.position;
                 Vector3 lookPos = currentField.Center;
@@ -206,14 +206,23 @@ public class GameFlow : Singleton<GameFlow>
                 rig.LookAt(lookPos);
                 Vector3 rot = rig.rotation.eulerAngles;
                 rig.rotation = Quaternion.Euler(0, rot.y, rot.z);
+            }
 
-                //reset field and clear loot history
+            //reset field and clear loot history
+            void ResetField() {
                 currentField.ResetAll();
                 LootManager.Instance.ClearPhaseItems(phaseIndex);
                 Suitcase.Instance.RemovePhaseItems(phaseIndex);
+            }
 
+            void Finish() {
                 camContrller.enabled = true;
             }
+
+            LoadingProcess process = new LoadingProcess();
+            process.Enroll(PlayerRelocation, "retreating to the nearest phase entry");
+            process.Enroll(ResetField, "resetting the mine field");
+            process.Enroll(Finish);
 
             void FullyTransparent() {
                 DifficultyLevel difficulty = Contract.Instance.Difficulty;
@@ -224,7 +233,7 @@ public class GameFlow : Singleton<GameFlow>
             //blank screen
             float lerpTime = blankScreenLerpTime;
             float pauseTime = blankScreenPauseTime;
-            BlankScreen.Instance.Apply(lerpTime, pauseTime, FullyBlank, FullyTransparent);
+            BlankScreen.Instance.Apply(lerpTime, pauseTime, process, FullyTransparent);
         }
         //game over
         else {

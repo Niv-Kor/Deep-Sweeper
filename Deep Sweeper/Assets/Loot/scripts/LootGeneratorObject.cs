@@ -42,17 +42,17 @@ public abstract class LootGeneratorObject : MonoBehaviour
     [SerializeField] protected LayerMask collidableLayers;
 
     [Tooltip("The offset of the item relative to this object.")]
-    [SerializeField] private Vector3 positionOffset;
+    [SerializeField] protected Vector3 positionOffset;
 
     [Tooltip("The scale of the loot item (relative to its original size - 1 is 100%).")]
-    [SerializeField] private float scale = 1;
+    [SerializeField] protected float scale = 1;
 
     [Header("Chance")]
     [Tooltip("True to drop the item automatically.")]
     [SerializeField] protected bool autoDrop;
 
     [Tooltip("The chance of the loot being dropped when Drop() is activated.")]
-    [SerializeField] [Range(0f, 1f)] private float dropChance = 1;
+    [SerializeField] [Range(0f, 1f)] public float dropChance = 1;
 
     [Header("Timing")]
     [Tooltip("The time it takes the loot to scale up when popped (in seconds).")]
@@ -81,7 +81,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     #region Properties
     public LayerMask CollideableLayers { get { return collidableLayers; } }
-    public bool WillDrop { get; set; }
+    public bool WillDrop { get; protected set; }
     public LootItem Item { get; set; }
     public float Chance {
         get { return dropChance; }
@@ -117,11 +117,11 @@ public abstract class LootGeneratorObject : MonoBehaviour
         this.originScale = Vector3.one * scale;
         this.Chance = dropChance;
         this.m_itemValue = 0;
-        this.initialized = true;
     }
 
     protected virtual void Start() {
         InitItem();
+        this.initialized = true;
     }
 
     protected virtual void OnValidate() {

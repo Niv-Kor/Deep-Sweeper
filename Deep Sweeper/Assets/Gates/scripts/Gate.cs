@@ -15,7 +15,7 @@ public class Gate : MonoBehaviour
     [Tooltip("The speed of the camera's dolly.")]
     [SerializeField] private float dollySpeed = 1;
 
-    [Header("Timing")]
+    [Header("Gate Opening Timing")]
     [Tooltip("The time it takes the upper edge to disappear when the gate opens.")]
     [SerializeField] private float upperEdgeShutTime;
 
@@ -33,6 +33,14 @@ public class Gate : MonoBehaviour
 
     [Tooltip("The time it takes to disable the gate camera after it has been opened.")]
     [SerializeField] private float pauseAfterOpen;
+
+    [Tooltip("The time it takes to get from a blank screen to a transparent screen and vise versa, "
+           + "during the gate's opening process.")]
+    [SerializeField] private float blankScreenLerpTime = 1;
+
+    [Tooltip("The time it takes to start lerping the screen again after reaching to a fully blank screen, "
+           + "during the gate's opening process.")]
+    [SerializeField] private float blankScreenPauseTime = 1;
     #endregion
 
     #region Constants
@@ -48,10 +56,6 @@ public class Gate : MonoBehaviour
     private SubmarineMovementController submarine;
     private CameraController camController;
     private bool initiated;
-    private UnityAction onFullyBlankHandler1;
-    private UnityAction onFullyBlankHandler2;
-    private UnityAction onFullyTransparentHandler1;
-    private UnityAction onFullyTransparentHandler2;
     #endregion
 
     #region Events
@@ -83,35 +87,7 @@ public class Gate : MonoBehaviour
         this.cam = GetComponentInChildren<Camera>();
         this.upperEdge = GetComponentInChildren<LineRenderer>();
 
-        //bind gate cross event
         forceField.CrossEvent += OnGateCrossed;
-
-        //first time the screen goes blank
-        this.onFullyBlankHandler1 = new UnityAction(delegate {
-            camController.enabled = false;
-            StartCoroutine(MoveDolly());
-            CameraManager.Instance.Switch(cam);
-            BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler1;
-        });
-
-        //seconds time the screen goes blank
-        this.onFullyBlankHandler2 = new UnityAction(delegate {
-            camController.enabled = true;
-            StopAllCoroutines();
-            CameraManager.Instance.Switch(CameraManager.Instance.FPCam);
-            BlankScreen.Instance.FullyBlankEvent -= onFullyBlankHandler2;
-        });
-
-        this.onFullyTransparentHandler1 = new UnityAction(delegate {
-            StartCoroutine(OnFullyTransparentScreen());
-            BlankScreen.Instance.FullyTransparentEvent -= onFullyTransparentHandler1;
-        });
-
-        this.onFullyTransparentHandler2 = new UnityAction(delegate {
-            submarine.MovementAllowd = true;
-            BlankScreen.Instance.FullyTransparentEvent -= onFullyTransparentHandler2;
-        });
-
         initiated = true;
         ReadyForOpenEvent?.Invoke();
     }
@@ -155,9 +131,21 @@ public class Gate : MonoBehaviour
     private IEnumerator AnimateGateOpening() {
         yield return new WaitForSeconds(pauseBeforeCam);
         submarine.MovementAllowd = false;
-        BlankScreen.Instance.FullyBlankEvent += onFullyBlankHandler1;
-        BlankScreen.Instance.FullyTransparentEvent += onFullyTransparentHandler1;
-        BlankScreen.Instance.Apply(1, 1);
+
+        void ActivateDolly() {
+            camController.enabled = false;
+            StartCoroutine(MoveDolly());
+            CameraManager.Instance.Switch(cam);
+        }
+
+        LoadingProcess process = new LoadingProcess();
+        process.Enroll(ActivateDolly);
+
+        void FullyTransparent() {
+            StartCoroutine(OnFullyTransparentScreen());
+        }
+
+        BlankScreen.Instance.Apply(blankScreenLerpTime, blankScreenPauseTime, process, FullyTransparent);
     }
 
     /// <summary>
@@ -172,9 +160,20 @@ public class Gate : MonoBehaviour
         GateOpenEvent?.Invoke();
         yield return new WaitForSeconds(openTime + pauseAfterOpen);
 
-        BlankScreen.Instance.FullyBlankEvent += onFullyBlankHandler2;
-        BlankScreen.Instance.FullyTransparentEvent += onFullyTransparentHandler2;
-        BlankScreen.Instance.Apply(1, 1);
+        void EnableCamera() {
+            camController.enabled = true;
+            StopAllCoroutines();
+            CameraManager.Instance.Switch(CameraManager.Instance.FPCam);
+        }
+
+        LoadingProcess process = new LoadingProcess();
+        process.Enroll(EnableCamera);
+
+        void FullyTransparent() {
+            submarine.MovementAllowd = true;
+        }
+
+        BlankScreen.Instance.Apply(blankScreenLerpTime, blankScreenPauseTime, process, FullyTransparent);
     }
 
     /// <summary>

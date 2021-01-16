@@ -129,7 +129,7 @@ public class MineGrid : MonoBehaviour
         //lose
         if (IsMined) {
             Sweeper.Explode();
-            //DeathTint.Instance.Tint();
+            DeathTint.Instance.Tint();
             GameFlow.Instance.Lose();
         }
         else {
@@ -167,7 +167,7 @@ public class MineGrid : MonoBehaviour
     public void TriggerHit(BulletHitType hitType, bool explosion, bool allowDrop = true) {
         switch (hitType) {
             case BulletHitType.SingleHit:
-                Reveal(explosion, false, allowDrop);
+                Reveal(explosion, true, allowDrop);
                 break;
 
             case BulletHitType.SectionHit:

@@ -11272,7 +11272,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 20, z: 0}
   scale: 40
   autoDrop: 0
-  dropChance: 0.7
+  dropChance: 1
   inScaleTime: 0.5
   outScaleTime: 0.07
 --- !u!114 &6924104458155657525
@@ -11297,8 +11297,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     relateOnDistance: 1
-    genre: 0
     exportAsExternal: 0
+    genre: 0
   - name: explosion
     clip: {fileID: 8300000, guid: 1604004412ce23349a6482ab74901898, type: 3}
     volume: 1
@@ -11308,8 +11308,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     relateOnDistance: 0
-    genre: 0
     exportAsExternal: 1
+    genre: 0
   - name: flag_check
     clip: {fileID: 8300000, guid: 564091c47f3229e4db42996d5246dfa6, type: 3}
     volume: 0.2
@@ -11319,8 +11319,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     relateOnDistance: 0
-    genre: 0
     exportAsExternal: 0
+    genre: 0
   destroyStoppedTunes: 0
 --- !u!1 &8788801433538985177
 GameObject:

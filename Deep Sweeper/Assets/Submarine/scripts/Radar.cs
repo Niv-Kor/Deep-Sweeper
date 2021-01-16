@@ -5,13 +5,20 @@ using UnityEngine;
 
 public class Radar : MonoBehaviour
 {
+    #region Exposed Editor Parameters
+    [Tooltip("The radius of the radar.")]
     [SerializeField] private float radius;
+    #endregion
 
+    #region Constants
     private static readonly Color GIZMOS_COLOR = Color.green;
     private static readonly int MAX_COLLISIONS = 64;
+    #endregion
 
+    #region Class Members
     private Collider[] colRes;
     private List<Collider> prevRes;
+    #endregion
 
     private void Start() {
         this.colRes = new Collider[MAX_COLLISIONS];
@@ -48,6 +55,11 @@ public class Radar : MonoBehaviour
         prevRes.AddRange(colList);
     }
 
+    private void OnDrawGizmos() {
+        Gizmos.color = GIZMOS_COLOR;
+        Gizmos.DrawWireSphere(transform.position, radius);
+    }
+
     /// <summary>
     /// Calculate the shortest distance of the point from the entire radar's line ray.
     /// </summary>
@@ -57,10 +69,5 @@ public class Radar : MonoBehaviour
         Vector3 dir = CameraManager.Instance.FPCam.transform.forward;
         Vector3 pos = transform.position - dir * radius;
         return Vector3.Cross(dir, point - pos).magnitude;
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = GIZMOS_COLOR;
-        Gizmos.DrawWireSphere(transform.position, radius);
     }
 }
