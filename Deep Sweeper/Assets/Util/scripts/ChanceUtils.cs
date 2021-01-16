@@ -9,6 +9,7 @@ public static class ChanceUtils
     /// <returns>A random boolean output, based on the specified chance.</returns>
     public static bool UnstableCondition(float chance) {
         if (chance > 1) chance /= 100f;
+        chance = Mathf.Clamp(chance, 0, 1);
 
         switch (chance) {
             case 0: return false;
