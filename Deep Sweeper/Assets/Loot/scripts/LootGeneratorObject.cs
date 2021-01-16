@@ -52,7 +52,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
     [SerializeField] protected bool autoDrop;
 
     [Tooltip("The chance of the loot being dropped when Drop() is activated.")]
-    [SerializeField] [Range(0f, 1f)] public float dropChance = 1;
+    [SerializeField] [Range(0f, 1f)] protected float dropChance = 1;
 
     [Header("Timing")]
     [Tooltip("The time it takes the loot to scale up when popped (in seconds).")]
