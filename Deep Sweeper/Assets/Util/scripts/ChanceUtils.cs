@@ -5,10 +5,16 @@ public static class ChanceUtils
     /// <summary>
     /// Generate a random boolean output.
     /// </summary>
-    /// <param name="chance">The chance of the answer being True [0:1].</param>
+    /// <param name="chance">The chance of the answer being True [0:1]</param>
     /// <returns>A random boolean output, based on the specified chance.</returns>
     public static bool UnstableCondition(float chance) {
-        return Random.value <= chance;
+        if (chance > 1) chance /= 100f;
+
+        switch (chance) {
+            case 0: return false;
+            case 1: return true;
+            default: return Random.value <= chance;
+        }
     }
 
     /// <summary>
