@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 [AddComponentMenu("AQUAS/Reflection")]
 [ExecuteInEditMode] // Make mirror live-update even when not in play mode
@@ -97,7 +98,10 @@ public class AQUAS_Reflection : MonoBehaviour
 		reflectionCamera.transform.position = newpos;
 		Vector3 euler = cam.transform.eulerAngles;
 		reflectionCamera.transform.eulerAngles = new Vector3(0, euler.y, euler.z);
-		reflectionCamera.Render();
+
+		try { reflectionCamera.Render(); }
+		catch (Exception) {}
+
 		reflectionCamera.transform.position = oldpos;
 		GL.invertCulling = false;        //should be used
         //GL.SetRevertBackfacing (false);   //obsolete

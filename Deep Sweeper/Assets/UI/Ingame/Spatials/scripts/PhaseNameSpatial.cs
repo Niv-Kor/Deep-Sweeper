@@ -14,7 +14,7 @@ public class PhaseNameSpatial : PhaseSpatial<PhaseNameSpatial>
 
     protected override void Start() {
         base.Start();
-        GameFlow.Instance.PhaseUpdatedEvent += SetPhase;
+        LevelFlow.Instance.PhaseUpdatedEvent += SetPhase;
     }
 
     /// <summary>

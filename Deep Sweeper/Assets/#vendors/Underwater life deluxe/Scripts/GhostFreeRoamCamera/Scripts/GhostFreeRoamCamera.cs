@@ -26,7 +26,7 @@ public class GhostFreeRoamCamera : MonoBehaviour
     {
         if (cursorToggleAllowed)
         {
-            Screen.lockCursor = true;
+            UnityEngine.Screen.lockCursor = true;
             Cursor.visible = false;
         }
     }
@@ -73,7 +73,7 @@ public class GhostFreeRoamCamera : MonoBehaviour
                 if (!togglePressed)
                 {
                     togglePressed = true;
-                    Screen.lockCursor = !Screen.lockCursor;
+                    UnityEngine.Screen.lockCursor = !UnityEngine.Screen.lockCursor;
                     Cursor.visible = !Cursor.visible;
                 }
             }

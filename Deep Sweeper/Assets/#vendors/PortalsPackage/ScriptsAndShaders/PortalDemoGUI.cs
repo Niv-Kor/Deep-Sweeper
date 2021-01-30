@@ -12,9 +12,9 @@ public class PortalDemoGUI: MonoBehaviour
     float dpiScale;
 
 	void Start () {
-        if (Screen.dpi < 1) dpiScale = 1;
-        if (Screen.dpi < 200) dpiScale = 1;
-        else dpiScale = Screen.dpi / 200f;
+        if (UnityEngine.Screen.dpi < 1) dpiScale = 1;
+        if (UnityEngine.Screen.dpi < 200) dpiScale = 1;
+        else dpiScale = UnityEngine.Screen.dpi / 200f;
         guiStyleHeader.fontSize = (int)(15f * dpiScale);
 		guiStyleHeader.normal.textColor = new Color(0.15f,0.15f,0.15f);
 		currentInstance = Instantiate(Prefabs[currentNomber], transform.position, new Quaternion()) as GameObject;

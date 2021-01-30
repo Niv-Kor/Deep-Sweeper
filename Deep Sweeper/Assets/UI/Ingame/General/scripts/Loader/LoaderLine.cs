@@ -55,7 +55,7 @@ public class LoaderLine : MonoBehaviour
             process.ExecuteStage();
 
             //stretch line
-            float lineWidth = Mathf.Lerp(0, Screen.width, timer / time);
+            float lineWidth = Mathf.Lerp(0, UnityEngine.Screen.width, timer / time);
             bool wider = lineWidth > lastWidth;
             lastWidth = lineWidth;
             if (wider) lineTransform.sizeDelta = new Vector2(lineWidth, loaderHeight);

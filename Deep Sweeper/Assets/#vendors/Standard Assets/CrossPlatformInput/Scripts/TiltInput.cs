@@ -78,13 +78,13 @@ namespace UnityStandardAssets.CrossPlatformInput
                     m_SteerAxis.Update(axisValue);
                     break;
                 case AxisMapping.MappingType.MousePositionX:
-                    CrossPlatformInputManager.SetVirtualMousePositionX(axisValue*Screen.width);
+                    CrossPlatformInputManager.SetVirtualMousePositionX(axisValue * UnityEngine.Screen.width);
                     break;
                 case AxisMapping.MappingType.MousePositionY:
-                    CrossPlatformInputManager.SetVirtualMousePositionY(axisValue*Screen.width);
+                    CrossPlatformInputManager.SetVirtualMousePositionY(axisValue * UnityEngine.Screen.width);
                     break;
                 case AxisMapping.MappingType.MousePositionZ:
-                    CrossPlatformInputManager.SetVirtualMousePositionZ(axisValue*Screen.width);
+                    CrossPlatformInputManager.SetVirtualMousePositionZ(axisValue * UnityEngine.Screen.width);
                     break;
             }
         }

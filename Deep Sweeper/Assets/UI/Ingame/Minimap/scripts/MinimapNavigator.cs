@@ -28,7 +28,7 @@ public class MinimapNavigator : SonarRotator
 
     #region Class Members
     private Transform player;
-    private GameFlow flow;
+    private LevelFlow flow;
     private RawImage arrow;
     private bool positiveTremble;
     private float minDisplayDistance;
@@ -56,7 +56,7 @@ public class MinimapNavigator : SonarRotator
     protected override void Start() {
         base.Start();
         this.player = CameraManager.Instance.Rig.transform;
-        this.flow = GameFlow.Instance;
+        this.flow = LevelFlow.Instance;
         this.positiveTremble = true;
         this.extraRotation = 0;
         this.trembleTimer = 0;

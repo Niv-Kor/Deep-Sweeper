@@ -117,7 +117,7 @@ public class SightRay : Singleton<SightRay>
         if (hit) {
             GameObject obj = raycastHit.collider.gameObject;
             MineGrid grid = obj.GetComponentInParent<MineGrid>();
-            Phase phase = GameFlow.Instance.CurrentPhase;
+            Phase phase = LevelFlow.Instance.CurrentPhase;
             bool allowedGrid = phase != null && phase.Field.ContainsGrid(grid);
             HitDistance = raycastHit.distance;
 

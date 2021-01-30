@@ -93,7 +93,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// This method updates the flags counters.
     /// </summary>
     private void OnDisplay() {
-        MineField field = GameFlow.Instance.CurrentPhase.Field;
+        MineField field = LevelFlow.Instance.CurrentPhase.Field;
         SetCounter(0, flagsMngr.AvailableFlags);
 
         //find unsweeped mines amount and bind new sweeper events

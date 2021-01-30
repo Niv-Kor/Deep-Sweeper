@@ -56,30 +56,30 @@ public class AnimBrowser : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		// --------------------
-		// Display informations
-		// --------------------
-		GUI.Box(new Rect(10, 10, Screen.width-20, 25), "Animation name : " + selector[current].name + "  /  "+"Animation number : " + current+ " (TIPS : Press key UP to save a screenshoot into the directory of the project)");
+        // --------------------
+        // Display informations
+        // --------------------
+        GUI.Box(new Rect(10, 10, UnityEngine.Screen.width-20, 25), "Animation name : " + selector[current].name + "  /  "+"Animation number : " + current + " (TIPS : Press key UP to save a screenshoot into the directory of the project)");
 		DisplayList ();
 
 		// -------------------------
 		// Get button/keyboard click
 		// -------------------------
-		if (GUI.Button(new Rect(0, Screen.height-40, Screen.width/2, 40), "< PREV ANIMATION (KEY LEFT)")) {
-			current = current - 1;
-			LaunchSprite ();
+		if (GUI.Button(new Rect(0, UnityEngine.Screen.height-40, UnityEngine.Screen.width/2, 40), "< PREV ANIMATION (KEY LEFT)")) {
+            current = current - 1;
+            LaunchSprite();
 		}
 
-		if (GUI.Button (new Rect (Screen.width/2, Screen.height-40, Screen.width/2, 40), "(KEY RIGHT) NEXT ANIMATION >")) {
-			current = current + 1;
-			LaunchSprite ();
+		if (GUI.Button (new Rect(UnityEngine.Screen.width/2, UnityEngine.Screen.height-40, UnityEngine.Screen.width/2, 40), "(KEY RIGHT) NEXT ANIMATION >")) {
+            current = current + 1;
+            LaunchSprite();
 		}
 
 		// ---------------------
 		// Loading label display
 		// ---------------------
 		if (loadingLabel != "") {
-			GUI.Box (new Rect (Screen.width/2-150, Screen.height/2, 300, 25), loadingLabel);
+            GUI.Box (new Rect(UnityEngine.Screen.width/2-150, UnityEngine.Screen.height/2, 300, 25), loadingLabel);
 		}
 	}
 

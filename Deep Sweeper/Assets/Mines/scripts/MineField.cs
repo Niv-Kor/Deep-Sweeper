@@ -357,7 +357,7 @@ public class MineField : ConfinedArea
     /// Generate and distribute coin values across the grids.
     /// </summary>
     private void GenerateLootValues() {
-        List<MineField> allFields = (from Phase phase in GameFlow.Instance.Phases
+        List<MineField> allFields = (from Phase phase in LevelFlow.Instance.Phases
                                      select phase.Field).ToList();
         int allMissionGrids = allFields.Sum(x => x.gridsAmount);
         float fieldGridsPercent = (float) gridsAmount / allMissionGrids;

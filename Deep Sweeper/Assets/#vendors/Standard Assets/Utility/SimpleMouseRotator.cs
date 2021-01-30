@@ -99,8 +99,8 @@ namespace UnityStandardAssets.Utility
                 inputV = Input.mousePosition.y;
 
                 // set values to allowed range
-                m_TargetAngles.y = Mathf.Lerp(-rotationRange.y*0.5f, rotationRange.y*0.5f, inputH/Screen.width);
-                m_TargetAngles.x = Mathf.Lerp(-rotationRange.x*0.5f, rotationRange.x*0.5f, inputV/Screen.height);
+                m_TargetAngles.y = Mathf.Lerp(-rotationRange.y*0.5f, rotationRange.y*0.5f, inputH/ UnityEngine.Screen.width);
+                m_TargetAngles.x = Mathf.Lerp(-rotationRange.x*0.5f, rotationRange.x*0.5f, inputV/ UnityEngine.Screen.height);
             }
 
             // smoothly interpolate current values to target angles

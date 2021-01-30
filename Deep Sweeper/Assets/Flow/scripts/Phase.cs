@@ -66,7 +66,7 @@
         DifficultyLevel difficulty = Contract.Instance.Difficulty;
         int levelTimer = DifficultyConfig.Clock;
         SpatialsManager.Instance.Activate(difficulty, levelTimer);
-        GameFlow.Instance.ReportPhaseUpdated(Config, DifficultyConfig, Index);
+        LevelFlow.Instance.ReportPhaseUpdated(Config, DifficultyConfig, Index);
         Field.Activate();
     }
 

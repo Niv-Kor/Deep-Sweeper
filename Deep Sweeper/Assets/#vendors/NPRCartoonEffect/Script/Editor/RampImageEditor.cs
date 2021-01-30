@@ -58,7 +58,7 @@ public class RampImageEditor : EditorWindow
 		
 		for (int i = 0; i < m_Gradient; i++)
 		{
-			GUI.Box (new Rect (5, 30 + i * 20, Screen.width - 5, 20), "");
+            GUI.Box (new Rect(5, 30 + i * 20, UnityEngine.Screen.width - 5, 20), "");
 			GUI.Label (new Rect (5, 30 + i * 20, 65, 20), "Gradient " + (i + 1).ToString ());
 			GUI.Label (new Rect (90, 30 + i * 20, 70, 20), "Level:");
 			m_GradientValues[i] = (int)GUI.HorizontalSlider (new Rect (150, 30 + i * 20, 120, 20), (float)m_GradientValues[i], 0f, 256f);
@@ -73,7 +73,7 @@ public class RampImageEditor : EditorWindow
 		m_GradientColors[m_Gradient] = (int)GUI.HorizontalSlider (new Rect (420, 30 + h * 20, 120, 20), (float)m_GradientColors[m_Gradient], 0f, 255f);
 		GUI.Label (new Rect (550, 30 + h * 20, 50, 20), m_GradientColors[m_Gradient].ToString ());
 		if (m_Ramp)
-			GUI.DrawTexture (new Rect (5, 35 + (h + 1) * 20, Screen.width - 15, 20), m_Ramp, ScaleMode.StretchToFill);
+            GUI.DrawTexture (new Rect(5, 35 + (h + 1) * 20, UnityEngine.Screen.width - 15, 20), m_Ramp, ScaleMode.StretchToFill);
 		m_RampName = GUI.TextField (new Rect (5, 40 + (h + 2) * 20, 120, 20), m_RampName);
 		if (GUI.Button (new Rect (135, 40 + (h + 2) * 20, 120, 20), "Save"))
 			SaveRampTexture ();

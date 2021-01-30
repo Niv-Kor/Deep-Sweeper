@@ -32,7 +32,7 @@ public class LootManager : Singleton<LootManager>
         info.Name = instanceCmp.ItemName;
         info.Value = instanceCmp.Value;
         info.Type = instanceCmp.Type;
-        info.PhaseIndex = GameFlow.Instance.CurrentPhase.Index;
+        info.PhaseIndex = LevelFlow.Instance.CurrentPhase.Index;
         items.Add(info);
 
         return instanceCmp;

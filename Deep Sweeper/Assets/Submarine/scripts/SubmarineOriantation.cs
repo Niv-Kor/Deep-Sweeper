@@ -2,7 +2,7 @@
 
 public class SubmarineOriantation : MonoBehaviour
 {
-    private GameFlow flow;
+    private LevelFlow flow;
 
     public Phase CurrentPhase {
         get {
@@ -17,6 +17,6 @@ public class SubmarineOriantation : MonoBehaviour
     }
 
     private void Start() {
-        this.flow = GameFlow.Instance;
+        this.flow = LevelFlow.Instance;
     }
 }

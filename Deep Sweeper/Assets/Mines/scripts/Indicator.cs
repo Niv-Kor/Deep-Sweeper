@@ -47,7 +47,7 @@ public class Indicator : MonoBehaviour
             gameObject.layer = Layers.GetLayerValue(Layers.MINE_INDICATION);
         }
 
-        Phase currentPhase = GameFlow.Instance.CurrentPhase;
+        Phase currentPhase = LevelFlow.Instance.CurrentPhase;
         if (currentPhase != null && currentPhase.Field == grid.Field) SetActiveLayer();
         else grid.Field.FieldActivatedEvent += SetActiveLayer;
     }

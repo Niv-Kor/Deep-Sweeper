@@ -21,13 +21,13 @@ public class GunAim:MonoBehaviour
 		float mouseX = Input.mousePosition.x;
 		float mouseY = Input.mousePosition.y;
 
-		if (mouseX <= borderLeft || mouseX >= Screen.width - borderRight || mouseY <= borderBottom || mouseY >= Screen.height - borderTop) 
+		if (mouseX <= borderLeft || mouseX >= UnityEngine.Screen.width - borderRight || mouseY <= borderBottom || mouseY >= UnityEngine.Screen.height - borderTop) 
 		{
-			isOutOfBounds = true;
+            isOutOfBounds = true;
 		} 
 		else 
 		{
-			isOutOfBounds = false;
+            isOutOfBounds = false;
 		}
 
 		if (!isOutOfBounds)

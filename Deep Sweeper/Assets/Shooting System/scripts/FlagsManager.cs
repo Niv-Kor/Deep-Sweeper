@@ -14,7 +14,7 @@ public class FlagsManager : Singleton<FlagsManager>
     #endregion
 
     private void Awake() {
-        GameFlow.Instance.PhaseUpdatedEvent += delegate(PhaseConfig pahseConfig, PhaseDifficultyConfig diffConfig, int index) {
+        LevelFlow.Instance.PhaseUpdatedEvent += delegate(PhaseConfig pahseConfig, PhaseDifficultyConfig diffConfig, int index) {
             CollectFieldInfo();
         };
     }
@@ -23,7 +23,7 @@ public class FlagsManager : Singleton<FlagsManager>
     /// Collect and update the UI info according to the current phase.
     /// </summary>
     private void CollectFieldInfo() {
-        MineField field = GameFlow.Instance.CurrentPhase.Field;
+        MineField field = LevelFlow.Instance.CurrentPhase.Field;
         MaxFlags = field.MinesAmount;
         AvailableFlags = field.MinesAmount;
         FlagsAmountUpdateEvent?.Invoke();

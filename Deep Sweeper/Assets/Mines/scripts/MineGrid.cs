@@ -130,7 +130,7 @@ public class MineGrid : MonoBehaviour
         if (IsMined) {
             Sweeper.Explode();
             DeathTint.Instance.Tint();
-            GameFlow.Instance.Lose();
+            LevelFlow.Instance.Lose();
         }
         else {
             Indicator.AllowRevelation(true);
@@ -151,7 +151,7 @@ public class MineGrid : MonoBehaviour
                 foreach (MineGrid mineGrid in section)
                     if (mineGrid != null) mineGrid.TriggerHit(BulletHitType.SingleHit, explosion, allowDrop);
 
-            GameFlow.Instance.TryNextPhase();
+            LevelFlow.Instance.TryNextPhase();
         }
     }
 
