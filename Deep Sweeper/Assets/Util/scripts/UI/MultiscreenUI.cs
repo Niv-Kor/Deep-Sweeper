@@ -7,7 +7,7 @@ public class MultiscreenUI : MonoBehaviour
     #region Exposed Editor Parameters
     [Header("Settings")]
     [Tooltip("The first screen that should be presented.")]
-    [SerializeField] private Screen defaultScreen;
+    [SerializeField] private ScreenLayout defaultScreen;
 
     [Header("Timing")]
     [Tooltip("The time it takes a screen to fade in or out.")]
@@ -21,6 +21,7 @@ public class MultiscreenUI : MonoBehaviour
     #region Class Members
     private List<UIScreen> screens;
     private UIScreen currenScreen;
+    private bool firstSwitch;
     #endregion
 
     #region Properties
@@ -31,9 +32,10 @@ public class MultiscreenUI : MonoBehaviour
         this.screens = new List<UIScreen>(GetComponentsInChildren<UIScreen>());
         this.IsSwitching = false;
         this.currenScreen = GetScreenByID(defaultScreen);
+        this.firstSwitch = true;
 
         InitScreens();
-        SwitchScreens(defaultScreen, true);
+        firstSwitch = false;
     }
 
     /// <summary>
@@ -42,9 +44,10 @@ public class MultiscreenUI : MonoBehaviour
     /// </summary>
     private void InitScreens() {
         foreach (UIScreen screen in screens) {
-            if (screen != currenScreen)
+            if (screen != currenScreen) {
                 if (screen.IsPresent)
                     screen.FadeScreen(false, 0);
+            }
             else screen.FadeScreen(true, 0);
         }
     }
@@ -53,7 +56,7 @@ public class MultiscreenUI : MonoBehaviour
     /// Get the actual screen object by its screen type ID.
     /// </summary>
     /// <param name="ID">The enum value of the screen</param>
-    private UIScreen GetScreenByID(Screen ID) {
+    private UIScreen GetScreenByID(ScreenLayout ID) {
         return screens.Find(x => x.ID == ID);
     }
 
@@ -61,7 +64,7 @@ public class MultiscreenUI : MonoBehaviour
     /// <param name="target">The screen that should replace the current one</param>
     /// <returns>True if the two screens are allowed to switch.</returns>
     private bool ShouldSwitch(UIScreen origin, UIScreen target) {
-        return target != null && origin != target && !IsSwitching;
+        return target != null && (origin != target || firstSwitch) && !IsSwitching;
     }
 
     /// <summary>
@@ -88,7 +91,7 @@ public class MultiscreenUI : MonoBehaviour
     /// </summary>
     /// <param name="targetScreen">The screen to turn on</param>
     /// <param name="instant">True to instantly switch between the two screen</param>
-    public void SwitchScreens(Screen targetScreen, bool instant = false) {
+    public void SwitchScreens(ScreenLayout targetScreen, bool instant = false) {
         UIScreen nextScreen = GetScreenByID(targetScreen);
 
         if (ShouldSwitch(currenScreen, nextScreen))

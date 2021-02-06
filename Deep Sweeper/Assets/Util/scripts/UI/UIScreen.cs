@@ -6,7 +6,7 @@ public abstract class UIScreen : MonoBehaviour
 {
     #region Exposed Editor Parameters
     [Tooltip("The unique signature of the screen.")]
-    [SerializeField] protected Screen screenId;
+    [SerializeField] protected ScreenLayout screenId;
     #endregion
 
     #region Class Members
@@ -15,8 +15,8 @@ public abstract class UIScreen : MonoBehaviour
     #endregion
 
     #region Properties
-    public Screen ID { get { return screenId; } }
-    public bool IsPresent { get { return canvas.alpha > 0; } }
+    public ScreenLayout ID { get { return screenId; } }
+    public bool IsPresent { get => canvas.alpha > 0 || canvas.blocksRaycasts; }
     protected MultiscreenUI UI { get; private set; }
     #endregion
 
@@ -27,6 +27,8 @@ public abstract class UIScreen : MonoBehaviour
 
     /// <see cref="FadeScreen(bool)"/>
     protected virtual IEnumerator Fade(bool fadeIn, float time) {
+        if (!fadeIn) canvas.blocksRaycasts = false;
+
         float from = canvas.alpha;
         float to = fadeIn ? 1 : 0;
         float timer = 0;
@@ -37,7 +39,7 @@ public abstract class UIScreen : MonoBehaviour
             yield return null;
         }
 
-        canvas.blocksRaycasts = fadeIn;
+        if (fadeIn) canvas.blocksRaycasts = true;
     }
 
     /// <summary>

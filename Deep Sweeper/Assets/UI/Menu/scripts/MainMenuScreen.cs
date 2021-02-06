@@ -5,6 +5,6 @@ using UnityEngine;
 public class MainMenuScreen : UIScreen
 {
     public void GotoCampaignScreen() {
-        UI.SwitchScreens(Screen.Campaign);
+        UI.SwitchScreens(ScreenLayout.Campaign);
     }
 }

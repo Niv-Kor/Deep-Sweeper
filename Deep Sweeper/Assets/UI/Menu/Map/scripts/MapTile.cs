@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static LevelsMap.Landmark;
 
 namespace LevelsMap
 {
@@ -17,28 +16,41 @@ namespace LevelsMap
         [SerializeField] private Texture tileSprite;
 
         [Header("Level")]
+        [Tooltip("The index of the tile's level (-1 if it represents no level).")]
         [SerializeField] private int levelIndex = -1;
         #endregion
 
         #region Class Members
-        private Landmark landmark;
+        private TileHighlighter highlighter;
+        private TileLandmark landmark;
+        private TileFrame frame;
         private TileGlow glow;
+        private bool objectiveLevel;
         #endregion
 
         private void Start() {
-            this.landmark = GetComponentInChildren<Landmark>();
+            this.highlighter = GetComponentInChildren<TileHighlighter>();
+            this.landmark = GetComponentInChildren<TileLandmark>();
+            this.frame = GetComponentInChildren<TileFrame>();
             this.glow = GetComponentInChildren<TileGlow>();
+            this.objectiveLevel = GameAdvancement.Instance.IsObjectiveLevel(levelIndex);
 
-            //set landmark availability
+            //set landmark state
             if (landmark != null) {
-                LandmarkIconState landmarkState = LandmarkIconState.None;
+                TileAttributeState landmarkState = TileAttributeState.Unavailable;
 
                 if (levelIndex >= 0) {
+                    glow.State = TileAttributeState.Off;
                     bool isOpen = GameAdvancement.Instance.IsLevelOpen(levelIndex);
-                    landmarkState = isOpen ? LandmarkIconState.Available : LandmarkIconState.Unavailable;
+                    landmarkState = isOpen ? TileAttributeState.On : TileAttributeState.Off;
+
+                    if (objectiveLevel) {
+                        highlighter.State = TileAttributeState.On;
+                        frame.State = TileAttributeState.On;
+                    }
                 }
 
-                landmark.Availability = landmarkState;
+                landmark.State = landmarkState;
             }
         }
 
@@ -47,11 +59,17 @@ namespace LevelsMap
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
-            glow.Enabled = true;
+            if (glow.State != TileAttributeState.Unavailable) {
+                if (objectiveLevel) frame.State = TileAttributeState.Off;
+                glow.State = TileAttributeState.On;
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData) {
-            glow.Enabled = false;
+            if (glow.State != TileAttributeState.Unavailable) {
+                if (objectiveLevel) frame.State = TileAttributeState.On;
+                glow.State = TileAttributeState.Off;
+            }
         }
     }
 }

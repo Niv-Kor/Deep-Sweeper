@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class CampaignScreen : UIScreen
 {
-    public void StartGame() {
+    public void StartGame(int levelIndex) {
 
+    }
+
+    public void PreviousButton() {
+        UI.SwitchScreens(ScreenLayout.MainMenu);
     }
 }

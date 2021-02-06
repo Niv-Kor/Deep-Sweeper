@@ -1,4 +1,4 @@
-﻿public enum Screen
+﻿public enum ScreenLayout
 {
     MainMenu,
     Campaign
