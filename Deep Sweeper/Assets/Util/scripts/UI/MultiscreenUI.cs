@@ -76,9 +76,9 @@ public class MultiscreenUI : MonoBehaviour
     private IEnumerator ManageSwitch(UIScreen origin, UIScreen target, bool instant = false) {
         float time = instant ? 0 : fadeTime;
         float pause = screenAppearAfter * time;
-
         IsSwitching = true;
-        origin.FadeScreen(false, time);
+
+        if (!origin.ChildScreensID.Contains(target.ID)) origin.FadeScreen(false, time);
         if (pause > 0) yield return new WaitForSeconds(pause);
         target.FadeScreen(true, time);
         IsSwitching = false;

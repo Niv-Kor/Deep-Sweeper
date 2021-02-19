@@ -1,5 +1,6 @@
 ﻿public enum ScreenLayout
 {
     MainMenu,
-    Campaign
+    Campaign,
+    Contract
 }

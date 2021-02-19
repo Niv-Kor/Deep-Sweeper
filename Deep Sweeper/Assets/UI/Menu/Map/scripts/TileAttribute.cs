@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LevelsMap
+namespace Menu.Map
 {
     public abstract class TileAttribute : MonoBehaviour
     {

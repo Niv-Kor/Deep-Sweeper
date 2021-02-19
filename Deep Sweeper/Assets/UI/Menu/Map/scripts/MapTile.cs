@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace LevelsMap
+namespace Menu.Map
 {
     public class MapTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -58,14 +58,16 @@ namespace LevelsMap
             textureImage.texture = tileSprite;
         }
 
-        public void OnPointerEnter(PointerEventData eventData) {
+        /// <inheritdoc/>
+        public void OnPointerEnter(PointerEventData ev) {
             if (glow.State != TileAttributeState.Unavailable) {
                 if (objectiveLevel) frame.State = TileAttributeState.Off;
                 glow.State = TileAttributeState.On;
             }
         }
 
-        public void OnPointerExit(PointerEventData eventData) {
+        /// <inheritdoc/>
+        public void OnPointerExit(PointerEventData ev) {
             if (glow.State != TileAttributeState.Unavailable) {
                 if (objectiveLevel) frame.State = TileAttributeState.On;
                 glow.State = TileAttributeState.Off;

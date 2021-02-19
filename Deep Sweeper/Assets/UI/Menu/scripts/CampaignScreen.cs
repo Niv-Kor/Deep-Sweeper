@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class CampaignScreen : UIScreen
 {
-    public void StartGame(int levelIndex) {
-
-    }
-
+    /// <summary>
+    /// Activat when the previous button is clicked.
+    /// </summary>
     public void PreviousButton() {
         UI.SwitchScreens(ScreenLayout.MainMenu);
     }

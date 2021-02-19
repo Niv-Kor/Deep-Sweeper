@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-namespace LevelsMap
+namespace Menu.Map
 {
     public class TileGlow : TileAttribute
     {
