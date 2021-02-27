@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Menu.Contract
@@ -24,6 +25,16 @@ namespace Menu.Contract
         private string buffer;
         private List<TMP_PageInfo> pageInfo;
         private bool[] readHistory;
+        #endregion
+
+        #region Events
+        /// <param string>The loaded text</param>
+        /// <param int>Amount of pages</param>
+        public event UnityAction<string, int> TextLoadedEvent;
+
+        /// <param int>Current page</param>
+        /// <param int>The next page after the change</param>
+        public event UnityAction<int, int> PageChangedEvent;
         #endregion
 
         #region Properties
@@ -56,6 +67,9 @@ namespace Menu.Contract
             else textCmp.text = buffer.Substring(readIndex, contentSize - readIndex);
         }
 
+        /// <summary>
+        /// Clear the current view's text.
+        /// </summary>
         public void ClearCurrentBoard() {
             StopAllCoroutines();
             textCmp.text = "";
@@ -74,6 +88,11 @@ namespace Menu.Contract
             StartCoroutine(CountPagesAndLoad(text, instant));
         }
 
+        /// <summary>
+        /// Count the amount of pages a text will fill and load it.
+        /// </summary>
+        /// <param name="text">The text to load</param>
+        /// <param name="instant">True to instantly load the page</param>
         private IEnumerator CountPagesAndLoad(string text, bool instant = false) {
             //skip one frame
             yield return null;
@@ -84,10 +103,13 @@ namespace Menu.Contract
             textCmp.text = "";
             textCmp.color = textColor;
             readHistory = new bool[PageCount];
+            TextLoadedEvent?.Invoke(text, PageCount);
 
+            //load text
+            Page = 0;
             buffer = text;
             float time = instant ? 0 : typeTime;
-            yield return Write(0, time);
+            yield return Write(Page, time);
         }
 
         /// <inheritdoc/>
@@ -96,10 +118,15 @@ namespace Menu.Contract
             StartCoroutine(Write(Page, 0));
         }
 
-        private void ChangePage(int page) {
-            if (page == Page || page < 0 || page >= PageCount) return;
-            else Page = page;
+        /// <summary>
+        /// Change the current displayed page.
+        /// </summary>
+        /// <param name="newPage">The new page to view</param>
+        public void ChangePage(int newPage) {
+            if (newPage == Page || newPage <= 0 || newPage > PageCount) return;
 
+            PageChangedEvent?.Invoke(Page, newPage);
+            Page = newPage;
             ClearCurrentBoard();
             bool instant = readHistory[Page];
             float time = instant ? 0 : typeTime;
@@ -107,11 +134,19 @@ namespace Menu.Contract
             StartCoroutine(Write(Page, time));
         }
 
+        /// <summary>
+        /// Display to the previous page.
+        /// </summary>
         public void PrevPage() {
+            readHistory[Page] = true;
             ChangePage(Page - 1);
         }
 
+        /// <summary>
+        /// Display the next page.
+        /// </summary>
         public void NextPage() {
+            readHistory[Page] = true;
             ChangePage(Page + 1);
         }
     }
