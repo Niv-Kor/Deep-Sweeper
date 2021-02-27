@@ -37,12 +37,12 @@ namespace Menu.Contract
         }
 
         /// <inheritdoc/>
-        public void OnPointerEnter(PointerEventData eventData) {
+        public void OnPointerEnter(PointerEventData ev) {
             sprite.color = hoverColor;
         }
 
         /// <inheritdoc/>
-        public void OnPointerExit(PointerEventData eventData) {
+        public void OnPointerExit(PointerEventData ev) {
             sprite.color = color;
         }
 

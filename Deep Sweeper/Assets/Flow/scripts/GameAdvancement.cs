@@ -4,6 +4,7 @@ public class GameAdvancement : Singleton<GameAdvancement>
 {
     private class IndicesComparer : Comparer<int>
     {
+        /// <inheritdoc/>
         public override int Compare(int x, int y) => x > y ? 1 : -1;
     }
 
