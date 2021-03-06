@@ -1,94 +1,89 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DifficultyButton : MonoBehaviour, IPointerClickHandler
 {
     #region Exposed Editor Parameters
-    [Header("Settings")]
-    [Tooltip("The sorting order of the button within the set.")]
-    [SerializeField] private int placementOrder;
+    [Tooltip("The tint of the buttons when selected.")]
+    [SerializeField] private Color selectedTint;
 
-    [Header("Timing")]
-    [Tooltip("The time it takes the button the scale up or down.")]
-    [SerializeField] private float scaleTime;
+    [SerializeField] private float tintAnimationTime = .5f;
+    #endregion
 
-    [Tooltip("The time it takes the button to translate position.")]
-    [SerializeField] private float moveTime;
+    #region Constants
+    private static readonly Color UNSELECTED_TINT = Color.white;
     #endregion
 
     #region Class Members
     private RectTransform rect;
-    private Coroutine scaleCoroutine;
-    private Coroutine moveCoroutine;
+    private ParticleSystem FX;
+    private Image image;
     #endregion
 
     #region Events
-    /// <param int>The placement order of the button</param>
-    public event UnityAction<int> ClickedEvent;
+    /// <param DifficultyButton>The invoking DifficultyButton component</param>
+    public event UnityAction<DifficultyButton> ClickedEvent;
     #endregion
 
     #region Properties
-    public int PlacementOrder { get => placementOrder; }
+    public Vector2 ActualSize {
+        get {
+            if (rect == null) return Vector2.zero;
+            else {
+                Vector2 scale = rect.localScale;
+                Vector2 size = rect.sizeDelta;
+                return Vector2.Scale(size, scale);
+            }
+        }
+    }
     #endregion
 
     private void Start() {
         this.rect = GetComponent<RectTransform>();
+        this.FX = GetComponentInChildren<ParticleSystem>();
+        this.image = GetComponent<Image>();
     }
 
     /// <inheritdoc/>
     public void OnPointerClick(PointerEventData ev) {
-        ClickedEvent?.Invoke(PlacementOrder);
+        ClickedEvent?.Invoke(this);
     }
 
-    /// <see cref="Scale(float)"/>
-    /// <param name="time">Scale animation time</param>
-    private IEnumerator ScaleButton(float scale, float time) {
-        float originScale = rect.localScale.x;
+    /// <summary>
+    /// Change the tint of the image.
+    /// </summary>
+    /// <param name="tint">New tint color</param>
+    /// <param name="time">The time it takes to complete the transition</param>
+    /// <returns></returns>
+    private IEnumerator ChangeTint(Color tint, float time) {
+        Color srcTint = image.color;
         float timer = 0;
 
         while (timer <= time) {
             timer += Time.deltaTime;
-            float step = Mathf.Lerp(originScale, scale, timer / time);
-            rect.localScale = Vector3.one * step;
+            image.color = Color.Lerp(srcTint, tint, timer / time);
             yield return null;
         }
     }
 
     /// <summary>
-    /// Set the scale of the button.
+    /// Mark this button as selected.
     /// </summary>
-    /// <param name="scale">The new cubed scale</param>
-    /// <param name="instant">True to scale the button instantly</param>
-    public void Scale(float scale, bool instant = false) {
-        if (scaleCoroutine != null) StopCoroutine(scaleCoroutine);
-        float time = instant ? 0 : scaleTime;
-        scaleCoroutine = StartCoroutine(ScaleButton(scale, time));
-    }
+    /// <param name="flag">True to select or false to deselect</param>
+    /// <param name="instant">True to instantly select the button without animation</param>
+    public void Select(bool flag, bool instant = false) {
+        Color imageTint = flag ? selectedTint : UNSELECTED_TINT;
+        float tintTime = instant ? 0 : tintAnimationTime;
+        StopAllCoroutines();
+        StartCoroutine(ChangeTint(imageTint, tintTime));
 
-    /// <see cref="Translate(Vector2)"/>
-    /// <param name="time">Translation animation time</param>
-    private IEnumerator TranslateButton(Vector2 position, float time) {
-        Vector2 originPos = rect.localPosition;
-        float timer = 0;
-
-        while (timer <= time) {
-            timer += Time.deltaTime;
-            rect.localPosition = Vector3.Lerp(originPos, position, timer / time);
-            yield return null;
+        if (flag) FX.Play();
+        else {
+            FX.Clear();
+            FX.Stop();
         }
-    }
-
-    /// <summary>
-    /// Move the button by a fixed position.
-    /// </summary>
-    /// <param name="position">The delta position by which to translate the button</param>
-    /// <param name="instant">True to translate the button instantly</param>
-    public void Translate(Vector2 position, bool instant = false) {
-        if (moveCoroutine != null) StopCoroutine(moveCoroutine);
-        float time = instant ? 0 : moveTime;
-        moveCoroutine = StartCoroutine(TranslateButton(position, time));
     }
 }
