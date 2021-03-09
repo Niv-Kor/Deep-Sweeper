@@ -8293,6 +8293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1290127939}
   - component: {fileID: 1290127938}
+  - component: {fileID: 1290127940}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -8326,6 +8327,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1290127940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290127937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ed1eb893d2f2b49ac2722586b8af13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectionStrings:
+  - stringName: Database
+    parameters:
+    - Key: Server
+      Value: den1.mssql8.gear.host
+    - Key: Database
+      Value: deepsweeper
+    - Key: User ID
+      Value: deepsweeper
+    - Key: Password
+      Value: P2413567cu221!
+    - Key: Integrated Security
+      Value: False
+    equalSign: 61
+    delimiter: 59
 --- !u!224 &1296305737 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,

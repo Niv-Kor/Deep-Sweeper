@@ -17,8 +17,9 @@ public class GameAdvancement : Singleton<GameAdvancement>
     }
 
     /// <summary>
-    /// Load the already open levels' indices.
+    /// Load the game's available levels.
     /// </summary>
+    /// <returns>A list of the already open levels' indices.</returns>
     private List<int> LoadLevels() {
         List<int> indices = new List<int>();
         indices.Add(0);
