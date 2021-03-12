@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using UnityEngine;
+using System.Reflection;
 
 namespace GamedevUtil.Data
 {
-    public abstract class SQLProcedure : MonoBehaviour
+    public abstract class SQLProcedure<REQ, RES> : Singleton<SQLProcedure<REQ, RES>> where REQ : ISQLio where RES : ISQLio
     {
         #region Class Members
         private Queue<SQLInput> inputQueue;
@@ -13,7 +14,8 @@ namespace GamedevUtil.Data
         #endregion
 
         #region Properties
-        protected abstract string ProcName { get; set; }
+        protected abstract string ProcName { get; }
+        protected abstract List<SqlDbType> ReturnTypes { get; }
         #endregion
 
         private void Start() {
@@ -59,16 +61,38 @@ namespace GamedevUtil.Data
             outputQueue.Enqueue(new SQLOutput(outputCounter++, type));
         }
 
-        public object CalculatePhaseGrade(string map, string difficulty, int passedTime) {
-            In("map", SqlDbType.VarChar, map);
-            In("difficulty", SqlDbType.VarChar, difficulty);
-            In("passedTime", SqlDbType.Int, passedTime);
-            Out(SqlDbType.Decimal);
+        /// <summary>
+        /// Map the values of a result list to an object.
+        /// </summary>
+        /// <param name="result">An ordered list of the procedure returned values</param>
+        /// <returns>A defined mapped object with named fields.</returns>
+        protected abstract RES MapResult(List<object> result);
+
+        /// <summary>
+        /// Run the procedure.
+        /// </summary>
+        /// <param name="req">Request struct</param>
+        /// <returns>A response struct.</returns>
+        public RES Run(REQ req) {
+            FieldInfo[] reqFields = typeof(REQ).GetFields();
+
+            //configure inputs
+            foreach (FieldInfo field in reqFields) {
+                string fieldName = field.Name;
+                Type type = field.FieldType;
+                var entry = Convert.ChangeType(field.GetValue(req), type);
+                var entryTypeField = type.GetField("Type");
+                var entryValueField = type.GetField("Value");
+                var entryType = (SqlDbType) entryTypeField.GetValue(entry);
+                var entryValue = entryValueField.GetValue(entry);
+                In(fieldName, entryType, entryValue);
+            }
+
+            //configure outputs
+            foreach (SqlDbType type in ReturnTypes) Out(type);
 
             var res = Execute();
-            return new {
-                Value = (float) res[0]
-            };
+            return MapResult(res);
         }
     }
 }
