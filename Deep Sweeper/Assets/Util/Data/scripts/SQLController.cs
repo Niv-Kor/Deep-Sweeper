@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GamedevUtil.Data
 {
@@ -25,7 +26,7 @@ namespace GamedevUtil.Data
         /// <param name="parameters">Input parameters</param>
         /// <param name="returnValues">Expected returned values</param>
         /// <returns>A list of the expected return values as generic objects</returns>
-        public static List<List<object>> ExecProcedure(string procedure, Queue<SQLInput> parameters, Queue<SQLOutput> returnValues) {
+        public static async Task<List<List<object>>> ExecProcedure(string procedure, Queue<SQLInput> parameters, Queue<SQLOutput> returnValues) {
             using (SqlConnection connection = new SqlConnection(cs)) {
                 connection.Open();
                 SqlCommand command = new SqlCommand {
@@ -42,7 +43,7 @@ namespace GamedevUtil.Data
                 }
 
                 //execute and read
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
                 List<List<object>> resultSet = new List<List<object>>();
 
                 while (reader.Read()) {

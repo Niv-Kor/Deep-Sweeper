@@ -30,13 +30,13 @@ namespace DeepSweeper.Menu.Contract
             int difficultyCounter = 0;
 
             //iterate each difficulty
-            foreach (DifficultyLevel diff in difficultyLevels) {
+            /*foreach (DifficultyLevel diff in difficultyLevels) {
                 string regionStr = region.ToString().Replace('_', ' ');
                 string difficultyStr = diff.ToString().ToLower();
                 var procReq = new GetTotalRegionRewardRequest(regionStr, difficultyStr);
                 var procRes = proc.Run(procReq);
                 amounts[difficultyCounter++] = procRes.Total;
-            }
+            }*/
 
             OnDifficultyChange(DifficultyLevel.Easy); //default
         }

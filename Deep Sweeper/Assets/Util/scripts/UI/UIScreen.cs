@@ -7,13 +7,22 @@ using UnityEngine;
 public abstract class UIScreen : MonoBehaviour
 {
     #region Exposed Editor Parameters
+    [Header("Settings")]
     [Tooltip("The unique signature of the screen.")]
     [SerializeField] protected ScreenLayout screenId;
+
+    [Header("Fade Delay")]
+    [Tooltip("The time it takes the screen to start fading in.")]
+    [SerializeField] protected float fadeInDelay = 0;
+
+    [Tooltip("True to only wait once for the fade delay.")]
+    [SerializeField] protected bool delayOnce;
     #endregion
 
     #region Class Members
     protected MultiscreenUI multiscreenUI;
     protected CanvasGroup canvas;
+    protected bool shouldDelayFadeIn;
     #endregion
 
     #region Properties
@@ -33,6 +42,7 @@ public abstract class UIScreen : MonoBehaviour
         this.ParentScreens = GetComponentsInParent<UIScreen>().ToList();
         ChildScreens.Remove(this);
         ParentScreens.Remove(this);
+        this.shouldDelayFadeIn = true;
         this.ChildScreensID = (from screen in ChildScreens
                                select screen.ID).ToList();
 
@@ -43,10 +53,23 @@ public abstract class UIScreen : MonoBehaviour
     /// <see cref="FadeScreen(bool)"/>
     protected virtual IEnumerator Fade(bool fadeIn, float time) {
         if (!fadeIn) canvas.blocksRaycasts = false;
+        float timer;
+
+        //wait
+        if (fadeIn && shouldDelayFadeIn) {
+            timer = fadeInDelay;
+
+            while (timer > 0) {
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+
+            if (delayOnce) shouldDelayFadeIn = false;
+        }
 
         float from = canvas.alpha;
         float to = fadeIn ? 1 : 0;
-        float timer = 0;
+        timer = 0;
 
         while (timer <= time) {
             timer += Time.deltaTime;

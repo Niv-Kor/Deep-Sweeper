@@ -17,10 +17,7 @@ public class LoadingProcess
     #region Properties
     public int StageCount { get { return stages.Count; } } 
     public string StageTitle {
-        get {
-            if (stages.Count > 0) return stages.Peek().Title;
-            else return "";
-        }
+        get => (stages.Count > 0) ? stages.Peek().Title : null;
     }
     #endregion
 

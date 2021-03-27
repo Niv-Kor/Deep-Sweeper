@@ -18,9 +18,13 @@ public class MultiscreenUI : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float screenAppearAfter = 0;
     #endregion
 
+    #region Constants
+    private static readonly float DELAY_AFTER_SPLASH_SCREEN = 1;
+    #endregion
+
     #region Class Members
     private List<UIScreen> screens;
-    private UIScreen currenScreen;
+    private UIScreen currentScreen;
     private bool firstSwitch;
     #endregion
 
@@ -31,7 +35,7 @@ public class MultiscreenUI : MonoBehaviour
     private void Start() {
         this.screens = new List<UIScreen>(GetComponentsInChildren<UIScreen>());
         this.IsSwitching = false;
-        this.currenScreen = GetScreenByID(defaultScreen);
+        this.currentScreen = GetScreenByID(defaultScreen);
         this.firstSwitch = true;
 
         InitScreens();
@@ -43,13 +47,18 @@ public class MultiscreenUI : MonoBehaviour
     /// Also, turn the default starting screen on.
     /// </summary>
     private void InitScreens() {
-        foreach (UIScreen screen in screens) {
-            if (screen != currenScreen) {
-                if (screen.IsPresent)
-                    screen.FadeScreen(false, 0);
-            }
-            else screen.FadeScreen(true, 0);
+        //fade out irrelevant
+        foreach (UIScreen screen in screens)
+            if (screen.IsPresent) screen.FadeScreen(false, 0);
+
+        //fade in relevant screen
+        SplashScreen splash = SplashScreen.Instance;
+        if (splash != null && splash.enabled) {
+            splash.ScreenFadedEvent += delegate {
+                currentScreen.FadeScreen(true, DELAY_AFTER_SPLASH_SCREEN);
+            };
         }
+        else currentScreen.FadeScreen(true, 0);
     }
 
     /// <summary>
@@ -83,7 +92,7 @@ public class MultiscreenUI : MonoBehaviour
         target.FadeScreen(true, time);
         IsSwitching = false;
 
-        currenScreen = target;
+        currentScreen = target;
     }
 
     /// <summary>
@@ -94,7 +103,7 @@ public class MultiscreenUI : MonoBehaviour
     public void SwitchScreens(ScreenLayout targetScreen, bool instant = false) {
         UIScreen nextScreen = GetScreenByID(targetScreen);
 
-        if (ShouldSwitch(currenScreen, nextScreen))
-            StartCoroutine(ManageSwitch(currenScreen, nextScreen, instant));
+        if (ShouldSwitch(currentScreen, nextScreen))
+            StartCoroutine(ManageSwitch(currentScreen, nextScreen, instant));
     }
 }
