@@ -2,9 +2,9 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Menu.Map
+namespace DeepSweeper.Menu.Map
 {
-    public class MapTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class MapTile : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         #region Exposed Editor Parameters
         [Header("Prefabs")]
@@ -18,15 +18,27 @@ namespace Menu.Map
         [Header("Level")]
         [Tooltip("The index of the tile's level (-1 if it represents no level).")]
         [SerializeField] private int levelIndex = -1;
+
+        [Tooltip("The region that this tile represents.")]
+        [SerializeField] private Region region = Region.None;
         #endregion
 
         #region Class Members
+        private CampaignMap map;
         private TileHighlighter highlighter;
         private TileLandmark landmark;
         private TileFrame frame;
         private TileGlow glow;
         private bool objectiveLevel;
         #endregion
+
+        #region Properties
+        public Region Region => region;
+        #endregion
+
+        private void Awake() {
+            this.map = GetComponentInParent<CampaignMap>();
+        }
 
         private void Start() {
             this.highlighter = GetComponentInChildren<TileHighlighter>();
@@ -58,6 +70,7 @@ namespace Menu.Map
             textureImage.texture = tileSprite;
         }
 
+
         /// <inheritdoc/>
         public void OnPointerEnter(PointerEventData ev) {
             if (glow.State != TileAttributeState.Unavailable) {
@@ -72,6 +85,11 @@ namespace Menu.Map
                 if (objectiveLevel) frame.State = TileAttributeState.On;
                 glow.State = TileAttributeState.Off;
             }
+        }
+
+        /// <inheritdoc/>
+        public void OnPointerClick(PointerEventData eventData) {
+            map.ReportTileClicked(this);
         }
     }
 }

@@ -19,11 +19,11 @@ namespace Constants
                     Color = new Color32(0x0, 0xff, 0x6a, 0xb8)
                 },
                 new DifficultySetting() {
-                    Difficulty = DifficultyLevel.Hard,
+                    Difficulty = DifficultyLevel.Medium,
                     Color = new Color32(0xff, 0xd6, 0x0, 0xb8)
                 },
                 new DifficultySetting() {
-                    Difficulty = DifficultyLevel.Hell,
+                    Difficulty = DifficultyLevel.Hard,
                     Color = new Color32(0xff, 0x0, 0x93, 0xb8)
                 },
             };

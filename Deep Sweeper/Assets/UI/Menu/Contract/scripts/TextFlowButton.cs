@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Menu.Contract
+namespace DeepSweeper.Menu.Contract
 {
     public class TextFlowButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

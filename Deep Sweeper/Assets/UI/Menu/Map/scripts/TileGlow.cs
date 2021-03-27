@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-namespace Menu.Map
+namespace DeepSweeper.Menu.Map
 {
     public class TileGlow : TileAttribute
     {

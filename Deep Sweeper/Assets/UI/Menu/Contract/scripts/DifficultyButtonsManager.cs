@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Menu.Contract
+namespace DeepSweeper.Menu.Contract
 {
     public class DifficultyButtonsManager : MonoBehaviour
     {
@@ -14,7 +14,12 @@ namespace Menu.Contract
         #region Class Members
         private List<DifficultyButton> buttons;
         private DifficultyButton selectedButton;
+        private ContractScreen contract;
         #endregion
+
+        private void Awake() {
+            this.contract = GetComponentInParent<ContractScreen>();
+        }
 
         private void Start() {
             var buttonsArr = GetComponentsInChildren<DifficultyButton>();
@@ -38,6 +43,7 @@ namespace Menu.Contract
             if (selectedButton != button) {
                 SelectButton(selectedButton, false);
                 SelectButton(button, true);
+                contract.SetContext(button.Difficulty);
             }
         }
 

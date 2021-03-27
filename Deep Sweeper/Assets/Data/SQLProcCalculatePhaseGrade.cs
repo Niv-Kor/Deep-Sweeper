@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace Data
+namespace DeepSweeper.Data
 {
     public struct CalculatePhaseGradeRequest : ISQLio
     {
@@ -30,18 +30,18 @@ namespace Data
     {
         #region Properties
         protected override string ProcName { get => "CalculatePhaseGrade"; }
-        protected override List<SqlDbType> ReturnTypes {
+        protected override List<SQLOutput> ReturnTypes {
             get {
-                return new List<SqlDbType>() {
-                    SqlDbType.Decimal
+                return new List<SQLOutput>() {
+                    new SQLOutput("grade", SqlDbType.Decimal)
                 };
             }
         }
         #endregion
 
         /// <inheritdoc/>
-        protected override CalculatePhaseGradeResponse MapResult(List<object> result) {
-            float.TryParse(result[0].ToString(), out float val);
+        protected override CalculatePhaseGradeResponse MapResult(List<List<object>> result) {
+            float.TryParse(result[0][0].ToString(), out float val);
             return new CalculatePhaseGradeResponse(val);
         }
     }

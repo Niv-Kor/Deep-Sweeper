@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Menu.Map
+namespace DeepSweeper.Menu.Map
 {
     public enum TileAttributeState
     {

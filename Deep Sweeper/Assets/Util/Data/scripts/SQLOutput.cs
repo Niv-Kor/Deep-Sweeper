@@ -4,11 +4,11 @@ namespace GamedevUtil.Data
 {
     public struct SQLOutput
     {
-        public int Column;
+        public string ColumnName;
         public SqlDbType Type;
 
-        public SQLOutput(int col, SqlDbType type) {
-            this.Column = col;
+        public SQLOutput(string colName, SqlDbType type) {
+            this.ColumnName = colName;
             this.Type = type;
         }
     }

@@ -8,14 +8,12 @@ namespace GamedevUtil.Data
 {
     public static class SQLController
     {
-        /*private string conString = "Server=den1.mssql8.gear.host;"
-                                 + "Database=deepsweeper;"
-                                 + "User ID=deepsweeper;"
-                                 + "Password=P2413567cu221!;"
-                                 + "Integrated Security=False";
-    */
         private static string cs;
 
+        /// <summary>
+        /// Setup a connection for the database.
+        /// </summary>
+        /// <param name="connectionString">The database's connection string</param>
         public static void Connect(string connectionString) {
             cs = connectionString;
         }
@@ -27,7 +25,7 @@ namespace GamedevUtil.Data
         /// <param name="parameters">Input parameters</param>
         /// <param name="returnValues">Expected returned values</param>
         /// <returns>A list of the expected return values as generic objects</returns>
-        public static List<object> ExecProcedure(string procedure, Queue<SQLInput> parameters, Queue<SQLOutput> returnValues) {
+        public static List<List<object>> ExecProcedure(string procedure, Queue<SQLInput> parameters, Queue<SQLOutput> returnValues) {
             using (SqlConnection connection = new SqlConnection(cs)) {
                 connection.Open();
                 SqlCommand command = new SqlCommand {
@@ -45,36 +43,21 @@ namespace GamedevUtil.Data
 
                 //execute and read
                 SqlDataReader reader = command.ExecuteReader();
-                List<object> res = new List<object>();
+                List<List<object>> resultSet = new List<List<object>>();
 
-                List<SQLOutput> returnValuesList = returnValues.ToList();
-                for (int readColumn = 0; reader.Read(); readColumn++) {
-                    SQLOutput output = returnValuesList.Find(x => x.Column == readColumn);
-                    object value = null;
+                while (reader.Read()) {
+                    List<object> row = new List<object>();
 
-                    switch (output.Type) {
-                        case SqlDbType.VarChar:
-                            value = reader.GetString(readColumn);
-                            break;
-
-                        case SqlDbType.Int:
-                            value = reader.GetInt32(readColumn);
-                            break;
-
-                        case SqlDbType.Decimal:
-                            value = reader.GetDecimal(readColumn);
-                            break;
-
-                        case SqlDbType.TinyInt:
-                            value = reader.GetBoolean(readColumn);
-                            break;
+                    foreach (SQLOutput output in returnValues.ToList()) {
+                        object value = reader[output.ColumnName];
+                        row.Add(value);
                     }
 
-                    res.Add(value);
+                    resultSet.Add(row);
                 }
 
                 connection.Close();
-                return res;
+                return resultSet;
             }
         }
     }

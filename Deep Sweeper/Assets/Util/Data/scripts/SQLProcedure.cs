@@ -10,15 +10,14 @@ namespace GamedevUtil.Data
         #region Class Members
         private Queue<SQLInput> inputQueue;
         private Queue<SQLOutput> outputQueue;
-        private int outputCounter;
         #endregion
 
         #region Properties
         protected abstract string ProcName { get; }
-        protected abstract List<SqlDbType> ReturnTypes { get; }
+        protected abstract List<SQLOutput> ReturnTypes { get; }
         #endregion
 
-        private void Start() {
+        private void Awake() {
             this.inputQueue = new Queue<SQLInput>();
             this.outputQueue = new Queue<SQLOutput>();
             ResetProcedure();
@@ -30,35 +29,32 @@ namespace GamedevUtil.Data
         private void ResetProcedure() {
             inputQueue.Clear();
             outputQueue.Clear();
-            outputCounter = 0;
         }
 
         /// <summary>
         /// Execute the procedure.
         /// </summary>
         /// <returns>A list of the response values as generic objects.</returns>
-        protected List<object> Execute() {
-            List<object> res = SQLController.ExecProcedure(ProcName, inputQueue, outputQueue);
+        protected List<List<object>> Execute() {
+            var resSet = SQLController.ExecProcedure(ProcName, inputQueue, outputQueue);
             ResetProcedure();
-            return res;
+            return resSet;
         }
 
         /// <summary>
         /// Insert a new input parameter.
         /// </summary>
-        /// <param name="paramName">The name of the parameter</param>
-        /// <param name="type">The type of the parameter</param>
-        /// <param name="value">The parameter's value</param>
-        protected void In(string paramName, SqlDbType type, object value) {
-            inputQueue.Enqueue(new SQLInput(paramName, type, value));
+        /// <param name="input">An input structure</param>
+        protected void In(SQLInput input) {
+            inputQueue.Enqueue(input);
         }
 
         /// <summary>
         /// Insert a new expected return value.
         /// </summary>
-        /// <param name="type">The type of the return value</param>
-        protected void Out(SqlDbType type) {
-            outputQueue.Enqueue(new SQLOutput(outputCounter++, type));
+        /// <param name="output">An output structure</param>
+        protected void Out(SQLOutput output) {
+            outputQueue.Enqueue(output);
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ namespace GamedevUtil.Data
         /// </summary>
         /// <param name="result">An ordered list of the procedure returned values</param>
         /// <returns>A defined mapped object with named fields.</returns>
-        protected abstract RES MapResult(List<object> result);
+        protected abstract RES MapResult(List<List<object>> result);
 
         /// <summary>
         /// Run the procedure.
@@ -85,11 +81,12 @@ namespace GamedevUtil.Data
                 var entryValueField = type.GetField("Value");
                 var entryType = (SqlDbType) entryTypeField.GetValue(entry);
                 var entryValue = entryValueField.GetValue(entry);
-                In(fieldName, entryType, entryValue);
+                SQLInput input = new SQLInput(fieldName, entryType, entryValue);
+                In(input);
             }
 
             //configure outputs
-            foreach (SqlDbType type in ReturnTypes) Out(type);
+            foreach (var output in ReturnTypes) Out(output);
 
             var res = Execute();
             return MapResult(res);

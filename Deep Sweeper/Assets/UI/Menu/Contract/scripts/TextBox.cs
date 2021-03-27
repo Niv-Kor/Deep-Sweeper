@@ -1,13 +1,11 @@
-﻿using Data;
-using GamedevUtil.Data;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace Menu.Contract
+namespace DeepSweeper.Menu.Contract
 {
     public class TextBox : MonoBehaviour, IPointerClickHandler
     {

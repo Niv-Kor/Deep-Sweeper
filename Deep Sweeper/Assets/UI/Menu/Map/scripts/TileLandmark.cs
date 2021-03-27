@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Menu.Map
+namespace DeepSweeper.Menu.Map
 {
     public class TileLandmark : TileAttribute
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Menu.Map
+namespace DeepSweeper.Menu.Map
 {
     public abstract class TileAttribute : MonoBehaviour
     {
