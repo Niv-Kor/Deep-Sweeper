@@ -11,8 +11,12 @@
     /// <summary>
     /// Create a new disposable AudioSource component.
     /// </summary>
-    public void ExportTune(Tune tune) {
-        jukebox.Add(tune);
+    /// <returns>The cloned external tune.</returns>
+    public Tune ExportTune(Tune tune, Jukebox parent) {
+        Tune tuneClone = new Tune(tune);
+        tuneClone.Externalize(parent);
+        jukebox.Add(tuneClone);
+        return tuneClone;
     }
 
     /// <summary>

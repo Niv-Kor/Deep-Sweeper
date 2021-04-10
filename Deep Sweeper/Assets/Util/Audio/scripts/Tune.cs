@@ -52,17 +52,19 @@ public class Tune
     #endregion
 
     #region Properties
-    public string Name { get { return name; } }
-    public float Delay { get { return delay; } }
-    public float Cooldown { get { return cooldown; } }
-    public bool PlayOnAwake { get { return playOnAwake; } }
-    public bool RelateOnDistance { get { return relateOnDistance; } }
-    public bool IsExternal { get { return exportAsExternal; } }
-    public Genre Genre { get { return genre; } }
-    public AudioClip Clip { get { return clip; } }
+    public string Name { get => name; }
+    public float Delay { get => delay; }
+    public float Cooldown { get => cooldown; }
+    public bool PlayOnAwake { get => playOnAwake; }
+    public bool RelateOnDistance { get => relateOnDistance; }
+    public bool IsExportable { get => exportAsExternal; }
+    public bool IsExternal { get; private set; }
+    public Jukebox OrganicParent { get; set; }
+    public Genre Genre { get => genre; }
+    public AudioClip Clip { get => clip; }
     public Coroutine Coroutine { get; set; }
     public AudioSource Source {
-        get { return m_source; }
+        get => m_source;
         set {
             m_source = value;
             m_source.clip = clip;
@@ -72,12 +74,13 @@ public class Tune
     }
 
     public bool IsLoop {
-        get { return loop; }
+        get => loop;
         set { loop = value; }
     }
 
+
     public float Volume {
-        get { return volume; }
+        get => volume;
         set {
             if (Source != null) {
                 Source.volume = value;
@@ -87,7 +90,7 @@ public class Tune
     }
 
     public float Pitch {
-        get { return pitch; }
+        get => pitch;
         set {
             if (Source != null) {
                 Source.pitch = value;
@@ -110,6 +113,26 @@ public class Tune
         }
     }
     #endregion
+
+    public Tune(Tune tune) {
+        this.name = tune.name;
+        this.clip = tune.clip;
+        this.volume = tune.volume;
+        this.pitch = tune.pitch;
+        this.delay = tune.delay;
+        this.cooldown = tune.cooldown;
+        this.loop = tune.loop;
+        this.playOnAwake = tune.playOnAwake;
+        this.relateOnDistance = tune.relateOnDistance;
+        this.exportAsExternal = tune.exportAsExternal;
+        this.genre = tune.genre;
+        this.OrganicParent = OrganicParent;
+    }
+
+    public void Externalize(Jukebox parent) {
+        IsExternal = true;
+        OrganicParent = parent;
+    }
 
     /// <summary>
     /// Stop the tune.

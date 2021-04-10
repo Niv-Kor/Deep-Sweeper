@@ -31,7 +31,7 @@ public class DistantVolumeController : Singleton<DistantVolumeController>
 
         float minVolume = minVolumePercent * tune.Volume;
         Vector2 minMaxVolume = new Vector2(minVolume, tune.Volume);
-        Vector3 tuneObjPos = tune.Source.gameObject.transform.position;
+        Vector3 tuneObjPos = tune.OrganicParent.transform.position;
         Vector3 anchorPos = sceneAnchor.transform.position;
         float dist = Vector3.Distance(tuneObjPos, anchorPos);
         float distPercent = 1 - RangeMath.NumberOfRange(dist, minMaxDistance);

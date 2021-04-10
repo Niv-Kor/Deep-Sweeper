@@ -9,6 +9,9 @@ public class SubmarineGun : MonoBehaviour
     [Tooltip("A prefab of a bullet.")]
     [SerializeField] private GameObject bulletPrefab;
 
+    [Tooltip("The barrel object that contains all released bullets.")]
+    [SerializeField] private GameObject barrel;
+
     [Header("Physics")]
     [Tooltip("The force in which the fire recoil takes place.")]
     [SerializeField] private float recoil;
@@ -17,22 +20,13 @@ public class SubmarineGun : MonoBehaviour
     [SerializeField] private float speed;
     #endregion
 
-    #region Constants
-    private static readonly string BARREL_NAME = "Barrel";
-    #endregion
-
     #region Class Members
     private ParticleSystem[] recoilParticles;
-    private GameObject barrel;
     private Rigidbody submarineRB;
     #endregion
 
     private void Start() {
         //create barrel
-        this.barrel = new GameObject(BARREL_NAME);
-        barrel.transform.SetParent(transform);
-        barrel.transform.localPosition = Vector3.zero;
-
         this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
         this.recoilParticles = GetComponentsInChildren<ParticleSystem>();
     }
@@ -41,7 +35,7 @@ public class SubmarineGun : MonoBehaviour
     private bool IsBarrelEmpty() {
         Bullet[] bullets = barrel.GetComponentsInChildren<Bullet>();
         IEnumerable<Bullet> active = from bullet in bullets
-                                     where bullet.ActiveBullet
+                                     where bullet.IsActive
                                      select bullet;
 
         return active.Count() == 0;

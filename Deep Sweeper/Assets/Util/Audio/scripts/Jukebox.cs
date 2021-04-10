@@ -44,7 +44,6 @@ public class Jukebox : MonoBehaviour
         this.audioParent = new GameObject(PARENT_NAME);
         audioParent.transform.SetParent(transform);
         audioParent.transform.localPosition = Vector3.zero;
-        this.isExternalAudioSource = gameObject == disposableAudio.gameObject;
 
         //create an audio source component for each tune
         foreach (Tune tune in tunes) BakeTune(tune);
@@ -52,7 +51,7 @@ public class Jukebox : MonoBehaviour
 
     private void OnDestroy() {
         foreach (Tune tune in tunes)
-            if (!tune.IsExternal) Stop(tune);
+            if (!tune.IsExportable) Stop(tune);
     }
 
     /// <summary>
@@ -67,6 +66,7 @@ public class Jukebox : MonoBehaviour
         AudioMixerGroup mixerGroup = VolumeController.Instance.GetGenreGroup(tune.Genre);
         audioSource.outputAudioMixerGroup = mixerGroup;
         limiter.Subscribe(tune);
+        if (!tune.IsExternal) tune.OrganicParent = this;
 
         //auto play the tune
         if (tune.PlayOnAwake) Play(tune);
@@ -131,9 +131,8 @@ public class Jukebox : MonoBehaviour
     public void Play(Tune tune) {
         if (tune != null) {
             //move the tune to an external source
-            if (tune.IsExternal && !isExternalAudioSource) {
-                disposableAudio.ExportTune(tune);
-                disposableAudio.Play(tune);
+            if (tune.IsExportable && !tune.IsExternal) {
+                disposableAudio.ExportTune(tune, this);
                 return;
             }
 

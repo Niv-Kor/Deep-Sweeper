@@ -8,9 +8,11 @@ public class Bullet : MonoBehaviour
     [Tooltip("Hit particles prefab to instantiate.")]
     [SerializeField] private GameObject hitParticlesPrefab;
 
-    [Tooltip("The time (in seconds) it takes the bullet to be inactive since it was fired, "
-           + "if it didn't hit a target beforehand.")]
-    [SerializeField] private float timeToLive = 1;
+    [Tooltip("The time (in seconds) it takes the bullet to be inactive from the moment it's fired.")]
+    [SerializeField] private float activityTime = 1;
+
+    [Tooltip("The overall time the bullet can fly in the air before it's automatically destroyed.")]
+    [SerializeField] private float timeToLive = 5;
     #endregion
 
     #region Constants
@@ -21,11 +23,11 @@ public class Bullet : MonoBehaviour
     private Transform bulletsParent;
     private LayerMask damageableSurfaces;
     private List<ParticleCollisionEvent> collisionEvents;
-    private float ttlTimer;
+    private float activityTimer;
     #endregion
 
     #region Properties
-    public bool ActiveBullet { get { return ttlTimer < timeToLive; } }
+    public bool IsActive { get => activityTimer < activityTime; }
     #endregion
 
     private void Start() {
@@ -33,15 +35,16 @@ public class Bullet : MonoBehaviour
         this.collisionEvents = new List<ParticleCollisionEvent>();
         this.bulletsParent = FXManager.Instance.gameObject.transform;
         this.damageableSurfaces = partSystem.collision.collidesWith;
-        this.ttlTimer = 0;
+        this.activityTimer = 0;
     }
 
     private void OnValidate() {
-        timeToLive = Mathf.Max(timeToLive, MIN_TTL);
+        activityTime = Mathf.Max(activityTime, MIN_TTL);
     }
 
     private void Update() {
-        ttlTimer += Time.deltaTime;
+        activityTimer += Time.deltaTime;
+        if (activityTimer >= timeToLive) Destroy(gameObject);
     }
 
     private void OnParticleCollision(GameObject obj) {
