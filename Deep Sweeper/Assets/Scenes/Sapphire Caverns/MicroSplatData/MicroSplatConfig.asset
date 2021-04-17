@@ -20,10 +20,10 @@ MonoBehaviour:
   clusterMode: 0
   packingMode: 0
   pbrWorkflow: 0
-  hash: 532924416
+  hash: -870141952
   splatArray: {fileID: 0}
-  diffuseArray: {fileID: 18700000, guid: 4c1cc36dfd71f7e4c8864d4982e8ebab, type: 2}
-  normalSAOArray: {fileID: 18700000, guid: 09d2932e05fb9ef44a971d81659ff050, type: 2}
+  diffuseArray: {fileID: 0}
+  normalSAOArray: {fileID: 0}
   smoothAOArray: {fileID: 0}
   specularArray: {fileID: 0}
   diffuseArray2: {fileID: 0}

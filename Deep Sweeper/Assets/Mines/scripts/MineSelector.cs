@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,8 +11,8 @@ public class MineSelector : MonoBehaviour
         [Tooltip("The related selection mode.")]
         [SerializeField] public SelectionMode Mode;
 
-        [Tooltip("The selection material.")]
-        [SerializeField] public Material Material;
+        [Tooltip("The color to which the selected mine should change.")]
+        [SerializeField] public Color Color;
 
         [Tooltip("A sprite to display over the mine on selection.")]
         [SerializeField] public Sprite Sprite;
@@ -39,8 +38,7 @@ public class MineSelector : MonoBehaviour
 
     #region Class Members
     private Jukebox jukebox;
-    private Material materialComponent;
-    private Renderer render;
+    private MineSensorsManager sensorsMngr;
     private SelectionMode m_mode;
     #endregion
 
@@ -57,44 +55,43 @@ public class MineSelector : MonoBehaviour
             if (m_mode == value) return;
 
             SelectionConfig config = GetConfiguration(value);
-            Material nextMat = config.Material;
             Sprite sprite = config.Sprite;
             Mark.Display(sprite != null, applyTime, sprite);
 
-            if (nextMat != null) {
-                bool fromFlagged = IsFlagMode(m_mode);
-                bool toFlagged = IsFlagMode(value);
-                bool flagChange = false;
-                bool permit = true;
+            bool fromFlagged = IsFlagMode(m_mode);
+            bool toFlagged = IsFlagMode(value);
+            bool flagChange = false;
+            bool permit = true;
 
-                //check flags permission
-                if (!fromFlagged && toFlagged) {
-                    permit = FlagsManager.Instance.TakeFlag();
-                    flagChange = true;
-                }
-                else if (fromFlagged && !toFlagged) {
-                    permit = FlagsManager.Instance.ReturnFlag();
-                    flagChange = true;
-                }
+            //check flags permission
+            if (!fromFlagged && toFlagged) {
+                permit = FlagsManager.Instance.TakeFlag();
+                flagChange = true;
+            }
+            else if (fromFlagged && !toFlagged) {
+                permit = FlagsManager.Instance.ReturnFlag();
+                flagChange = true;
+            }
 
-                //apply mode
-                if (permit) {
-                    if (flagChange) jukebox?.Play(FLAG_CHECK_SFX);
-                    StopAllCoroutines();
-                    StartCoroutine(Lerp(m_mode, value, nextMat));
-                    m_mode = value;
-                }
+            //apply mode
+            if (permit) {
+                if (flagChange) jukebox?.Play(FLAG_CHECK_SFX);
+                sensorsMngr.Colorize(config.Color);
+                m_mode = value;
             }
         }
     }
     #endregion
 
     private void Awake() {
-        this.render = avatar.GetComponent<MeshRenderer>();
         this.jukebox = GetComponent<Jukebox>();
         this.Mark = GetComponentInChildren<MineMark>();
-        this.materialComponent = render.material;
-        this.m_mode = SelectionMode.Default;
+        this.sensorsMngr = GetComponentInChildren<MineSensorsManager>();
+        this.m_mode = SelectionMode.None;
+    }
+
+    private void Start() {
+        this.Mode = SelectionMode.Default;
     }
 
     /// <summary>
@@ -104,32 +101,6 @@ public class MineSelector : MonoBehaviour
     /// <returns>The corresponding material.</returns>
     private SelectionConfig GetConfiguration(SelectionMode mode) {
         return selections.Find(x => x.Mode == mode);
-    }
-
-    /// <summary>
-    /// Transit between two of the mine's materials.
-    /// </summary>
-    /// <param name="oldMode">Previously applied selection mode</param>
-    /// <param name="newMode">Selection mode to apply</param>
-    /// <param name="target">The material into which to transition</param>
-    private IEnumerator Lerp(SelectionMode oldMode, SelectionMode newMode, Material target) {
-        ModeApplicationStartEvent?.Invoke(oldMode, newMode, target);
-
-        float lerpedTime = 0;
-        bool invokedEvent = false;
-
-        while (lerpedTime <= applyTime) {
-            lerpedTime += Time.deltaTime / applyTime;
-            materialComponent.Lerp(materialComponent, target, lerpedTime);
-
-            //invoke an event once after lerping halfway
-            if (!invokedEvent && lerpedTime > applyTime / 2) {
-                ModeApplicationHalfwayEvent?.Invoke(oldMode, newMode, target);
-                invokedEvent = true;
-            }
-
-            yield return null;
-        }
     }
 
     /// <summary>

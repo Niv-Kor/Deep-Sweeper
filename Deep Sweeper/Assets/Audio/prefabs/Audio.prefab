@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 792161685588902323}
   - component: {fileID: 792161685588902325}
   - component: {fileID: 792161685588902324}
+  - component: {fileID: 143593856}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -63,17 +64,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tunes:
-  - name: 
-    clip: {fileID: 0}
-    volume: 0
-    pitch: 0
+  - name: stop watch
+    clip: {fileID: 8300000, guid: 70b6c584866c55d4c93b8caaa9e0e891, type: 3}
+    volume: 1
+    pitch: 1.2
     delay: 0
     cooldown: 0
-    loop: 0
+    loop: 1
     playOnAwake: 0
     relateOnDistance: 0
     exportAsExternal: 0
-    genre: 0
+    genre: 1
   destroyStoppedTunes: 0
 --- !u!114 &792161685588902323
 MonoBehaviour:
@@ -100,8 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneAnchor: {fileID: 0}
-  minMaxDistance: {x: 0, y: 0}
-  minVolumePercent: 0.1
+  minMaxDistance: {x: 100, y: 900}
+  minVolumePercent: 0.05
 --- !u!114 &792161685588902324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,4 +115,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5e19d652d7b51742a57e66c3666a831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterMixer: {fileID: 0}
+  masterMixer: {fileID: 24100000, guid: b34db620d8843a3429ed68586044ece4, type: 2}
+--- !u!114 &143593856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792161686244347898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b871a6122a0c042bbb5031081372de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

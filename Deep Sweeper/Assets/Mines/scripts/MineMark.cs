@@ -4,11 +4,21 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class MineMark : MonoBehaviour
 {
+    #region Exposed Editor Parameters
+    [Header("Settings")]
+    [Tooltip("The target alpha value of a mark.")]
+    [SerializeField] [Range(0f, 1f)] private float alphaValue = 1;
+    #endregion
+
+    #region Class Members
     private SpriteRenderer render;
     private Transform parentTransform;
     private Submarine player;
+    #endregion
 
+    #region Properties
     public bool IsDisplayed { get; private set; }
+    #endregion
 
     private void Start() {
         this.render = GetComponent<SpriteRenderer>();
@@ -54,7 +64,7 @@ public class MineMark : MonoBehaviour
     private IEnumerator Appear(bool flag, float time) {
         Color baseColor = render.color;
         float startAlpha = baseColor.a;
-        float targetAlpha = flag ? 1 : 0;
+        float targetAlpha = flag ? alphaValue : 0;
         float lerpedTime = 0;
 
         while (lerpedTime <= time) {

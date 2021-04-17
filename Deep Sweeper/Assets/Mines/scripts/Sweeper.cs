@@ -17,7 +17,7 @@ public class Sweeper : MonoBehaviour
 
     #region Class Members
     private Jukebox jukebox;
-    private MeshRenderer render;
+    private MeshRenderer[] renders;
     private SphereCollider col;
     private ParticleSystem[] particles;
     private bool isMined;
@@ -34,7 +34,7 @@ public class Sweeper : MonoBehaviour
 
     private void Awake() {
         this.particles = avatar.GetComponentsInChildren<ParticleSystem>();
-        this.render = avatar.GetComponent<MeshRenderer>();
+        this.renders = avatar.GetComponentsInChildren<MeshRenderer>();
         this.col = avatar.GetComponentInChildren<SphereCollider>();
         this.jukebox = GetComponent<Jukebox>();
         this.IsDismissed = false;
@@ -82,7 +82,7 @@ public class Sweeper : MonoBehaviour
         if (IsDismissed) yield break;
 
         MineDisposalStartEvent?.Invoke();
-        render.enabled = false;
+        foreach (var render in renders) render.enabled = false;
         col.enabled = false;
         IsDismissed = true;
         float vanishTime = 0;
