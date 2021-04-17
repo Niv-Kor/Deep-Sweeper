@@ -1,4 +1,5 @@
 ﻿using com.ootii.Cameras;
+using DeepSweeper.Camera;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -199,7 +200,7 @@ public class LevelFlow : Singleton<LevelFlow>
                 Gate entranceGate = CurrentPhase.EntranceGate;
                 Vector3 gatePos = entranceGate.transform.position;
                 Vector3 lookPos = currentField.Center;
-                Transform rig = CameraManager.Instance.Rig.transform;
+                Transform rig = IngameCameraManager.Instance.Rig.transform;
                 Transform player = Submarine.Instance.transform;
                 player.position = gatePos;
                 rig.LookAt(lookPos);

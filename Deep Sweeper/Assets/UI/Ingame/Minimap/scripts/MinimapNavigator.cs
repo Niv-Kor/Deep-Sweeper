@@ -1,4 +1,5 @@
 ﻿using Constants;
+using DeepSweeper.Camera;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,13 +56,13 @@ public class MinimapNavigator : SonarRotator
 
     protected override void Start() {
         base.Start();
-        this.player = CameraManager.Instance.Rig.transform;
+        this.player = IngameCameraManager.Instance.Rig.transform;
         this.flow = LevelFlow.Instance;
         this.positiveTremble = true;
         this.extraRotation = 0;
         this.trembleTimer = 0;
 
-        Camera minimap = CameraManager.Instance.MinimapCam;
+        Camera minimap = IngameCameraManager.Instance.MinimapCam;
         this.minDisplayDistance = minimap.orthographicSize / 4;
 
         StartCoroutine(FlickerArrow());

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DeepSweeper.Camera;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -106,7 +107,7 @@ public class CameraShaker : MonoBehaviour
         this.originPos = transform.localPosition;
 
         //post processing effects
-        PostProcessingManager postProcessMngr = CameraManager.Instance.FPPostProcess;
+        PostProcessingManager postProcessMngr = IngameCameraManager.Instance.FPPostProcess;
         this.ambientOcclusion = new EffectFloatParameter(postProcessMngr.AmbientOcclusion?.intensity);
         this.chromaticAberration = new EffectFloatParameter(postProcessMngr.ChromaticAberration?.intensity);
         this.depthOfField = new EffectFloatParameter(postProcessMngr.DepthOfField?.aperture);

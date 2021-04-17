@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DeepSweeper.Camera;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ public class SubmarineGun : MonoBehaviour
     /// Move the submarine backwards with a recoil shock.
     /// </summary>
     private void Recoil() {
-        Transform FPCam = CameraManager.Instance.FPCam.transform;
+        Transform FPCam = IngameCameraManager.Instance.FPCam.transform;
         Vector3 backwards = FPCam.forward * -1;
         Vector3 downwards = FPCam.up * -1;
         submarineRB.AddForce((backwards - downwards) * recoil);

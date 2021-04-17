@@ -1,4 +1,5 @@
 ﻿using Constants;
+using DeepSweeper.Camera;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -66,7 +67,7 @@ public class Radar : MonoBehaviour
     /// <param name="point">The point to check</param>
     /// <returns>The distance of a point from the radar's line ray.</returns>
     private float CalcDistanceFromRay(Vector3 point) {
-        Vector3 dir = CameraManager.Instance.FPCam.transform.forward;
+        Vector3 dir = IngameCameraManager.Instance.FPCam.transform.forward;
         Vector3 pos = transform.position - dir * radius;
         return Vector3.Cross(dir, point - pos).magnitude;
     }

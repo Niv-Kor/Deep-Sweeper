@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DeepSweeper.Camera;
+using System.Collections;
 using UnityEngine;
 
 public class SonarRotator : MonoBehaviour
@@ -26,7 +27,7 @@ public class SonarRotator : MonoBehaviour
     #endregion
 
     protected virtual void Start() {
-        this.camTransform = CameraManager.Instance.Rig.transform;
+        this.camTransform = IngameCameraManager.Instance.Rig;
         this.rect = GetComponent<RectTransform>();
         StartCoroutine(Rotate());
     }

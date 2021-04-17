@@ -1,4 +1,5 @@
 ﻿using com.ootii.Cameras;
+using DeepSweeper.Camera;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -135,7 +136,7 @@ public class Gate : MonoBehaviour
         void ActivateDolly() {
             camController.enabled = false;
             StartCoroutine(MoveDolly());
-            CameraManager.Instance.Switch(cam);
+            IngameCameraManager.Instance.Switch(cam);
         }
 
         LoadingProcess process = new LoadingProcess();
@@ -163,7 +164,7 @@ public class Gate : MonoBehaviour
         void EnableCamera() {
             camController.enabled = true;
             StopAllCoroutines();
-            CameraManager.Instance.Switch(CameraManager.Instance.FPCam);
+            IngameCameraManager.Instance.Switch(IngameCameraManager.Instance.FPCam);
         }
 
         LoadingProcess process = new LoadingProcess();

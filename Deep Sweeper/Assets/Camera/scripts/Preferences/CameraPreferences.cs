@@ -10,7 +10,7 @@ public class CameraPreferences : MonoBehaviour
     #endregion
 
     #region Properties
-    public bool AlwaysOn { get { return alwaysOn; } }
+    public bool AlwaysOn { get => alwaysOn; }
     #endregion
 
     /// <summary>

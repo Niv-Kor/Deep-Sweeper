@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DeepSweeper.Camera;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -55,7 +56,7 @@ public class Sweeper : MonoBehaviour
     /// or false if it should be relative to the mine's distance
     /// </param>
     private void ShakeCamera() {
-        CameraShaker camShaker = CameraManager.Instance.FPCam.GetComponent<CameraShaker>();
+        CameraShaker camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
         SightRay ray = SightRay.Instance;
 
         if (camShaker != null) {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DeepSweeper.Camera;
 
 public class SightRay : Singleton<SightRay>
 {
@@ -80,7 +81,7 @@ public class SightRay : Singleton<SightRay>
     #endregion
 
     private void Start() {
-        this.camTransform = CameraManager.Instance.FPCam.transform;
+        this.camTransform = IngameCameraManager.Instance.FPCam.transform;
         this.gun = FindObjectOfType<SubmarineGun>();
         this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
         this.indicatorLayer = Layers.MINE_INDICATION;
