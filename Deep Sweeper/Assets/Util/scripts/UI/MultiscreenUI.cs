@@ -24,18 +24,18 @@ public class MultiscreenUI : MonoBehaviour
 
     #region Class Members
     private List<UIScreen> screens;
-    private UIScreen currentScreen;
     private bool firstSwitch;
     #endregion
 
     #region Properties
     public bool IsSwitching { get; private set; }
+    public UIScreen CurrentScreen { get; private set; }
     #endregion
 
     private void Start() {
         this.screens = new List<UIScreen>(GetComponentsInChildren<UIScreen>());
         this.IsSwitching = false;
-        this.currentScreen = GetScreenByID(defaultScreen);
+        this.CurrentScreen = GetScreenByID(defaultScreen);
         this.firstSwitch = true;
 
         InitScreens();
@@ -49,16 +49,16 @@ public class MultiscreenUI : MonoBehaviour
     private void InitScreens() {
         //fade out irrelevant
         foreach (UIScreen screen in screens)
-            if (screen.IsPresent) screen.FadeScreen(false, 0);
+            if (screen.IsPresent) screen.ChangeScreen(false, 0, null);
 
         //fade in relevant screen
         SplashScreen splash = SplashScreen.Instance;
         if (splash != null && splash.enabled) {
             splash.ScreenFadedEvent += delegate {
-                currentScreen.FadeScreen(true, DELAY_AFTER_SPLASH_SCREEN);
+                CurrentScreen.ChangeScreen(true, DELAY_AFTER_SPLASH_SCREEN, null);
             };
         }
-        else currentScreen.FadeScreen(true, 0);
+        else CurrentScreen.ChangeScreen(true, 0, null);
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class MultiscreenUI : MonoBehaviour
     /// </summary>
     /// <param name="ID">The enum value of the screen</param>
     private UIScreen GetScreenByID(ScreenLayout ID) {
-        return screens.Find(x => x.ID == ID);
+        return screens.Find(x => x.Layout == ID);
     }
 
     /// <param name="origin">The current screen</param>
@@ -87,12 +87,12 @@ public class MultiscreenUI : MonoBehaviour
         float pause = screenAppearAfter * time;
         IsSwitching = true;
 
-        if (!origin.ChildScreensID.Contains(target.ID)) origin.FadeScreen(false, time);
+        if (!origin.ChildScreensID.Contains(target.Layout)) origin.ChangeScreen(false, time, target);
         if (pause > 0) yield return new WaitForSeconds(pause);
-        target.FadeScreen(true, time);
+        target.ChangeScreen(true, time, origin);
         IsSwitching = false;
 
-        currentScreen = target;
+        CurrentScreen = target;
     }
 
     /// <summary>
@@ -103,7 +103,7 @@ public class MultiscreenUI : MonoBehaviour
     public void SwitchScreens(ScreenLayout targetScreen, bool instant = false) {
         UIScreen nextScreen = GetScreenByID(targetScreen);
 
-        if (ShouldSwitch(currentScreen, nextScreen))
-            StartCoroutine(ManageSwitch(currentScreen, nextScreen, instant));
+        if (ShouldSwitch(CurrentScreen, nextScreen))
+            StartCoroutine(ManageSwitch(CurrentScreen, nextScreen, instant));
     }
 }

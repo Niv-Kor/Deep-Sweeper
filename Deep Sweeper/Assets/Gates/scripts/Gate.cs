@@ -50,7 +50,7 @@ public class Gate : MonoBehaviour
 
     #region Class Members
     private LineRenderer upperEdge;
-    private Camera cam;
+    private DynamicCamera cam;
     private Jukebox jukebox;
     private ForceField forceField;
     private Transform emblem;
@@ -85,7 +85,7 @@ public class Gate : MonoBehaviour
     public void Initiate(ForceField forceField, Transform emblem) {
         this.forceField = forceField;
         this.emblem = emblem;
-        this.cam = GetComponentInChildren<Camera>();
+        this.cam = GetComponentInChildren<DynamicCamera>();
         this.upperEdge = GetComponentInChildren<LineRenderer>();
 
         forceField.CrossEvent += OnGateCrossed;

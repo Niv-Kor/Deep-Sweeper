@@ -12,7 +12,7 @@ public class IndicationMinimapActor : MinimapActor
     }
 
     protected override float GetYawAngle() {
-        Camera FPCam = IngameCameraManager.Instance.FPCam;
+        DynamicCamera FPCam = IngameCameraManager.Instance.FPCam;
         Quaternion rot = Quaternion.LookRotation(FPCam.transform.forward, Vector3.up);
         return rot.eulerAngles.y;
     }

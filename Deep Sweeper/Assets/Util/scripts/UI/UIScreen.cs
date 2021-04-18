@@ -9,7 +9,7 @@ public abstract class UIScreen : MonoBehaviour
     #region Exposed Editor Parameters
     [Header("Settings")]
     [Tooltip("The unique signature of the screen.")]
-    [SerializeField] protected ScreenLayout screenId;
+    [SerializeField] protected ScreenLayout screenLayout;
 
     [Header("Fade Delay")]
     [Tooltip("The time it takes the screen to start fading in.")]
@@ -26,7 +26,7 @@ public abstract class UIScreen : MonoBehaviour
     #endregion
 
     #region Properties
-    public ScreenLayout ID { get => screenId; }
+    public ScreenLayout Layout { get => screenLayout; }
     public bool IsPresent { get => canvas.alpha > 0 || canvas.blocksRaycasts; }
     public List<UIScreen> ChildScreens { get; protected set; }
     public List<UIScreen> ParentScreens { get; protected set; }
@@ -44,14 +44,31 @@ public abstract class UIScreen : MonoBehaviour
         ParentScreens.Remove(this);
         this.shouldDelayFadeIn = true;
         this.ChildScreensID = (from screen in ChildScreens
-                               select screen.ID).ToList();
+                               select screen.Layout).ToList();
 
         this.ParentScreensID = (from screen in ParentScreens
-                                select screen.ID).ToList();
+                                select screen.Layout).ToList();
     }
 
-    /// <see cref="FadeScreen(bool)"/>
-    protected virtual IEnumerator Fade(bool fadeIn, float time) {
+    /// <summary>
+    /// Activate whenever this screen appears.
+    /// </summary>
+    /// <param name="prevScreen">The changed screen</param>
+    protected abstract void OnScreenUp(UIScreen prevScreen);
+
+    /// <summary>
+    /// Activate whenever this screen changes to another.
+    /// </summary>
+    /// <param name="nextScreen">The next upcoming screen</param>
+    protected abstract void OnScreenOff(UIScreen nextScreen);
+
+    /// <summary>
+    /// Slowly fade the screen in or out.
+    /// </summary>
+    /// <param name="fadeIn">True to fade the sceen in (make it appear)</param>
+    /// <param name="time">The time it takes to fade the screen</param>
+    /// <param name="contextScreen">The previous screen (if fading in) or next screen (if fading out)</param>
+    protected virtual IEnumerator Fade(bool fadeIn, float time, UIScreen contextScreen) {
         if (!fadeIn) canvas.blocksRaycasts = false;
         float timer;
 
@@ -78,6 +95,12 @@ public abstract class UIScreen : MonoBehaviour
         }
 
         if (fadeIn) canvas.blocksRaycasts = true;
+
+        //activate callbacks
+        if (contextScreen != null) {
+            if (fadeIn) OnScreenUp(contextScreen);
+            else OnScreenOff(contextScreen);
+        }
     }
 
     /// <summary>
@@ -85,19 +108,19 @@ public abstract class UIScreen : MonoBehaviour
     /// </summary>
     /// <param name="fadeIn">True to fade the sceen in (make it appear)</param>
     /// <param name="time">The time it takes to fade the screen</param>
-    public void FadeScreen(bool fadeIn, float time) {
+    public void ChangeScreen(bool fadeIn, float time, UIScreen contextScreen) {
         //display all parent screens
         if (fadeIn) {
             foreach (UIScreen screen in ParentScreens)
-                if (!screen.IsPresent) screen.FadeScreen(true, time);
+                if (!screen.IsPresent) screen.ChangeScreen(true, time, contextScreen);
         }
         //dismiss all child screens
         else {
             foreach (UIScreen screen in ChildScreens)
-                if (screen.IsPresent) screen.FadeScreen(false, time);
+                if (screen.IsPresent) screen.ChangeScreen(false, time, contextScreen);
         }
 
         StopAllCoroutines();
-        StartCoroutine(Fade(fadeIn, time));
+        StartCoroutine(Fade(fadeIn, time, contextScreen));
     }
 }

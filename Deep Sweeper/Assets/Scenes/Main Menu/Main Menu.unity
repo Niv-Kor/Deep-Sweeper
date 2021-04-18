@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08534465, g: 0.2793372, b: 0.4836067, a: 1}
+  m_IndirectSpecularColor: {r: 0.08538408, g: 0.27934274, b: 0.48357666, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1971,12 +1971,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 184c64b79f4f95542ba2535309fa6d6b, type: 3}
---- !u!20 &213642902 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 814063994, guid: 184c64b79f4f95542ba2535309fa6d6b,
-    type: 3}
-  m_PrefabInstance: {fileID: 213642901}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &221789786 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -3379,7 +3373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &362643934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4046,6 +4040,27 @@ PrefabInstance:
       objectReference: {fileID: 2800000, guid: c6d581326b129264ebc4e5c1851b16cf, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 411ffc5a3484889498e24638418c60ab, type: 3}
+--- !u!1 &415695152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5037591089210068542, guid: 508ab66efeede8f449da7d528e472f26,
+    type: 3}
+  m_PrefabInstance: {fileID: 5037591089587304887}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &415695155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415695152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dd3faf98b222047803c0bb04441ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysOn: 0
+  camGrowTime: 1
+  camShrinkTime: 0.3
 --- !u!224 &461435591 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -4340,7 +4355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c884adab22a3934fb77d0893c0f225a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenId: 0
+  screenLayout: 0
   fadeInDelay: 1
   delayOnce: 1
 --- !u!224 &613141018 stripped
@@ -7022,6 +7037,19 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &968295007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968295003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a23b60c787ab64b9caec849ec52824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysOn: 1
 --- !u!224 &996214078 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -7320,9 +7348,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66c2f357c844e549a1feac82f4a038f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenId: 1
+  screenLayout: 1
   fadeInDelay: 0
   delayOnce: 0
+  blurBackgroundTime: 1
 --- !u!224 &1076748886 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -8682,12 +8711,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4333e7403afbe6489992e584e13c6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundCam: {fileID: 213642902}
+  backgroundCam: {fileID: 968295007}
   backgroundPostProcess: {fileID: 1785740410}
-  uiCam: {fileID: 1387525713}
-  uiPostProcess: {fileID: 0}
-  sandboxCam: {fileID: 5037591089587304888}
-  sandboxPostProcess: {fileID: 0}
+  uiCam: {fileID: 1387525714}
+  sandboxCam: {fileID: 415695155}
 --- !u!224 &1296305737 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -9021,6 +9048,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1387525712}
   - component: {fileID: 1387525713}
+  - component: {fileID: 1387525714}
   m_Layer: 5
   m_Name: UI Camera
   m_TagString: Untagged
@@ -9085,6 +9113,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1387525714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387525711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a23b60c787ab64b9caec849ec52824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysOn: 0
 --- !u!224 &1390495637 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -9719,7 +9760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee78f30998bd8f540a95606228df5ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenId: 2
+  screenLayout: 2
   fadeInDelay: 0
   delayOnce: 0
 --- !u!224 &1592865194 stripped
@@ -14625,6 +14666,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5037591089210068539, guid: 508ab66efeede8f449da7d528e472f26,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5037591089937081342, guid: 508ab66efeede8f449da7d528e472f26,
         type: 3}
       propertyPath: m_RootOrder
@@ -14687,12 +14733,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 508ab66efeede8f449da7d528e472f26, type: 3}
---- !u!20 &5037591089587304888 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5037591089210068539, guid: 508ab66efeede8f449da7d528e472f26,
-    type: 3}
-  m_PrefabInstance: {fileID: 5037591089587304887}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6059191462818406806
 MonoBehaviour:
   m_ObjectHideFlags: 0

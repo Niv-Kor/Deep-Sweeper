@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class MainMenuScreen : UIScreen
+﻿public class MainMenuScreen : UIScreen
 {
     public void GotoCampaignScreen() {
         UI.SwitchScreens(ScreenLayout.Campaign);
     }
+
+    /// <inheritdoc/>
+    protected override void OnScreenUp(UIScreen prevScreen) {}
+
+    /// <inheritdoc/>
+    protected override void OnScreenOff(UIScreen nextScreen) {}
 }

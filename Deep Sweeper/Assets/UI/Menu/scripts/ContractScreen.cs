@@ -31,5 +31,11 @@ namespace DeepSweeper.Menu.Contract
             Difficulty = diff;
             ContextDifficultyChangeEvent?.Invoke(diff);
         }
+
+        /// <inheritdoc/>
+        protected override void OnScreenUp(UIScreen prevScreen) {}
+
+        /// <inheritdoc/>
+        protected override void OnScreenOff(UIScreen nextScreen) {}
     }
 }

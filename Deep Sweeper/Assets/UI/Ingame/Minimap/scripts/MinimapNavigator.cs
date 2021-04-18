@@ -62,7 +62,7 @@ public class MinimapNavigator : SonarRotator
         this.extraRotation = 0;
         this.trembleTimer = 0;
 
-        Camera minimap = IngameCameraManager.Instance.MinimapCam;
+        Camera minimap = IngameCameraManager.Instance.MinimapCam.Camera;
         this.minDisplayDistance = minimap.orthographicSize / 4;
 
         StartCoroutine(FlickerArrow());

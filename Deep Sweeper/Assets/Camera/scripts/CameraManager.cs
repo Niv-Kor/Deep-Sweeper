@@ -11,7 +11,7 @@ namespace DeepSweeper.Camera
         #endregion
 
         #region Properties
-        public UnityEngine.Camera CurrentActive { get; protected set; }
+        public DynamicCamera CurrentActive { get; protected set; }
         #endregion
 
         private void Start() {
@@ -19,29 +19,25 @@ namespace DeepSweeper.Camera
         }
 
         /// <returns>The main camera in the scene.</returns>
-        protected abstract UnityEngine.Camera GetDefaultCamera();
+        protected abstract DynamicCamera GetDefaultCamera();
 
         /// <summary>
         /// Switch the main camera.
         /// </summary>
         /// <param name="cam">The camera into which to switch</param>
-        public void Switch(UnityEngine.Camera cam) {
-            UnityEngine.Camera[] allCams = FindObjectsOfType<UnityEngine.Camera>();
+        public void Switch(DynamicCamera cam) {
+            DynamicCamera[] allCams = FindObjectsOfType<DynamicCamera>();
             if (!allCams.ToList().Contains(cam)) return;
 
-            foreach (UnityEngine.Camera iterCam in allCams) {
-                AudioListener audio = iterCam.GetComponent<AudioListener>();
-                CameraPreferences camPref = iterCam.GetComponent<CameraPreferences>();
+            foreach (DynamicCamera iterCam in allCams) {
+                var audio = iterCam.GetComponent<AudioListener>();
+                var camComponent = iterCam.GetComponent<UnityEngine.Camera>();
                 bool isNewCam = iterCam == cam;
                 bool isOldCam = iterCam == CurrentActive;
 
                 iterCam.tag = isNewCam ? CAMERA_TAG : UNTAGGED_TAG;
-                iterCam.enabled = (camPref != null && camPref.AlwaysOn) || isNewCam;
+                iterCam.Enable(iterCam.AlwaysOn || isNewCam);
                 if (audio != null) audio.enabled = isNewCam;
-
-                //activate an optional callback method
-                if (isNewCam) camPref?.OnActivation();
-                else if (isOldCam) camPref?.OnDeactivation();
             }
 
             CurrentActive = cam;

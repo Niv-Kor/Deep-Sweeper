@@ -4,7 +4,7 @@ using UnityEngine;
 public class SubmarineMinimapActor : MinimapActor
 {
     #region Class Members
-    private Camera FPCam;
+    private DynamicCamera FPCam;
     #endregion
 
     protected override void Awake() {
