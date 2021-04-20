@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace DeepSweeper.Camera
 {
@@ -25,17 +26,21 @@ namespace DeepSweeper.Camera
         /// </summary>
         /// <param name="flag">True to enable or false to disable</param>
         public void Enable(bool flag) {
+            string n = gameObject.name;
             if (Camera.enabled == flag) return;
 
-            //prime callbacks
+            void Callback() { Camera.enabled = flag; }
+
+            //preliminary callbacks
             if (flag) BeforeActivation();
             else BeforeDeactivation();
 
-            Camera.enabled = flag;
-
-            //overdue callbacks
-            if (flag) OnActivation();
-            else OnDeactivation();
+            //subsequent callbacks
+            if (flag) {
+                Callback();
+                OnActivation();
+            }
+            else OnDeactivation(Callback);
         }
 
         /// <summary>
@@ -56,6 +61,7 @@ namespace DeepSweeper.Camera
         /// <summary>
         /// Activate when the camera component is deactivated.
         /// </summary>
-        protected virtual void OnDeactivation() {}
+        /// <param name="callback">A callback function to activate as soon as the process is done</param>
+        protected virtual void OnDeactivation(UnityAction callback = null) {}
     }
 }

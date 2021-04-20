@@ -27,7 +27,7 @@ namespace DeepSweeper.Menu
         /// <summary>
         /// Activat when the previous button is clicked.
         /// </summary>
-        public void PreviousButton() {
+        public void OnPreviousButton() {
             UI.SwitchScreens(ScreenLayout.MainMenu);
         }
 
@@ -49,9 +49,11 @@ namespace DeepSweeper.Menu
         private void DisplaySandbox(bool flag) {
             MenuCameraManager camMngr = MenuCameraManager.Instance;
             var postProcess = camMngr.BackgroundPostProcess;
+            var mainCam = camMngr.BackgroundCam;
             var sandboxCam = camMngr.SandboxCam;
+            var nextCam = flag ? sandboxCam : mainCam;
             postProcess.Activate(flag, blurBackgroundTime);
-            camMngr.Switch(sandboxCam);
+            camMngr.Switch(nextCam);
         }
 
         /// <inheritdoc/>

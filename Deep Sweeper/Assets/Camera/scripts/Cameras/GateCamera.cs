@@ -1,4 +1,6 @@
-﻿namespace DeepSweeper.Camera
+﻿using UnityEngine.Events;
+
+namespace DeepSweeper.Camera
 {
     public class GateCamera : DynamicCamera
     {
@@ -8,8 +10,9 @@
         }
 
         /// <inheritdoc/>
-        protected override void OnDeactivation() {
+        protected override void OnDeactivation(UnityAction callback = null) {
             DiegeticsManager.Instance.Activate(true, 0);
+            callback?.Invoke();
         }
     }
 }

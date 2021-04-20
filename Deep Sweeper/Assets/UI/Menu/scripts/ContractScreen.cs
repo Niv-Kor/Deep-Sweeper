@@ -5,7 +5,10 @@ namespace DeepSweeper.Menu.Contract
     public class ContractScreen : UIScreen
     {
         #region Events
+        /// <param name="Region">The new context region</param>
         public event UnityAction<Region> ContextRegionChangeEvent;
+
+        /// <param name="DifficultyLevel">The new context difficulty level</param>
         public event UnityAction<DifficultyLevel> ContextDifficultyChangeEvent;
         #endregion
 

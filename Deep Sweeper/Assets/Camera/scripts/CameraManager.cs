@@ -31,10 +31,7 @@ namespace DeepSweeper.Camera
 
             foreach (DynamicCamera iterCam in allCams) {
                 var audio = iterCam.GetComponent<AudioListener>();
-                var camComponent = iterCam.GetComponent<UnityEngine.Camera>();
                 bool isNewCam = iterCam == cam;
-                bool isOldCam = iterCam == CurrentActive;
-
                 iterCam.tag = isNewCam ? CAMERA_TAG : UNTAGGED_TAG;
                 iterCam.Enable(iterCam.AlwaysOn || isNewCam);
                 if (audio != null) audio.enabled = isNewCam;

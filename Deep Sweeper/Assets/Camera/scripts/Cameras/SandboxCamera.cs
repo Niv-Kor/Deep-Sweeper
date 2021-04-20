@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DeepSweeper.Camera
 {
@@ -32,7 +33,8 @@ namespace DeepSweeper.Camera
         /// </summary>
         /// <param name="grow">True to grow the camera's view or false to shrink it</param>
         /// <param name="time">The time it takes to complete the process</param>
-        private IEnumerator GrowView(bool grow, float time) {
+        /// <param name="callback">A callback function to activate as soon as the process is done</param>
+        private IEnumerator GrowView(bool grow, float time, UnityAction callback = null) {
             float timer = 0;
             float from = Camera.fieldOfView;
             float to = grow ? originFieldOfView : SMALLEST_VIEW;
@@ -42,6 +44,8 @@ namespace DeepSweeper.Camera
                 Camera.fieldOfView = Mathf.Lerp(from, to, timer / time);
                 yield return null;
             }
+
+            callback?.Invoke();
         }
 
         /// <inheritdoc/>
@@ -56,9 +60,9 @@ namespace DeepSweeper.Camera
         }
 
         /// <inheritdoc/>
-        protected override void OnDeactivation() {
+        protected override void OnDeactivation(UnityAction callback = null) {
             StopAllCoroutines();
-            StartCoroutine(GrowView(false, camShrinkTime));
+            StartCoroutine(GrowView(false, camShrinkTime, callback));
         }
     }
 }

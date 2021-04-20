@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.084980525, g: 0.27899116, b: 0.4833868, a: 1}
+  m_IndirectSpecularColor: {r: 0.08547001, g: 0.27939293, b: 0.48362976, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4055,12 +4055,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 415695152}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61dd3faf98b222047803c0bb04441ea3, type: 3}
+  m_Script: {fileID: 11500000, guid: f0fe4e76534bba6489b7f58a74a6266d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysOn: 0
   camGrowTime: 0.5
-  camShrinkTime: 0.3
+  camShrinkTime: 0.25
 --- !u!224 &461435591 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -14387,8 +14387,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1074291685}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: PreviousButton
+        m_TargetAssemblyTypeName: DeepSweeper.Menu.CampaignScreen, Assembly-CSharp
+        m_MethodName: OnPreviousButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
