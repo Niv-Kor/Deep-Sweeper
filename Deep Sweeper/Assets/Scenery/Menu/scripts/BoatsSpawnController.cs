@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DeepSweeper.Camera;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -111,7 +112,10 @@ public class BoatsSpawnController : MonoBehaviour
             Gizmos.DrawWireSphere(setting.FurthestCameraPoint, CAM_POINT_GIZMO_RAD);
         }
     }
-
+    
+    /// <summary>
+    /// Create tje array of boats.
+    /// </summary>
     private void SetFleet() {
         int boatsDiff = maxBoats - boats.Count;
 
@@ -123,6 +127,9 @@ public class BoatsSpawnController : MonoBehaviour
             for (int i = 0; i < Mathf.Abs(boatsDiff); i++) boats.Dequeue();
     }
 
+    /// <summary>
+    /// Regularly run the boats schedule and their spawn times.
+    /// </summary>
     private IEnumerator RunBoatsSchedule() {
         float spawnTimer = spawnDelay;
 
@@ -138,6 +145,9 @@ public class BoatsSpawnController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Create a single boat.
+    /// </summary>
     private void CreateBoat() {
         if (boats.Count >= maxBoats) return;
 
@@ -152,6 +162,9 @@ public class BoatsSpawnController : MonoBehaviour
         boats.Enqueue(instance);
     }
 
+    /// <summary>
+    /// Spawn a boat in a random state at the scene.
+    /// </summary>
     private void Spawn() {
         if (boats.Count == 0) return;
 
@@ -169,7 +182,8 @@ public class BoatsSpawnController : MonoBehaviour
         GameObject instance = boats.Dequeue();
         instance.transform.position = pos;
         instance.transform.rotation = Quaternion.LookRotation(area.BoatDirection, Vector3.up);
-        Vector3 camPos = Camera.main.transform.position;
+        DynamicCamera mainCam = MenuCameraManager.Instance.BackgroundCam;
+        Vector3 camPos = mainCam.transform.position;
         float boatCamDist = Vector3.Distance(camPos, instance.transform.position);
         float boatDistPercent = 1 - RangeMath.NumberOfRange(boatCamDist, area.CameraDistancesRange);
         float boatSize = RangeMath.PercentOfRange(boatDistPercent, boatSizeRange);
@@ -179,9 +193,15 @@ public class BoatsSpawnController : MonoBehaviour
         StartCoroutine(Sail(instance, area));
     }
 
+    /// <summary>
+    /// Let a boat sail across the scene.
+    /// </summary>
+    /// <param name="boat">The boat that is set to sail</param>
+    /// <param name="area">The spawn area of the boat</param>
     private IEnumerator Sail(GameObject boat, BoatSpawnSetting area) {
         float speed = Random.Range(sailSpeedRange.x, sailSpeedRange.y);
-        Vector3 targetPos = area.BoatDirection * boatSailDistance;
+        float currentZ = boat.transform.position.z;
+        Vector3 targetPos = area.BoatDirection * boatSailDistance + Vector3.forward * currentZ;
         float dist = 0;
 
         while (dist < boatSailDistance) {

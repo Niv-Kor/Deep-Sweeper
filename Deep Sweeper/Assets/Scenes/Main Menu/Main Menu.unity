@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08538408, g: 0.27934274, b: 0.48357666, a: 1}
+  m_IndirectSpecularColor: {r: 0.084980525, g: 0.27899116, b: 0.4833868, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4059,7 +4059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysOn: 0
-  camGrowTime: 1
+  camGrowTime: 0.5
   camShrinkTime: 0.3
 --- !u!224 &461435591 stripped
 RectTransform:
@@ -9125,7 +9125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95a23b60c787ab64b9caec849ec52824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alwaysOn: 0
+  alwaysOn: 1
 --- !u!224 &1390495637 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -12441,8 +12441,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultScreen: 0
-  fadeTime: 0.4
-  screenAppearAfter: 0.5
+  fadeTime: 0.2
+  screenAppearAfter: 0.2
 --- !u!114 &2054372676
 MonoBehaviour:
   m_ObjectHideFlags: 0
