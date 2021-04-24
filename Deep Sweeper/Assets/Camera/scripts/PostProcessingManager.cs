@@ -6,6 +6,7 @@ public class PostProcessingManager : MonoBehaviour
 {
     #region Class Members
     private PostProcessVolume volume;
+    private float startingWeight;
     #endregion
 
     #region Properties
@@ -24,6 +25,7 @@ public class PostProcessingManager : MonoBehaviour
 
     private void Start() {
         this.volume = GetComponent<PostProcessVolume>();
+        this.startingWeight = volume.weight;
 
         //extract settings
         volume.profile.TryGetSettings(out ScreenSpaceReflections screenSpaceReflections);
@@ -74,7 +76,7 @@ public class PostProcessingManager : MonoBehaviour
     /// <param name="flag">True to activate or false to deactivate</param>
     /// <param name="time">The time it takes to activate or deactivate</param>
     public void Activate(bool flag = true, float time = 0) {
-        float targetWeight = flag ? 1 : 0;
+        float targetWeight = flag ? 1 : startingWeight;
         StopAllCoroutines();
         StartCoroutine(SetWeight(targetWeight, time));
     }

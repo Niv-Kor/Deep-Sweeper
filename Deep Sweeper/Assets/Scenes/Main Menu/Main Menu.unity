@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08547001, g: 0.27939293, b: 0.48362976, a: 1}
+  m_IndirectSpecularColor: {r: 0.08518889, g: 0.27928632, b: 0.4836144, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7351,7 +7351,7 @@ MonoBehaviour:
   screenLayout: 1
   fadeInDelay: 0
   delayOnce: 0
-  blurBackgroundTime: 1
+  blurBackgroundTime: 0.5
 --- !u!224 &1076748886 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8048141282387250894, guid: 411ffc5a3484889498e24638418c60ab,
@@ -10806,7 +10806,7 @@ MonoBehaviour:
   sharedProfile: {fileID: 11400000, guid: 4a365b5d952fea5418fa0422a8dd643a, type: 2}
   isGlobal: 1
   blendDistance: 0
-  weight: 0
+  weight: 0.9
   priority: 0
 --- !u!114 &1785740410
 MonoBehaviour:
@@ -14730,6 +14730,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sandbox
+      objectReference: {fileID: 0}
+    - target: {fileID: 8875541481029137654, guid: 508ab66efeede8f449da7d528e472f26,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8875541481530092748, guid: 508ab66efeede8f449da7d528e472f26,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8875541481791912320, guid: 508ab66efeede8f449da7d528e472f26,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 508ab66efeede8f449da7d528e472f26, type: 3}

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DeepSweeper.Menu.Sandbox.Ring
 {
@@ -21,13 +22,19 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         private Coroutine animationCoroutine;
         #endregion
 
+        #region Events
+        /// <param type="bool">True if the marker is displayed or false if it's hidden</param>
+        public event UnityAction<bool> MarkerDisplayedEvent;
+        #endregion
+
         #region Properties
         public bool Displayed {
             get => m_displayed;
             set {
                 if (m_displayed != value) {
-                    var emissionModule = particle.emission;
                     m_displayed = value;
+                    MarkerDisplayedEvent?.Invoke(value);
+                    var emissionModule = particle.emission;
 
                     if (value) {
                         particle.Clear();
