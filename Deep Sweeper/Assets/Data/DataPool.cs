@@ -1,4 +1,5 @@
 ﻿using DeepSweeper.Data;
+using DeepSweeper.Flow;
 using GamedevUtil.Data;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,14 @@ public class DataPool
         public int Reward;
     }
 
-    private struct RegionalData
+    private struct RegionMetaData
+    {
+        public Region Region;
+        public int Index;
+        public string MissionBrief;
+    }
+
+    private struct LevelData
     {
         public Region Region;
         public DifficultyLevel Difficulty;
@@ -23,7 +31,8 @@ public class DataPool
     }
 
     #region Class Members
-    private List<RegionalData> regions;
+    private List<LevelData> levelData;
+    private List<RegionMetaData> regionMetaData;
     private List<Procedure> procedures;
     #endregion
 
@@ -51,26 +60,37 @@ public class DataPool
     /// </summary>
     /// <returns></returns>
     private async Task LoadRegions() {
-        regions = new List<RegionalData>();
+        levelData = new List<LevelData>();
+        regionMetaData = new List<RegionMetaData>();
         var getPhasesProc = GetProcedure(typeof(SQLProcGetPhasesData)) as SQLProcGetPhasesData;
+        var getRegionMetaProc = GetProcedure(typeof(SQLProcGetRegionMetaData)) as SQLProcGetRegionMetaData;
 
         foreach (Region region in Enum.GetValues(typeof(Region))) {
             if (region == Region.None) continue;
             string regionStr = region.ToString().Replace('_', ' ');
 
+            //fetch region meta data
+            var regionMetaReq = new GetRegionMetaDataRequest(regionStr);
+            var regionMetaRes = await getRegionMetaProc.Run(regionMetaReq);
+            RegionMetaData regionMeta;
+            regionMeta.Region = region;
+            regionMeta.Index = regionMetaRes.Index;
+            regionMeta.MissionBrief = regionMetaRes.Brief;
+            regionMetaData.Add(regionMeta);
+
             foreach (DifficultyLevel diff in Enum.GetValues(typeof(DifficultyLevel))) {
                 string diffStr = diff.ToString().ToLower();
-                RegionalData regionalData;
+                LevelData regionalData;
                 regionalData.Region = region;
                 regionalData.Difficulty = diff;
                 regionalData.Phases = new List<PhaseData>();
                 regionalData.TotalReward = 0;
 
                 //fetch phases data
-                var req = new GetPhasesDataRequest(regionStr, diffStr);
-                var res = await getPhasesProc.Run(req);
+                var phaseDataReq = new GetPhasesDataRequest(regionStr, diffStr);
+                var pahseDataRes = await getPhasesProc.Run(phaseDataReq);
 
-                foreach (GetPhasesDataPhaseInfo phase in res.Phases) {
+                foreach (GetPhasesDataPhaseInfo phase in pahseDataRes.Phases) {
                     PhaseData phaseData;
                     phaseData.MapName = phase.MapName;
                     phaseData.MinePercent = phase.MinePercent;
@@ -79,19 +99,39 @@ public class DataPool
                     regionalData.Phases.Add(phaseData);
                 }
                 
-                regions.Add(regionalData);
+                levelData.Add(regionalData);
             }
         }
     }
-    
+
     /// <param name="region">The context region</param>
     /// <param name="difficulty">The context level of difficulty</param>
     /// <returns>The total reward money for the entire region level</returns>
     public int GetRegionTotalReward(Region region, DifficultyLevel difficulty) {
         try {
-            RegionalData dataSet = regions.Find(x => x.Region == region && x.Difficulty == difficulty);
+            LevelData dataSet = levelData.Find(x => x.Region == region && x.Difficulty == difficulty);
             return dataSet.TotalReward;
         }
         catch (Exception) { return 0; }
+    }
+
+    /// <param name="region">The context region</param>
+    /// <returns>The index of the region within its district [0:inf).</returns>
+    public int GetRegionIndex(Region region) {
+        try {
+            RegionMetaData dataSet = regionMetaData.Find(x => x.Region == region);
+            return dataSet.Index;
+        }
+        catch (Exception) { return -1; }
+    }
+
+    /// <param name="region">The context region</param>
+    /// <returns>The region's mission brief text.</returns>
+    public string GetRegionMissionBrief(Region region) {
+        try {
+            RegionMetaData dataSet = regionMetaData.Find(x => x.Region == region);
+            return dataSet.MissionBrief;
+        }
+        catch (Exception) { return ""; }
     }
 }

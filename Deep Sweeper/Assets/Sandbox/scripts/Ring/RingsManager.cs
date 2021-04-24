@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace DeepSweeper.Menu.Sandbox.Ring
+namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
 {
     public class RingsManager : MonoBehaviour
     {
@@ -13,6 +14,11 @@ namespace DeepSweeper.Menu.Sandbox.Ring
 
         #region Class Members
         private List<LevelRing> rings;
+        #endregion
+
+        #region Events
+        /// <param type="LevelRing">The selected level ring</param>
+        public event UnityAction<LevelRing> RingSelectedEvent;
         #endregion
 
         private void Awake() {
@@ -41,8 +47,12 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         /// </summary>
         /// <param name="selectedRing">The reporting ring</param>
         public void ReportSelection(LevelRing selectedRing) {
+            RingSelectedEvent?.Invoke(selectedRing);
+
+            //deselect all other rings
             foreach (LevelRing ring in rings)
                 if (ring != selectedRing) ring.Selected = false;
+
         }
     }
 }

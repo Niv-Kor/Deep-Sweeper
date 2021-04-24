@@ -10,8 +10,8 @@ namespace DeepSweeper.Data
         public SQLValue<string> difficulty;
 
         public GetPhasesDataRequest(string p_region, string p_difficulty) {
-            region = new SQLValue<string>(SqlDbType.VarChar, p_region);
-            difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
+            this.region = new SQLValue<string>(SqlDbType.VarChar, p_region);
+            this.difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
         }
     }
 
@@ -23,10 +23,10 @@ namespace DeepSweeper.Data
         public int Reward;
 
         public GetPhasesDataPhaseInfo(int index, string map, float minePercent, int reward) {
-            Index = index;
-            MapName = map;
-            MinePercent = minePercent;
-            Reward = reward;
+            this.Index = index;
+            this.MapName = map;
+            this.MinePercent = minePercent;
+            this.Reward = reward;
         }
     }
 

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace DeepSweeper.Menu.Sandbox.Ring
+namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
 {
     public class RingRegionLabel : MonoBehaviour
     {
@@ -17,6 +17,13 @@ namespace DeepSweeper.Menu.Sandbox.Ring
 
         #region Class Members
         private TextMeshProUGUI text;
+        #endregion
+
+        #region Properties
+        public string Text {
+            get => text.text;
+            set { text.text = value; }
+        }
         #endregion
 
         private void Awake() {

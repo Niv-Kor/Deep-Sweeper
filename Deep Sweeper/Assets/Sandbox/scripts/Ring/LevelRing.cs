@@ -1,9 +1,11 @@
+using DeepSweeper.Flow;
+using GamedevUtil.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DeepSweeper.Menu.Sandbox.Ring
+namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
 {
     public class LevelRing : MonoBehaviour
     {
@@ -30,7 +32,7 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         [Tooltip("A list of the particle systems to be colorized upon mouse events.")]
         [SerializeField] private List<ParticleSystemRenderer> colorizableParticles;
 
-        [Header("Settings")]
+        [Header("Level")]
         [Tooltip("A list of the ring's states color configurations.")]
         [SerializeField] private List<RingStateColor> colorConfig;
 
@@ -46,15 +48,18 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         private bool m_selected;
         private RingState defaultState;
         private RingState currentState;
+        private SandboxLevel level;
         #endregion
 
         #region Events
         /// <param bool>True if the ring is selected</param>
         public event UnityAction<bool> SelectedEvent;
+        public event UnityAction InitializedEvent;
         #endregion
 
         #region Properties
         public RingsManager Manager { get; set; }
+        public Region Region { get; private set; }
         public bool Selected {
             get => m_selected;
             set {
@@ -70,11 +75,25 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         }
         #endregion
 
-        private void Start() {
+        private void Awake() {
             this.m_selected = false;
             this.defaultState = RingState.Allowed;
             this.currentState = defaultState;
-            ApplyState(currentState);
+        }
+
+        private void Start() {
+            this.level = GetComponentInParent<SandboxLevel>();
+            this.Region = level.Region;
+
+            //edit region name
+            RingRegionLabel[] labels = GetComponentsInChildren<RingRegionLabel>();
+            var filter = new UIRegionNameFilter();
+
+            foreach (var label in labels)
+                label.Text = EnumNameFilter<Region>.Filter(Region, filter);
+
+            void reportInitEvent() { InitializedEvent?.Invoke(); }
+            StartCoroutine(ApplyState(currentState, reportInitEvent));
         }
 
         private void OnValidate() {
@@ -88,6 +107,19 @@ namespace DeepSweeper.Menu.Sandbox.Ring
             }
         }
 
+        /// <inheritdoc/>
+        public void OnMouseDown() { Selected = true; }
+
+        /// <inheritdoc/>
+        public void OnMouseEnter() {
+            if (!Selected) StartCoroutine(ApplyState(RingState.Hovered));
+        }
+
+        /// <inheritdoc/>
+        public void OnMouseExit() {
+            if (!Selected) StartCoroutine(ApplyState(defaultState));
+        }
+
         /// <param name="state">The state of which to get the color configuration</param>
         /// <returns>The color configuration of the specified state.</returns>
         private Color GetColorConfig(RingState state) {
@@ -98,7 +130,7 @@ namespace DeepSweeper.Menu.Sandbox.Ring
         /// Apply a ring's state.
         /// </summary>
         /// <param name="state">The state to apply</param>
-        private IEnumerator ApplyState(RingState state) {
+        private IEnumerator ApplyState(RingState state, UnityAction callback = null) {
             float timer = 0;
             Color color = GetColorConfig(state);
             currentState = state;
@@ -118,18 +150,8 @@ namespace DeepSweeper.Menu.Sandbox.Ring
 
                 yield return null;
             }
-        }
 
-        public void OnMouseDown() {
-            Selected = true;
-        }
-
-        public void OnMouseEnter() {
-            if (!Selected) StartCoroutine(ApplyState(RingState.Hovered));
-        }
-
-        public void OnMouseExit() {
-            if (!Selected) StartCoroutine(ApplyState(defaultState));
+            callback?.Invoke();
         }
     }
 }

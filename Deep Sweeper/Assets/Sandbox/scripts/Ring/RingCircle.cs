@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace DeepSweeper.Menu.Sandbox.Ring
+namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
 {
     public class RingCircle : MonoBehaviour
     {

@@ -11,9 +11,9 @@ namespace DeepSweeper.Data
         public SQLValue<int> passedTime;
 
         public CalculatePhaseGradeRequest(string p_map, string p_difficulty, int p_passedTime) {
-            map = new SQLValue<string>(SqlDbType.VarChar, p_map);
-            difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
-            passedTime = new SQLValue<int>(SqlDbType.VarChar, p_passedTime);
+            this.map = new SQLValue<string>(SqlDbType.VarChar, p_map);
+            this.difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
+            this.passedTime = new SQLValue<int>(SqlDbType.VarChar, p_passedTime);
         }
     }
 
@@ -22,7 +22,7 @@ namespace DeepSweeper.Data
         public float Grade;
 
         public CalculatePhaseGradeResponse(float val) {
-            Grade = val;
+            this.Grade = val;
         }
     }
 

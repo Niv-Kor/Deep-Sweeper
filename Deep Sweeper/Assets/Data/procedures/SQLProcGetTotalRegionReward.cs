@@ -10,8 +10,8 @@ namespace DeepSweeper.Data
         public SQLValue<string> difficulty;
 
         public GetTotalRegionRewardRequest(string p_region, string p_difficulty) {
-            region = new SQLValue<string>(SqlDbType.VarChar, p_region);
-            difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
+            this.region = new SQLValue<string>(SqlDbType.VarChar, p_region);
+            this.difficulty = new SQLValue<string>(SqlDbType.VarChar, p_difficulty);
         }
     }
 
@@ -20,7 +20,7 @@ namespace DeepSweeper.Data
         public int Total;
 
         public GetTotalRegionRewardResponse(int value) {
-            Total = value;
+            this.Total = value;
         }
     }
 

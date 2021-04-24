@@ -1,5 +1,8 @@
-﻿public enum Region
+﻿namespace DeepSweeper.Flow
 {
-    None,
-    Sapphire_Caverns
+    public enum Region
+    {
+        None,
+        Sapphire_Caverns
+    }
 }
