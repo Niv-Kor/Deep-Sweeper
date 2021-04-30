@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ab936a54e633d9344a28ecf0cb43d652
-timeCreated: 1449577492
+guid: 38a68f55943b5274d9269966a0a631ff
+timeCreated: 1464345324
 licenseType: Store
 TextureImporter:
   fileIDToRecycleName: {}
@@ -17,7 +17,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 1
     externalNormalMap: 1
-    heightScale: .142000005
+    heightScale: .200000003
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -26,7 +26,7 @@ TextureImporter:
   cubemapConvolutionSteps: 8
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
