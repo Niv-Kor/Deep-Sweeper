@@ -80,6 +80,8 @@ public class LifeSupply : PhaseSpatial<LifeSupply>
     /// <returns>True if the are still life bits remaining following by the decrease.</returns>
     public bool LifeDown(int amount) {
         for (int i = 0; i < amount; i++) {
+            if (lifeBits.Count == 0) break;
+
             LifeBit bit = lifeBits.Pop();
             bit.Dispose(true);
         }

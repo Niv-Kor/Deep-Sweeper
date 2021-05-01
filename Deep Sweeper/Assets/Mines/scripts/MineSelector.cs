@@ -43,8 +43,9 @@ public class MineSelector : MonoBehaviour
     #endregion
 
     #region Events
-    public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationStartEvent;
-    public event UnityAction<SelectionMode, SelectionMode, Material> ModeApplicationHalfwayEvent;
+    /// <param type=typeof(SelectionMode)>The previous mode</param>
+    /// <param type=typeof(SelectionMode)>The new mode</param>
+    public event UnityAction<SelectionMode, SelectionMode> ModeApplicationEvent;
     #endregion
     
     #region Public Properties
@@ -77,6 +78,7 @@ public class MineSelector : MonoBehaviour
             if (permit) {
                 if (flagChange) jukebox?.Play(FLAG_CHECK_SFX);
                 sensorsMngr.Colorize(config.Color);
+                ModeApplicationEvent?.Invoke(m_mode, value);
                 m_mode = value;
             }
         }

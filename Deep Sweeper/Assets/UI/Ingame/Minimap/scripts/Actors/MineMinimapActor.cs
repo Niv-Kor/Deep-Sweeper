@@ -17,15 +17,15 @@ public class MineMinimapActor : MinimapActor
 
         //bind events
         sweeper.MineDisposalStartEvent += delegate { Sprite = null; };
-        selector.ModeApplicationStartEvent += OnMineSelection;
+        selector.ModeApplicationEvent += OnMineSelection;
     }
 
     /// <summary>
     /// Activate when the selection mode of the mine is changed.
     /// This method changes the color of the minimap icon accordingly.
     /// </summary>
-    /// <see cref="MineSelector.ModeApplicationStartEvent"/>
-    private void OnMineSelection(SelectionMode oldMode, SelectionMode newMode, Material _) {
+    /// <see cref="MineSelector.ModeApplicationEvent"/>
+    private void OnMineSelection(SelectionMode oldMode, SelectionMode newMode) {
         bool oldFlagged = MineSelector.IsFlagMode(oldMode);
         bool newFlagged = MineSelector.IsFlagMode(newMode);
 

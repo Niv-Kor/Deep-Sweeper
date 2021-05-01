@@ -204,7 +204,7 @@ public class MineField : ConfinedArea
                 MineGrid grid = gridsMatrix[i, j];
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.Indicator.MinedNeighbours = minedNeighbours;
+                grid.Indicator.Value = minedNeighbours;
             }
         }
     }
@@ -244,7 +244,7 @@ public class MineField : ConfinedArea
                 grid = Grids[gridIndex];
                 gridPos = grid.Position;
             }
-            while (grid.IsMined || (grid.Indicator.MinedNeighbours != 0 && !lowerStandard));
+            while (grid.IsMined || (grid.Indicator.Value != 0 && !lowerStandard));
         }
         //find grid by position
         else grid = Grids.Find(x => x.Position == gridPos);

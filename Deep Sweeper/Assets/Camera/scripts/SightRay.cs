@@ -6,18 +6,23 @@ using DeepSweeper.Camera;
 
 public class SightRay : Singleton<SightRay>
 {
-    private class MineInfo
-    {
+    public class MineInfo {
+        #region Class Members
+        private GameObject avatar;
+        #endregion
+
         #region Properties
         public MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
         public Indicator Indicator { get; private set; }
         public MineSelector Selector { get; private set; }
-        private GameObject Avatar { get; set; }
+        public bool IsValueable {
+            get => !Grid.Sweeper.IsDismissed || Indicator.Value > 0;
+        }
         #endregion
 
         public MineInfo(GameObject mine) {
-            this.Avatar = mine;
+            this.avatar = mine;
             this.Grid = mine.GetComponentInParent<MineGrid>();
             this.Activator = Grid.Activator;
             this.Indicator = Grid.Indicator;
@@ -55,7 +60,7 @@ public class SightRay : Singleton<SightRay>
         /// <param name="other">The object to test</param>
         /// <returns>True if both objects reference the same location in memory.</returns>
         public bool Equals(GameObject other) {
-            return Avatar == other;
+            return avatar == other;
         }
     }
 
@@ -76,8 +81,14 @@ public class SightRay : Singleton<SightRay>
     #endregion
 
     #region Properties
-    public float MaxDistance { get { return maxDistance; } }
+    public float MaxDistance => maxDistance;
     public float HitDistance { get; private set; }
+    public MineGrid TargetMine {
+        get {
+            MineInfo mineInfo = selectedMine?? selectedIndicator;
+            return mineInfo?.Grid;
+        }
+    }
     #endregion
 
     private void Start() {
@@ -146,7 +157,7 @@ public class SightRay : Singleton<SightRay>
                     if (noIndicator || !sameIndicator) {
                         DeselectIndicators();
                         selectedIndicator = SelectMine(obj);
-                        selectedIndicator.SelectNeighbours(true);
+                        selectedIndicator?.SelectNeighbours(true);
                     }
                 }
             }
@@ -166,29 +177,38 @@ public class SightRay : Singleton<SightRay>
         Vector3 upDir = camTransform.up;
         Vector3 pos = camTransform.position;
         Vector3 dir = camTransform.forward;
-        bool indicatorHit = Physics.Raycast(pos, dir, out RaycastHit hitInfo, Mathf.Infinity, Layers.MINE_INDICATION);
 
-        if (indicatorHit) {
-            GameObject hitObj = hitInfo.collider.gameObject;
-            MineGrid grid = hitObj.GetComponentInParent<MineGrid>();
-            Indicator indicator = grid.Indicator;
-
+        //split the bullet to the indicator's neighbours
+        if (selectedIndicator != null) {
             //only fire the bullets if the indicator is fulfilled
-            if (indicator.IsIndicationFulfilled()) {
-                IEnumerable<MineGrid> section = from neighbour in grid.Section
+            if (selectedIndicator.Indicator.IsIndicationFulfilled) {
+                IEnumerable<MineGrid> section = from neighbour in selectedIndicator.Grid.Section
                                                 where neighbour != null && !neighbour.Sweeper.IsDismissed && !neighbour.IsFlagged
                                                 select neighbour;
 
                 //fire a bullet at each of the neighbours
-                foreach (MineGrid neighbour in section) {
-                    Vector3 neighbourPos = neighbour.Avatar.transform.position;
-                    Vector3 neighbourDir = Vector3.Normalize(neighbourPos - pos);
-                    gun.Fire(neighbourDir, upDir, false, true);
+                if (section.Count() > 0) {
+                    foreach (MineGrid neighbour in section) {
+                        Vector3 neighbourPos = neighbour.Avatar.transform.position;
+                        Vector3 neighbourDir = Vector3.Normalize(neighbourPos - pos);
+                        gun.Fire(neighbourDir, upDir, false, neighbour, true);
+                    }
                 }
+                else DryFireForward();
             }
+            //fire at the indicator itself
+            else DryFireForward();
         }
-        
-        gun.Fire(camTransform.forward, upDir, true);
+        //only fire at the targeted spot, or rather a selected mine
+        else DryFireForward();
+    }
+
+    /// <summary>
+    /// Fire a bullet forward.
+    /// This bullet will not be able to explode a mine.
+    /// </summary>
+    private void DryFireForward() {
+        gun.Fire(camTransform.forward, camTransform.up, true, TargetMine);
     }
 
     /// <summary>
@@ -197,12 +217,14 @@ public class SightRay : Singleton<SightRay>
     /// <param name="mine">The object to select</param>
     private MineInfo SelectMine(GameObject mine) {
         MineInfo mineInfo = new MineInfo(mine);
-        mineInfo.Activator.ActivateAndLock();
-        Crosshair.Instance.Lock();
 
-        //print("Explosive Chance: " + mineInfo.Grid.ExplosiveChance);
-
-        return mineInfo;
+        //check that the given mine is not an empty indication
+        if (mineInfo.IsValueable) {
+            mineInfo.Activator.ActivateAndLock();
+            Crosshair.Instance.Lock();
+            return mineInfo;
+        }
+        else return null;
     }
 
     /// <summary>

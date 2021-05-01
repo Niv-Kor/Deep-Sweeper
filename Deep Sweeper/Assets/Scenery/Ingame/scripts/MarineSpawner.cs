@@ -3,7 +3,7 @@
 public abstract class MarineSpawner : ConfinedArea
 {
     #region Exposed Editor Parameters
-    [Header("Prefabs")]
+    [Header("Settings")]
     [Tooltip("The particle system prefabs to instantiate.")]
     [SerializeField] public GameObject[] Prefabs;
 

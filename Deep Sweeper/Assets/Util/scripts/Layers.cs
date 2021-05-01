@@ -24,6 +24,7 @@ namespace Constants
         private static readonly string NAME_INACTIVE_MINE = "Inactive Mine";
         private static readonly string NAME_DEPTH_UI = "Depth UI";
         private static readonly string NAME_SANDBOX = "Sandbox";
+        private static readonly string NAME_TARGET_MINE = "Target Mine";
 
         //masks
         public static readonly LayerMask DEFAULT = LayerMask.GetMask(NAME_DEFAULT);
@@ -45,6 +46,7 @@ namespace Constants
         public static readonly LayerMask INACTIVE_MINE = LayerMask.GetMask(NAME_INACTIVE_MINE);
         public static readonly LayerMask DEPTH_UI = LayerMask.GetMask(NAME_DEPTH_UI);
         public static readonly LayerMask SANDBOX = LayerMask.GetMask(NAME_SANDBOX);
+        public static readonly LayerMask TARGET_MINE = LayerMask.GetMask(NAME_TARGET_MINE);
 
         /// <summary>
         /// Check if a certain layer is contained in a layer mask.
@@ -67,6 +69,21 @@ namespace Constants
         /// </returns>
         public static int GetLayerValue(LayerMask mask) {
             return (int) Mathf.Log(mask.value, 2);
+        }
+
+        /// <summary>
+        /// Apply a layer to a game object.
+        /// </summary>
+        /// <param name="obj">The object to which to apply the layer</param>
+        /// <param name="layer">The applied layer</param>
+        /// <param name="applyToChildren">True to also apply the layer to each of the object's children</param>
+        public static void ApplyLayer(GameObject obj, LayerMask layer, bool applyToChildren = false) {
+            int layerVal = GetLayerValue(layer);
+            obj.layer = layerVal;
+
+            if (applyToChildren)
+                foreach (Transform child in obj.transform)
+                    child.gameObject.layer = layerVal;
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using Constants;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class Bullet : MonoBehaviour
 {
     #region Exposed Editor Parameters
-    [Tooltip("Hit particles prefab to instantiate.")]
-    [SerializeField] private GameObject hitParticlesPrefab;
-
+    [Header("Timing")]
     [Tooltip("The time (in seconds) it takes the bullet to be inactive from the moment it's fired.")]
     [SerializeField] private float activityTime = 1;
 
@@ -20,21 +17,20 @@ public class Bullet : MonoBehaviour
     #endregion
 
     #region Class Members
-    private Transform bulletsParent;
-    private LayerMask damageableSurfaces;
-    private List<ParticleCollisionEvent> collisionEvents;
     private float activityTimer;
     #endregion
 
-    #region Properties
-    public bool IsActive { get => activityTimer < activityTime; }
+    #region Events
+    public event UnityAction BulletHitEvent;
     #endregion
 
-    private void Start() {
-        ParticleSystem partSystem = GetComponent<ParticleSystem>();
-        this.collisionEvents = new List<ParticleCollisionEvent>();
-        this.bulletsParent = FXManager.Instance.gameObject.transform;
-        this.damageableSurfaces = partSystem.collision.collidesWith;
+    #region Properties
+    public bool IsActive => activityTimer < activityTime;
+    public BulletWarhead Warhead { get; private set; }
+    #endregion
+
+    private void Awake() {
+        this.Warhead = GetComponentInChildren<BulletWarhead>();
         this.activityTimer = 0;
     }
 
@@ -44,23 +40,14 @@ public class Bullet : MonoBehaviour
 
     private void Update() {
         activityTimer += Time.deltaTime;
-        if (activityTimer >= timeToLive) Destroy(gameObject);
+        if (activityTimer >= timeToLive) Deconstruct();
     }
 
-    private void OnParticleCollision(GameObject obj) {
-        if (Layers.ContainedInMask(obj.layer, damageableSurfaces)) {
-            ParticleSystem partSystem = GetComponent<ParticleSystem>();
-            int hits = ParticlePhysicsExtensions.GetCollisionEvents(partSystem, obj, collisionEvents);
-
-            //instantiate the hit particles
-            if (hits > 0) {
-                GameObject particlesObj = Instantiate(hitParticlesPrefab);
-                particlesObj.transform.SetParent(bulletsParent);
-                particlesObj.transform.position = collisionEvents[0].intersection;
-            }
-        }
-
-        //dispose bullet
+    /// <summary>
+    /// Destroy this bullet.
+    /// </summary>
+    public void Deconstruct() {
+        BulletHitEvent?.Invoke();
         Destroy(gameObject);
     }
 }

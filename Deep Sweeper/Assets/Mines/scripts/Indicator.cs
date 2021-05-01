@@ -24,9 +24,19 @@ public class Indicator : MonoBehaviour
     #endregion
 
     #region Properties
-    public int MinedNeighbours {
-        get { return indicationNum.Value; }
+    public int Value {
+        get => indicationNum.Value;
         set { indicationNum.Value = value; }
+    }
+
+    public bool IsIndicationFulfilled {
+        get {
+            int flaggedNeighbours = (from neighbour in grid.Section
+                                     where neighbour != null && neighbour.IsFlagged
+                                     select neighbour).Count();
+
+            return Value == flaggedNeighbours;
+        }
     }
     #endregion
 
@@ -107,21 +117,5 @@ public class Indicator : MonoBehaviour
 
             yield return null;
         }
-    }
-
-    /// <summary>
-    /// Check if the mine's section consists of the correct amount of flags it should have.
-    /// This method does NOT check if the flags are correctly placed.
-    /// </summary>
-    /// <returns>
-    /// True if the amount of flagged neighbours
-    /// equals the amount of mined neighbours.
-    /// </returns>
-    public bool IsIndicationFulfilled() {
-        int flaggedNeighbours = (from neighbour in grid.Section
-                                 where neighbour != null && neighbour.IsFlagged
-                                 select neighbour).Count();
-
-        return MinedNeighbours == flaggedNeighbours;
     }
 }

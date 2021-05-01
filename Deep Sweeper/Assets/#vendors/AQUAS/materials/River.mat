@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DemoRiver
+  m_Name: River
   m_Shader: {fileID: 4800000, guid: 4ad3a40692e960b4bbd3671032b4845e, type: 3}
   m_ShaderKeywords: _ENABLEREFLECTIONS_ON
   m_LightmapFlags: 5
