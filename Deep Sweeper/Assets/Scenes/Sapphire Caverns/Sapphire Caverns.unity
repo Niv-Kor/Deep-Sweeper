@@ -3910,7 +3910,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1269453248}
   - component: {fileID: 1269453249}
-  - component: {fileID: 1269453250}
   m_Layer: 0
   m_Name: Marine Particles
   m_TagString: Untagged
@@ -3952,28 +3951,6 @@ MonoBehaviour:
   parentObjectName: Light Beams
   SpreadRange: {x: 10, y: 30}
   VolumeRange: {x: 1, y: 1}
-  DepthAffection: 1
-  TurbulenceAffection: 2
---- !u!114 &1269453250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1269453247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a78d99ed9eca0c40bf7d7aeef8a9858, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Confine:
-    Offset: {x: 100, y: 0, z: 100}
-    Size: {x: 700, y: 50, z: 700}
-  Prefabs:
-  - {fileID: 1000010715882420, guid: 14d81e2c407975245973a11cdfbeb902, type: 3}
-  parentObjectName: Sand
-  SpreadRange: {x: 100, y: 200}
-  VolumeRange: {x: 80, y: 100}
   DepthAffection: 1
   TurbulenceAffection: 2
 --- !u!4 &1291029450 stripped
