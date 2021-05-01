@@ -23,12 +23,12 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
 
     #region Class Members
     private FlagsManager flagsMngr;
-    private List<Sweeper> sweepers;
+    private List<DetonationSystem> sweepers;
     #endregion
 
     protected override void Start() {
         this.flagsMngr = FlagsManager.Instance;
-        this.sweepers = new List<Sweeper>();
+        this.sweepers = new List<DetonationSystem>();
         base.Start();
     }
 
@@ -101,8 +101,8 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         int unsweeped = grids.Count;
 
         foreach (MineGrid grid in grids) {
-            Sweeper sweeper = grid.Sweeper;
-            if (sweeper.IsDismissed) unsweeped--;
+            DetonationSystem sweeper = grid.DetonationSystem;
+            if (sweeper.Detonated) unsweeped--;
             sweeper.MineDisposalStartEvent += OnMineSweeped;
             sweepers.Add(sweeper);
         }
@@ -121,7 +121,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         if (flag) flagsMngr.FlagsAmountUpdateEvent += OnDisplay;
         else {
             //unbind sweeper events
-            foreach (Sweeper sweeper in sweepers)
+            foreach (DetonationSystem sweeper in sweepers)
                 sweeper.MineDisposalStartEvent -= OnMineSweeped;
 
             flagsMngr.FlagsAmountUpdateEvent -= OnDisplay;

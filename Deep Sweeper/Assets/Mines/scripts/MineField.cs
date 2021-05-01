@@ -204,7 +204,7 @@ public class MineField : ConfinedArea
                 MineGrid grid = gridsMatrix[i, j];
                 List<MineGrid> section = GetSection(i, j);
                 int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.Indicator.Value = minedNeighbours;
+                grid.IndicationSystem.Value = minedNeighbours;
             }
         }
     }
@@ -244,7 +244,7 @@ public class MineField : ConfinedArea
                 grid = Grids[gridIndex];
                 gridPos = grid.Position;
             }
-            while (grid.IsMined || (grid.Indicator.Value != 0 && !lowerStandard));
+            while (grid.IsMined || (grid.IndicationSystem.Value != 0 && !lowerStandard));
         }
         //find grid by position
         else grid = Grids.Find(x => x.Position == gridPos);
@@ -367,7 +367,7 @@ public class MineField : ConfinedArea
         List<MineGrid> droppingGrids = new List<MineGrid>();
         while (droppingGrids.Count == 0) {
             droppingGrids = (from MineGrid grid in Grids
-                             where !grid.IsMined && !grid.Sweeper.IsDismissed && grid.LootGenerator.WillDrop
+                             where !grid.IsMined && !grid.DetonationSystem.Detonated && grid.LootGenerator.WillDrop
                              select grid).ToList();
 
             //reroll all
@@ -418,7 +418,7 @@ public class MineField : ConfinedArea
         if (!IsActivated) return false;
 
         foreach (MineGrid grid in Grids)
-            if (!grid.IsMined && !grid.Sweeper.IsDismissed) return false;
+            if (!grid.IsMined && !grid.DetonationSystem.Detonated) return false;
 
         return true;
     }

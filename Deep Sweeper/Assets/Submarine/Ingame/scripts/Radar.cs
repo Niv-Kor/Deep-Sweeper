@@ -35,7 +35,7 @@ public class Radar : MonoBehaviour
             Collider col = colRes[i];
             if (col == null) break;
 
-            Indicator indicator = col.GetComponent<Indicator>();
+            IndicationSystem indicator = col.GetComponent<IndicationSystem>();
             float dist = CalcDistanceFromRay(col.transform.position);
             float alpha = 1 - dist / radius;
             indicator?.Display(alpha);
@@ -48,7 +48,7 @@ public class Radar : MonoBehaviour
 
         //deactivate indicators that are no longer visible by the radar
         foreach (Collider col in symmerticDiff) {
-            Indicator indicator = col.GetComponent<Indicator>();
+            IndicationSystem indicator = col.GetComponent<IndicationSystem>();
             indicator?.Display(0);
         }
 

@@ -60,7 +60,7 @@ public class FlagsGauge : MonoBehaviour
         float partialHeight = (1 - overallPercent) * fullHeight;
         float targetHeight = initHeight + partialHeight;
 
-        StopCoroutine("Set");
+        StopAllCoroutines();
         StartCoroutine(Set(targetHeight));
     }
 

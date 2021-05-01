@@ -11,9 +11,9 @@ public class MineMinimapActor : MinimapActor
         base.Awake();
 
         MineGrid grid = GetComponent<MineGrid>();
-        MineSelector selector = grid.Selector;
-        Sweeper sweeper = grid.Sweeper;
-        if (sweeper.IsDismissed) Sprite = null;
+        SelectionSystem selector = grid.SelectionSystem;
+        DetonationSystem sweeper = grid.DetonationSystem;
+        if (sweeper.Detonated) Sprite = null;
 
         //bind events
         sweeper.MineDisposalStartEvent += delegate { Sprite = null; };
@@ -24,10 +24,10 @@ public class MineMinimapActor : MinimapActor
     /// Activate when the selection mode of the mine is changed.
     /// This method changes the color of the minimap icon accordingly.
     /// </summary>
-    /// <see cref="MineSelector.ModeApplicationEvent"/>
+    /// <see cref="SelectionSystem.ModeApplicationEvent"/>
     private void OnMineSelection(SelectionMode oldMode, SelectionMode newMode) {
-        bool oldFlagged = MineSelector.IsFlagMode(oldMode);
-        bool newFlagged = MineSelector.IsFlagMode(newMode);
+        bool oldFlagged = SelectionSystem.IsFlagMode(oldMode);
+        bool newFlagged = SelectionSystem.IsFlagMode(newMode);
 
         if (!oldFlagged && newFlagged) spriteRenderer.color = flaggedColor;
         else if (oldFlagged && !newFlagged) spriteRenderer.color = defaultColor;

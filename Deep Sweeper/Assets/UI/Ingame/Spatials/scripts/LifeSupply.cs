@@ -37,6 +37,7 @@ public class LifeSupply : PhaseSpatial<LifeSupply>
         this.lifeBits = new Stack<LifeBit>();
         this.RemainingLives = 0;
         LifeUp(initialAmount);
+        Enabled = true;
     }
 
     /// <summary>

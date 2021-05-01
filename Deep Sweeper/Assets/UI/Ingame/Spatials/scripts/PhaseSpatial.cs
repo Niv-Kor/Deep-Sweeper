@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
 public abstract class PhaseSpatial<T> : Singleton<T> where T : MonoBehaviour
 {
     #region Exposed Editor Parameters
+    [Header("Settings")]
+    [Tooltip("True to enable this spatial as the game starts.")]
+    [SerializeField] protected bool EnableOnAwake = false;
+
     [Header("Text Pump Effect")]
     [Tooltip("The percentage by which the scale of the text multiplies when is pumps (1:Inf).")]
     [SerializeField] protected float textPumpPercent;
@@ -16,6 +21,7 @@ public abstract class PhaseSpatial<T> : Singleton<T> where T : MonoBehaviour
 
     #region Class Members
     private List<GameObject> children;
+    private CanvasGroup canvas;
     private bool m_enabled;
     #endregion
 
@@ -24,17 +30,19 @@ public abstract class PhaseSpatial<T> : Singleton<T> where T : MonoBehaviour
         get { return m_enabled; }
         protected set {
             m_enabled = value;
-
-            foreach (GameObject child in children)
-                child.SetActive(value);
+            canvas.alpha = value ? 1 : 0;
         }
     }
     #endregion
 
+    protected virtual void Awake() {
+        this.canvas = GetComponent<CanvasGroup>();
+    }
+
     protected virtual void Start() {
         this.children = new List<GameObject>();
         foreach (Transform child in transform) children.Add(child.gameObject);
-        this.Enabled = false;
+        this.Enabled = EnableOnAwake;
     }
 
     /// <summary>

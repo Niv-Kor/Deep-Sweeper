@@ -14,10 +14,10 @@ public class MineActivator : ObjectActivator
     [SerializeField] private float activationRange;
 
     private MeshClone[] clones;
-    private Sweeper sweeper;
+    private DetonationSystem sweeper;
 
     private void Awake() {
-        this.sweeper = GetComponent<Sweeper>();
+        this.sweeper = GetComponent<DetonationSystem>();
         this.clones = GetComponentsInChildren<MeshClone>();
         var scouters = GetComponentsInChildren<ActivationScouter>();
         var player = Submarine.Instance.transform;
@@ -36,7 +36,7 @@ public class MineActivator : ObjectActivator
 
     /// <inheritdoc/>
     protected override void Enable(bool flag) {
-        if (sweeper.IsDismissed) return;
+        if (sweeper.Detonated) return;
 
         foreach (GameObject obj in activateOnEnable) obj.SetActive(flag);
         foreach (GameObject obj in activateOnDisable) obj.SetActive(!flag);

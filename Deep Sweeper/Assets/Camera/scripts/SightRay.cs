@@ -14,10 +14,10 @@ public class SightRay : Singleton<SightRay>
         #region Properties
         public MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
-        public Indicator Indicator { get; private set; }
-        public MineSelector Selector { get; private set; }
+        public IndicationSystem Indicator { get; private set; }
+        public SelectionSystem Selector { get; private set; }
         public bool IsValueable {
-            get => !Grid.Sweeper.IsDismissed || Indicator.Value > 0;
+            get => !Grid.DetonationSystem.Detonated || Indicator.Value > 0;
         }
         #endregion
 
@@ -25,33 +25,8 @@ public class SightRay : Singleton<SightRay>
             this.avatar = mine;
             this.Grid = mine.GetComponentInParent<MineGrid>();
             this.Activator = Grid.Activator;
-            this.Indicator = Grid.Indicator;
-            this.Selector = Grid.GetComponent<MineSelector>();
-        }
-
-        /// <summary>
-        /// Highlight all neigbours of the selected mine.
-        /// </summary>
-        /// <param name="flag">True to highlight the neighbours or false to cancel</param>
-        public void SelectNeighbours(bool flag) {
-            foreach (MineGrid grid in Grid.Section) {
-                if (grid == null) continue;
-
-                MineSelector gridSelector = grid.GetComponent<MineSelector>();
-                MineActivator gridActivator = grid.GetComponent<MineActivator>();
-
-                //activate or deactivate each of the neighbours
-                if (flag) gridActivator.ActivateAndLock();
-                else gridActivator.Unlock();
-
-                //apply the correct selection mode
-                SelectionMode mode;
-
-                if (grid.IsFlagged) mode = flag ? SelectionMode.FlaggedNeighbourIndication : SelectionMode.Flagged;
-                else mode = flag ? SelectionMode.NeighbourIndication : SelectionMode.Default;
-
-                gridSelector.Mode = mode;
-            }
+            this.Indicator = Grid.IndicationSystem;
+            this.Selector = Grid.SelectionSystem;
         }
 
         /// <summary>
@@ -109,7 +84,7 @@ public class SightRay : Singleton<SightRay>
 
         if (mouseLeft) Fire();
         if (selectedMine != null) {
-            if (mouseRight) selectedMine.Grid.ToggleFlag();
+            if (mouseRight) selectedMine.Selector.ToggleFlag();
             if (mouseLeft) {
                 DeselectMines();
                 DeselectIndicators();
@@ -157,7 +132,7 @@ public class SightRay : Singleton<SightRay>
                     if (noIndicator || !sameIndicator) {
                         DeselectIndicators();
                         selectedIndicator = SelectMine(obj);
-                        selectedIndicator?.SelectNeighbours(true);
+                        selectedIndicator?.Selector.SelectSection(true);
                     }
                 }
             }
@@ -183,7 +158,7 @@ public class SightRay : Singleton<SightRay>
             //only fire the bullets if the indicator is fulfilled
             if (selectedIndicator.Indicator.IsIndicationFulfilled) {
                 IEnumerable<MineGrid> section = from neighbour in selectedIndicator.Grid.Section
-                                                where neighbour != null && !neighbour.Sweeper.IsDismissed && !neighbour.IsFlagged
+                                                where neighbour != null && !neighbour.DetonationSystem.Detonated && !neighbour.SelectionSystem.IsFlagged
                                                 select neighbour;
 
                 //fire a bullet at each of the neighbours
@@ -244,7 +219,7 @@ public class SightRay : Singleton<SightRay>
     /// </summary>
     private void DeselectIndicators() {
         if (selectedIndicator != null) {
-            selectedIndicator.SelectNeighbours(false);
+            selectedIndicator.Selector.SelectSection(false);
             selectedIndicator = null;
         }
     }

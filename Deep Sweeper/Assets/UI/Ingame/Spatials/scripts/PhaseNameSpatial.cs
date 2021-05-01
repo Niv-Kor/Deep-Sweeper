@@ -25,10 +25,4 @@ public class PhaseNameSpatial : PhaseSpatial<PhaseNameSpatial>
         phaseNumberCmp.text = NumericUtils.Romanify(number + 1);
         mapNameCmp.text = phaseConfig.MapName;
     }
-
-    /// <summary>
-    /// Display or hide the phase title.
-    /// </summary>
-    /// <param name="flag">True to display or false to hide</param>
-    public void Display(bool flag) { Enabled = flag; }
 }

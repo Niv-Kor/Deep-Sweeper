@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Sweeper))]
-[RequireComponent(typeof(MineSelector))]
+[RequireComponent(typeof(DetonationSystem))]
+[RequireComponent(typeof(SelectionSystem))]
 [RequireComponent(typeof(MineActivator))]
 [RequireComponent(typeof(LootGeneratorObject))]
 public class MineGrid : MonoBehaviour
@@ -21,14 +21,14 @@ public class MineGrid : MonoBehaviour
 
     #region Properties
     public GameObject Avatar => mine.gameObject;
-    public Sweeper Sweeper { get; private set; }
-    public MineActivator Activator { get; private set; }
-    public MineSelector Selector { get; private set; }
+    public DetonationSystem DetonationSystem { get; private set; }
+    public SelectionSystem SelectionSystem { get; private set; }
+    public IndicationSystem IndicationSystem { get; private set; }
     public LootGeneratorObject LootGenerator { get; private set; }
-    public Indicator Indicator { get; private set; }
-    public float ExplosiveChance { get; private set; }
+    public MineActivator Activator { get; private set; }
     public MineField Field { get; set; }
     public Vector2Int Position { get; set; }
+    public float ExplosiveChance { get; private set; }
     public bool IsMined { get; set; }
     public int Layer {
         get => Avatar.layer;
@@ -50,20 +50,6 @@ public class MineGrid : MonoBehaviour
         }
     }
 
-    public bool IsFlagged {
-        get {
-            bool flagged = Selector.Mode == SelectionMode.Flagged;
-            bool indicatedFlagged = Selector.Mode == SelectionMode.FlaggedNeighbourIndication;
-            return flagged || indicatedFlagged;
-        }
-        set {
-            if (value != IsFlagged) {
-                var targetMode = value ? SelectionMode.Flagged : SelectionMode.Default;
-                Selector.Mode = targetMode;
-            }
-        }
-    }
-
     public List<MineGrid> Section {
         get {
             int row = Position.x;
@@ -75,16 +61,22 @@ public class MineGrid : MonoBehaviour
 
     private void Awake() {
         this.Activator = GetComponent<MineActivator>();
-        this.Indicator = GetComponentInChildren<Indicator>();
+        this.IndicationSystem = GetComponentInChildren<IndicationSystem>();
+        this.DetonationSystem = GetComponent<DetonationSystem>();
         this.LootGenerator = GetComponent<LootGeneratorObject>();
-        this.Sweeper = GetComponent<Sweeper>();
-        this.Selector = GetComponent<MineSelector>();
+        this.SelectionSystem = GetComponent<SelectionSystem>();
         this.mine = GetComponentInChildren<MineBouncer>();
+
+        //set this object as a parent grid to its systems
+        IndicationSystem.SetParentGrid(this);
+        DetonationSystem.SetParentGrid(this);
+        SelectionSystem.SetParentGrid(this);
+
         this.IsMined = false;
 
         //bind events
-        Sweeper.MineDisposalEndEvent += Activator.Unlock;
-        Selector.ModeApplicationEvent += ChangeMineLayer;
+        DetonationSystem.MineDisposalEndEvent += Activator.Unlock;
+        SelectionSystem.ModeApplicationEvent += ChangeLayer;
     }
 
     private void Start() {
@@ -92,7 +84,7 @@ public class MineGrid : MonoBehaviour
         foreach (MineGrid neighbour in Section) {
             if (neighbour == null) continue;
 
-            neighbour.Sweeper.MineDisposalStartEvent += CalcExplosiveChance;
+            neighbour.DetonationSystem.MineDisposalStartEvent += CalcExplosiveChance;
             FlagsManager.Instance.FlagsAmountUpdateEvent += CalcExplosiveChance;
             FlagsManager.Instance.FlagReturnedEvent += delegate(bool _) { CalcExplosiveChance(); };
             FlagsManager.Instance.FlagTakenEvent += delegate(bool _) { CalcExplosiveChance(); };
@@ -105,32 +97,12 @@ public class MineGrid : MonoBehaviour
     /// Change the layer of the mine avatar and mine clone,
     /// according to their flag state.
     /// </summary>
-    /// <param name="newMode">The previous mine selection mode</param>
+    /// <param name="oldMode">The previous mine selection mode</param>
     /// <param name="newMode">The applied mine selection mode</param>
-    private void ChangeMineLayer(SelectionMode oldMode, SelectionMode newMode) {
-        LayerMask targetLayer;
-
-        switch (newMode) {
-            case SelectionMode.Flagged:
-            case SelectionMode.FlaggedNeighbourIndication:
-                targetLayer = Layers.FLAGGED_MINE;
-                break;
-
-            case SelectionMode.Default:
-            case SelectionMode.NeighbourIndication:
-                targetLayer = Layers.MINE;
-                break;
-
-            default: return;
-        }
-
-        Layer = targetLayer;
+    private void ChangeLayer(SelectionMode oldMode, SelectionMode newMode) {
+        bool flagMode = SelectionSystem.IsFlagMode(newMode);
+        Layer = flagMode ? Layers.FLAGGED_MINE : Layers.MINE;
     }
-
-    /// <summary>
-    /// Put a flag on the mine or dispose it.
-    /// </summary>
-    public void ToggleFlag() { IsFlagged ^= true; }
 
     /// <summary>
     /// Explode the mine.
@@ -139,27 +111,27 @@ public class MineGrid : MonoBehaviour
     /// <param name="ignoreFlagged">True to do nothing if this mine is flagged</param>
     /// <param name="allowDrop">True to allow the mine to drop an item</param>
     private void Detonate(bool explosion, bool ignoreFlagged = false, bool allowDrop = true) {
-        bool ignored = IsFlagged && ignoreFlagged;
-        if (Indicator.IsDisplayed() || ignored) return;
+        bool ignored = SelectionSystem.IsFlagged && ignoreFlagged;
+        if (IndicationSystem.IsDisplayed || ignored) return;
 
         //lose
         if (IsMined) {
-            Sweeper.Explode();
+            DetonationSystem.Explode();
             DeathTint.Instance.Tint();
             LevelFlow.Instance.Lose();
         }
         else {
-            Indicator.AllowRevelation(true);
-            Indicator.Activate();
+            IndicationSystem.AllowRevelation(true);
+            IndicationSystem.Activate();
             Activator.ActivateAndLock();
-            IsFlagged = false;
+            SelectionSystem.ApplyFlag(false);
 
-            int neighbours = Indicator.Value;
+            int neighbours = IndicationSystem.Value;
             List<MineGrid> section = Section;
 
             if (!allowDrop) LootGenerator.Chance = 0;
-            if (explosion) Sweeper.Explode();
-            else Sweeper.Vanish();
+            if (explosion) DetonationSystem.Explode();
+            else DetonationSystem.Vanish();
             MineHitEvent?.Invoke();
 
             //keep revealing grids recursively
@@ -191,11 +163,11 @@ public class MineGrid : MonoBehaviour
 
                 //check if section consists if the exact amount of flagged mines
                 int flaggedCounter = 0;
-                foreach (MineGrid mineGrid in section)
-                    if (mineGrid != null && mineGrid.IsFlagged) flaggedCounter++;
+                foreach (MineGrid grid in section)
+                    if (grid != null && grid.SelectionSystem.IsFlagged) flaggedCounter++;
 
                 //reveal each available grid in the section
-                if (flaggedCounter == Indicator.Value)
+                if (flaggedCounter == IndicationSystem.Value)
                     foreach (MineGrid mineGrid in section)
                         if (mineGrid != null) mineGrid.Detonate(explosion, true);
 
@@ -207,7 +179,7 @@ public class MineGrid : MonoBehaviour
     /// Calculate the chance of this mine being an explosive mine.
     /// </summary>
     public void CalcExplosiveChance() {
-        if (Sweeper.IsDismissed) {
+        if (DetonationSystem.Detonated) {
             ExplosiveChance = 0;
             return;
         }
@@ -220,8 +192,8 @@ public class MineGrid : MonoBehaviour
         foreach (MineGrid neighbour in Section) {
             if (neighbour == null) continue;
 
-            bool dismissed = neighbour.Sweeper.IsDismissed;
-            int number = neighbour.Indicator.Value;
+            bool dismissed = neighbour.DetonationSystem.Detonated;
+            int number = neighbour.IndicationSystem.Value;
 
             if (dismissed && number > 0) {
                 List<MineGrid> neighbourSection = neighbour.Section;
@@ -230,8 +202,8 @@ public class MineGrid : MonoBehaviour
 
                 foreach (MineGrid farNeighbour in neighbourSection) {
                     if (farNeighbour == null) continue;
-                    else if (!farNeighbour.Sweeper.IsDismissed) {
-                        if (farNeighbour.IsFlagged) flaggedGrids++;
+                    else if (!farNeighbour.DetonationSystem.Detonated) {
+                        if (farNeighbour.SelectionSystem.IsFlagged) flaggedGrids++;
                         else emptyGrids++;
                     }
                 }

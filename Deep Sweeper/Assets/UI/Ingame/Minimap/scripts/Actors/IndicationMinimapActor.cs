@@ -7,7 +7,7 @@ public class IndicationMinimapActor : MinimapActor
         base.Awake();
 
         //apply minimap layer when mine dismisses
-        Sweeper sweeper = GetComponentInParent<Sweeper>();
+        DetonationSystem sweeper = GetComponentInParent<DetonationSystem>();
         sweeper.MineDisposalEndEvent += delegate { ApplyMinimapLayer(true); };
     }
 

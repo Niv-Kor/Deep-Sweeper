@@ -25,7 +25,14 @@ public class FlagsManager : Singleton<FlagsManager>
     private void CollectFieldInfo() {
         MineField field = LevelFlow.Instance.CurrentPhase.Field;
         MaxFlags = field.MinesAmount;
-        AvailableFlags = field.MinesAmount;
+        ResetGauge();
+    }
+
+    /// <summary>
+    /// Reset the flags gauge and make all taken flags available again.
+    /// </summary>
+    public void ResetGauge() {
+        AvailableFlags = MaxFlags;
         FlagsAmountUpdateEvent?.Invoke();
     }
 

@@ -214,6 +214,7 @@ public class LevelFlow : Singleton<LevelFlow>
                 currentField.ResetAll();
                 LootManager.Instance.ClearPhaseItems(phaseIndex);
                 Suitcase.Instance.RemovePhaseItems(phaseIndex);
+                FlagsManager.Instance.ResetGauge();
             }
 
             void Finish() {

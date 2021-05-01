@@ -252,7 +252,7 @@ Transform:
   - {fileID: 1732933414}
   - {fileID: 1345751765}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &88409603
 MeshCollider:
@@ -1264,7 +1264,7 @@ PrefabInstance:
     - target: {fileID: 792161686244347900, guid: b33cf03cbc1d54a45bfdce38adbd6532,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 792161686244347900, guid: b33cf03cbc1d54a45bfdce38adbd6532,
         type: 3}
@@ -2978,7 +2978,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &912688817
 PrefabInstance:
@@ -5247,7 +5247,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1964278201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec495e4d6e7fde94ca7a91c8946ca5f9, type: 3}
   m_Name: 
@@ -7566,6 +7566,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1821911913, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: blankColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821911913, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: blankColor.b
+      value: 0.1792453
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821911913, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: blankColor.g
+      value: 0.059093837
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821911913, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: blankColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821911914, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 595683363501056561, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: m_Material
@@ -7904,7 +7924,7 @@ PrefabInstance:
     - target: {fileID: 8247457643987969534, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: UI
       objectReference: {fileID: 0}
     - target: {fileID: 9106694886123821246, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}

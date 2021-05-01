@@ -8,7 +8,6 @@
     public void Activate(DifficultyLevel difficulty, int timer) {
         canvas.alpha = 0;
         PhaseTimerSpatial.Instance.Set(difficulty, timer);
-        PhaseNameSpatial.Instance.Display(true);
         FlagsGaugeSpatial.Instance.Display(true);
 
         Activate(true);
@@ -20,7 +19,6 @@
     public void Deactivate() {
         void Callback() {
             PhaseTimerSpatial.Instance.Stop();
-            PhaseNameSpatial.Instance.Display(false);
             FlagsGaugeSpatial.Instance.Display(false);
         }
 
