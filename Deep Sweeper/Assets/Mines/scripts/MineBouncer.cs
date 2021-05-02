@@ -39,8 +39,8 @@ public class MineBouncer : MonoBehaviour
 
     private void Awake() {
         Renderer chainJointRenderer = baseChainJoint.GetComponent<Renderer>();
-        DetonationSystem sweeper = GetComponentInParent<DetonationSystem>();
-        sweeper.MineDisposalEndEvent += StopAllCoroutines;
+        DetonationSystem detonationSys = GetComponentInParent<DetonationSystem>();
+        detonationSys.DetonationEvent += StopAllCoroutines;
         float jointLength = chainJointRenderer.bounds.size.y;
         this.chain = baseChainJoint.transform.parent;
         this.chainLength = chain.childCount * jointLength;

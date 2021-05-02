@@ -13,10 +13,10 @@ public class MineMinimapActor : MinimapActor
         MineGrid grid = GetComponent<MineGrid>();
         SelectionSystem selector = grid.SelectionSystem;
         DetonationSystem sweeper = grid.DetonationSystem;
-        if (sweeper.Detonated) Sprite = null;
+        if (sweeper.IsDetonated) Sprite = null;
 
         //bind events
-        sweeper.MineDisposalStartEvent += delegate { Sprite = null; };
+        sweeper.DetonationEvent += delegate { Sprite = null; };
         selector.ModeApplicationEvent += OnMineSelection;
     }
 

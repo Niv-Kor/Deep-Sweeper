@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,11 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         [SerializeField] public List<int> fontSizes;
     }
 
+    #region Constants
+    private static readonly int AVAILABLE_FLAGS_COUNTER = 0;
+    private static readonly int AVAILABLE_MINES_COUNTER = 1;
+    #endregion
+
     #region Exposed Editor Parameters
     [Tooltip("A list of modifiable counters.")]
     [SerializeField] private List<CounterSettings> counters;
@@ -23,13 +29,36 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
 
     #region Class Members
     private FlagsManager flagsMngr;
-    private List<DetonationSystem> sweepers;
+    private List<DetonationSystem> detonationSystems;
+    #endregion
+
+    #region Properties
+    public int AvailableFlags => GetCounter(AVAILABLE_FLAGS_COUNTER);
+    public int AvailableMines => GetCounter(AVAILABLE_MINES_COUNTER);
+    private List<MineGrid> CurrentGrids => LevelFlow.Instance.CurrentPhase.Field.Grids;
     #endregion
 
     protected override void Start() {
         this.flagsMngr = FlagsManager.Instance;
-        this.sweepers = new List<DetonationSystem>();
+        this.detonationSystems = new List<DetonationSystem>();
+
+        flagsMngr.FlagTakenEvent += OnFlagsStateChanged;
+        flagsMngr.FlagReturnedEvent += OnFlagsStateChanged;
+        flagsMngr.FlagsAmountUpdateEvent += delegate { OnFlagsStateChanged(true); };
+
         base.Start();
+    }
+
+    /// <summary>
+    /// Activate when the amount of available flags or undetonated mines
+    /// in the current field changes.
+    /// </summary>
+    /// <param name="update">True to update counters</param>
+    private void OnFlagsStateChanged(bool update) {
+        if (update) {
+            FetchAvailableFlags();
+            FetchUndetonatedAmount();
+        }
     }
 
     /// <summary>
@@ -54,38 +83,38 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// <see cref="SetCounter(int, string)"/>
     /// <param name="text">The counter's new numeric value</param>
     private void SetCounter(int index, int num) {
-        SetCounter(index, num.ToString());
+        if (GetCounter(index) != num) SetCounter(index, num.ToString());
+    }
+
+    /// <param name="index">The index of the counter</param>
+    /// <returns>The counter's value</returns>
+    private int GetCounter(int index) {
+        bool success = int.TryParse(counters[index].textComponent.text, out int amount);
+        return success ? amount : 0;
     }
 
     /// <summary>
-    /// Bind or unbind FlagsManager events.
+    /// Set the amount in the available flags counter.
     /// </summary>
-    /// <param name="flag">True to bind the events or false to unbind</param>
-    private void BindEvents(bool flag) {
-        FlagsManager flagsMngr = FlagsManager.Instance;
-
-        void UpdateFlagsCount(bool update) {
-            if (update) SetCounter(0, flagsMngr.AvailableFlags);
-        }
-
-        if (flag) {
-            flagsMngr.FlagTakenEvent += UpdateFlagsCount;
-            flagsMngr.FlagReturnedEvent += UpdateFlagsCount;
-        }
-        else {
-            flagsMngr.FlagTakenEvent -= UpdateFlagsCount;
-            flagsMngr.FlagReturnedEvent -= UpdateFlagsCount;
-        }
+    /// <param name="num">The new amount</param>
+    private void SetAvailableFlags(int num) {
+        SetCounter(AVAILABLE_FLAGS_COUNTER, num);
     }
 
     /// <summary>
-    /// Activate when a mine in the current phase's field is being sweeped.
+    /// Set the amount in the available mines counter.
+    /// </summary>
+    /// <param name="num">The new amount</param>
+    private void SetAvailableMines(int num) {
+        SetCounter(AVAILABLE_MINES_COUNTER, num);
+    }
+
+    /// <summary>
+    /// Activate when a mine in the current phase's field is being detonated.
     /// This function updates the right counter and decreases its value by 1.
     /// </summary>
     private void OnMineSweeped() {
-        CounterSettings counter = counters[1];
-        int currentValue = int.Parse(counter.textComponent.text);
-        SetCounter(1, currentValue - 1);
+        SetAvailableMines(AvailableMines - 1);
     }
 
     /// <summary>
@@ -93,21 +122,35 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// This method updates the flags counters.
     /// </summary>
     private void OnDisplay() {
-        MineField field = LevelFlow.Instance.CurrentPhase.Field;
-        SetCounter(0, flagsMngr.AvailableFlags);
-
-        //find unsweeped mines amount and bind new sweeper events
-        var grids = field.Grids;
-        int unsweeped = grids.Count;
-
-        foreach (MineGrid grid in grids) {
-            DetonationSystem sweeper = grid.DetonationSystem;
-            if (sweeper.Detonated) unsweeped--;
-            sweeper.MineDisposalStartEvent += OnMineSweeped;
-            sweepers.Add(sweeper);
+        //bind an event to each of the field's mines
+        foreach (MineGrid grid in CurrentGrids) {
+            DetonationSystem detonateionSys = grid.DetonationSystem;
+            detonateionSys.DetonationEvent += OnMineSweeped;
+            detonationSystems.Add(detonateionSys);
         }
 
-        SetCounter(1, unsweeped);
+        FetchAvailableFlags();
+        FetchUndetonatedAmount();
+    }
+
+    /// <summary>
+    /// Find the amount of available flags in the current field
+    /// and update the relevant counter.
+    /// </summary>
+    private void FetchAvailableFlags() {
+        SetAvailableFlags(flagsMngr.AvailableFlags);
+    }
+
+    /// <summary>
+    /// Find the amount of undetonated mines in the current field
+    /// and update the relevant counter.
+    /// </summary>
+    private void FetchUndetonatedAmount() {
+        int unsweeped = (from grid in CurrentGrids
+                         where !grid.DetonationSystem.IsDetonated
+                         select grid).Count();
+
+        SetAvailableMines(unsweeped);
     }
 
     /// <summary>
@@ -116,16 +159,15 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// <param name="flag">True to display or false to hide</param>
     public void Display(bool flag) {
         Enabled = flag;
-        BindEvents(flag);
 
         if (flag) flagsMngr.FlagsAmountUpdateEvent += OnDisplay;
         else {
             //unbind sweeper events
-            foreach (DetonationSystem sweeper in sweepers)
-                sweeper.MineDisposalStartEvent -= OnMineSweeped;
+            foreach (DetonationSystem sweeper in detonationSystems)
+                sweeper.DetonationEvent -= OnMineSweeped;
 
             flagsMngr.FlagsAmountUpdateEvent -= OnDisplay;
-            sweepers.Clear();
+            detonationSystems.Clear();
         }
     }
 }

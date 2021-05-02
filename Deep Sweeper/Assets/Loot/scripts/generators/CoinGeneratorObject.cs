@@ -28,6 +28,6 @@ public class CoinGeneratorObject : LootGeneratorObject
     /// <inheritdoc/>
     protected override void BindDropEvent(UnityAction dropAction) {
         MineGrid grid = GetComponentInParent<MineGrid>();
-        grid.DetonationSystem.MineDisposalStartEvent += dropAction;
+        grid.DetonationSystem.DetonationEvent += dropAction;
     }
 }

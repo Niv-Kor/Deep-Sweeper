@@ -14,7 +14,7 @@ public class SubmarineMovementController : PlayerController3D
     [Tooltip("The submarine's ascending speed.")]
     [SerializeField] private float verticalSpeed = 1;
 
-    [Tooltip("The maximum velocity magnitude is determined by current speed divided by relativeMaxMagnitude.")]
+    [Tooltip("The maximum velocity magnitude is determined by current speed divided by 'relativeMaxMagnitude'.")]
     [SerializeField] [Range(1, 50f)] private float maxVelocity = 10;
 
     [Tooltip("The number with which the submarine's speed multiplies when using the turbo feature.")]

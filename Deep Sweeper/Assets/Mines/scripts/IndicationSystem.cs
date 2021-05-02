@@ -1,5 +1,6 @@
 ﻿using Constants;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -19,13 +20,15 @@ public class IndicationSystem : MineSystem
     private Transform textTransform;
     private SphereCollider sphereCol;
     private Submarine player;
-    private bool allowReveal;
+    private bool revealable;
     #endregion
 
     #region Properties
-    public bool IsDisplayed => allowReveal || indicationNum.Alpha > 0;
+    public bool IsFatal { get; set; }
+    public float FatalityChance { get; private set; }
+    public bool IsRevealed => revealable || indicationNum.Alpha > 0;
     public int Value {
-        get => indicationNum.Value;
+        get => IsFatal ? -1 : indicationNum.Value;
         set { indicationNum.Value = value; }
     }
 
@@ -45,7 +48,23 @@ public class IndicationSystem : MineSystem
         this.textTransform = indicationNum.transform.parent;
         this.player = Submarine.Instance;
         this.sphereCol = GetComponent<SphereCollider>();
-        this.allowReveal = false;
+        this.revealable = false;
+        this.IsFatal = false;
+    }
+
+    private void Start() {
+        FlagsManager flagsMngr = FlagsManager.Instance;
+
+        //calculate the fatality chance every time a change occurs to one of the neighbours
+        foreach (MineGrid neighbour in Grid.Section) {
+            if (neighbour == null) continue;
+            neighbour.DetonationSystem.DetonationEvent += CalcFatalityChance;
+            flagsMngr.FlagsAmountUpdateEvent += CalcFatalityChance;
+            flagsMngr.FlagReturnedEvent += delegate (bool _) { CalcFatalityChance(); };
+            flagsMngr.FlagTakenEvent += delegate (bool _) { CalcFatalityChance(); };
+        }
+
+        CalcFatalityChance();
     }
 
     /// <summary>
@@ -66,8 +85,11 @@ public class IndicationSystem : MineSystem
     /// Set 'alphaPercent' to 0 in order to hide it.
     /// </summary>
     /// <param name="alphaPercent">Alpha value of the text [0:1]</param>
-    public void Display(float alphaPercent) {
-        if (allowReveal) indicationNum.Alpha = alphaPercent;
+    public void Reveal(float alphaPercent) {
+        if (revealable) {
+            alphaPercent = Mathf.Clamp(alphaPercent, 0, 1);
+            indicationNum.Alpha = alphaPercent;
+        }
     }
 
     /// <summary>
@@ -77,12 +99,12 @@ public class IndicationSystem : MineSystem
     /// <param name="flag">True to allow or false to forbid</param>
     public void AllowRevelation(bool flag) {
         sphereCol.enabled = flag;
-        allowReveal = flag;
+        revealable = flag;
 
         if (flag) StartCoroutine(Float());
         else {
             StopAllCoroutines();
-            Display(0);
+            Reveal(0);
         }
     }
 
@@ -91,10 +113,10 @@ public class IndicationSystem : MineSystem
     /// </summary>
     private IEnumerator Float() {
         float startHeight = textTransform.position.y;
-        float timer = Random.Range(-1f, 1f); //randomize sine
+        float timer = Random.Range(-1f, 1f); //randomize sine wave
 
         while (true) {
-            if (IsDisplayed) {
+            if (IsRevealed) {
                 //float
                 timer += Time.deltaTime;
                 float sineWave = Mathf.Sin(timer * floatSpeed);
@@ -113,5 +135,52 @@ public class IndicationSystem : MineSystem
 
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Calculate the chance of this mine being fatal.
+    /// </summary>
+    public void CalcFatalityChance() {
+        if (Grid.DetonationSystem.IsDetonated) {
+            FatalityChance = 0;
+            return;
+        }
+
+        FlagsManager flagsMngr = FlagsManager.Instance;
+        List<float> chances = new List<float>();
+        float defaultChance = 1f / flagsMngr.AvailableFlags;
+        chances.Add(defaultChance);
+
+        foreach (MineGrid neighbour in Grid.Section) {
+            if (neighbour == null) continue;
+
+            bool dismissed = neighbour.DetonationSystem.IsDetonated;
+            int number = neighbour.IndicationSystem.Value;
+
+            if (dismissed && number > 0) {
+                List<MineGrid> neighbourSection = neighbour.Section;
+                int emptyGrids = 0;
+                int flaggedGrids = 0;
+
+                foreach (MineGrid farNeighbour in neighbourSection) {
+                    if (farNeighbour == null) continue;
+                    else if (!farNeighbour.DetonationSystem.IsDetonated) {
+                        if (farNeighbour.SelectionSystem.IsFlagged) flaggedGrids++;
+                        else emptyGrids++;
+                    }
+                }
+
+                int unfulfilled = number - flaggedGrids;
+                float neighbourChance = (float)unfulfilled / emptyGrids;
+                chances.Add(neighbourChance);
+            }
+        }
+
+        //find maximum chance
+        float maxChance = defaultChance;
+        foreach (float chance in chances)
+            if (chance > maxChance) maxChance = chance;
+
+        FatalityChance = maxChance;
     }
 }

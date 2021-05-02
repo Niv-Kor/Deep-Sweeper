@@ -84,7 +84,7 @@ public class SubmarineGun : MonoBehaviour
 
                 //ensure the mine has been detonated and revert its layer
                 bulletCmp.BulletHitEvent += delegate {
-                    targetMine.TriggerHit(BulletHitType.SingleHit, true);
+                    targetMine.DetonationSystem.TriggerHit(bulletCmp, true);
                     targetMine.TempTarget = false;
                 };
             }
@@ -96,6 +96,7 @@ public class SubmarineGun : MonoBehaviour
 
             return true;
         }
+
         else return false;
     }
 }

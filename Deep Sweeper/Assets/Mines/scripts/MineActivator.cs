@@ -29,14 +29,14 @@ public class MineActivator : ObjectActivator
         }
 
         //deactivate clones when the mine disposes
-        sweeper.MineDisposalStartEvent += delegate {
+        sweeper.DetonationEvent += delegate {
             foreach (MeshClone clone in clones) clone.DisplayMesh(false);
         };
     }
 
     /// <inheritdoc/>
     protected override void Enable(bool flag) {
-        if (sweeper.Detonated) return;
+        if (sweeper.IsDetonated) return;
 
         foreach (GameObject obj in activateOnEnable) obj.SetActive(flag);
         foreach (GameObject obj in activateOnDisable) obj.SetActive(!flag);

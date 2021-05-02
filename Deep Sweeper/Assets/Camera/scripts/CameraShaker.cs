@@ -57,7 +57,7 @@ public class CameraShaker : MonoBehaviour
     [Tooltip("The frequency of the camera's shake.")]
     [SerializeField] private float frequency = 1;
 
-    [Tooltip("A parameter that determines how fast will the shake decay.")]
+    [Tooltip("A parameter that determines how fast will the shake energy decay.")]
     [SerializeField] private float entropy = .5f;
 
     [Tooltip("The minimal exponential wave multiplier at which the shake stops.")]
@@ -167,6 +167,9 @@ public class CameraShaker : MonoBehaviour
     /// </summary>
     /// <param name="intensity">The percentage of shake power [0:1]</param>
     public void Shake(float intensity = 1) {
+        intensity = Mathf.Clamp(intensity, 0, 1);
+        if (intensity == 0) return;
+
         transform.localPosition = originPos;
         StopAllCoroutines();
         ActivateFX(true, intensity);

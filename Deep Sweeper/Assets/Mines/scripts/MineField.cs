@@ -162,10 +162,10 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Spread mines randomly in the grids matrix.
+    /// Spread fatal mines randomly in the grids matrix.
     /// </summary>
     /// <param name="amount">Amount of mines to spread</param>
-    /// <returns>A list of the randomly selected mined grids' positions</returns>
+    /// <returns>A list of the randomly selected fatal grids' positions</returns>
     private List<Vector2Int> SpreadMines(int amount) {
         List<Vector2Int> positions = new List<Vector2Int>();
         amount = Mathf.Min(amount, gridsAmount);
@@ -179,7 +179,7 @@ public class MineField : ConfinedArea
             int num = numsStock[randomIndex];
             numsStock.Remove(num);
             MineGrid selected = Grids[num];
-            selected.IsMined = true;
+            selected.IndicationSystem.IsFatal = true;
             positions.Add(selected.Position);
         }
 
@@ -187,24 +187,25 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Spread mines in the grids matrix.
+    /// Spread fatal mines in the grids matrix.
     /// </summary>
-    /// <param name="positions">A list of positions that indicate the mined grids</param>
+    /// <param name="positions">A list of positions that indicate the fatal grids</param>
     private void SpreadMines(List<Vector2Int> positions) {
         List<MineGrid> selected = GetGridsByPositions(positions);
-        foreach (MineGrid grid in selected) grid.IsMined = true;
+        foreach (MineGrid grid in selected)
+            grid.IndicationSystem.IsFatal = true;
     }
 
     /// <summary>
-    /// Count the mined neighbours of each grid.
+    /// Count the fatal neighbours of each grid.
     /// </summary>
     private void CountNeighbours() {
         for (int i = 0; i < MatrixSize.x; i++) {
             for (int j = 0; j < MatrixSize.y; j++) {
                 MineGrid grid = gridsMatrix[i, j];
                 List<MineGrid> section = GetSection(i, j);
-                int minedNeighbours = section.FindAll(x => x != null && x.IsMined).Count;
-                grid.IndicationSystem.Value = minedNeighbours;
+                int fatalNeighbours = section.FindAll(x => x != null && x.IndicationSystem.IsFatal).Count;
+                grid.IndicationSystem.Value = fatalNeighbours;
             }
         }
     }
@@ -222,6 +223,7 @@ public class MineField : ConfinedArea
     /// </returns>
     private Vector2Int? OpenInitially(Vector2Int? gridPos = null) {
         if (gridsAmount == 0 || MinesAmount >= gridsAmount) return null;
+
         MineGrid grid;
 
         //find grid randomly
@@ -232,7 +234,7 @@ public class MineField : ConfinedArea
             bool lowerStandard = false;
 
             do {
-                //fill pool again and now ignore the mined neighbours condition
+                //fill pool again and now ignore the fatal neighbours condition
                 if (!lowerStandard && indicesPool.Count == 0) {
                     for (int i = 0; i < gridsAmount; i++) indicesPool.Add(i);
                     lowerStandard = true;
@@ -244,12 +246,12 @@ public class MineField : ConfinedArea
                 grid = Grids[gridIndex];
                 gridPos = grid.Position;
             }
-            while (grid.IsMined || (grid.IndicationSystem.Value != 0 && !lowerStandard));
+            while (grid.IndicationSystem.IsFatal || (grid.IndicationSystem.Value != 0 && !lowerStandard));
         }
         //find grid by position
         else grid = Grids.Find(x => x.Position == gridPos);
 
-        grid.TriggerHit(BulletHitType.SingleHit, false, false);
+        grid.DetonationSystem.TriggerHit(null, false, false);
         return gridPos;
     }
 
@@ -345,11 +347,11 @@ public class MineField : ConfinedArea
     /// Prevent real mines from dropping loot items.
     /// </summary>
     private void DisableRealMineLoots() {
-        List<LootGeneratorObject> mined = (from MineGrid grid in Grids
-                                           where grid.IsMined
+        List<LootGeneratorObject> fatal = (from MineGrid grid in Grids
+                                           where grid.IndicationSystem.IsFatal
                                            select grid.LootGenerator).ToList();
 
-        foreach (LootGeneratorObject generator in mined)
+        foreach (LootGeneratorObject generator in fatal)
             generator.Chance = 0;
     }
 
@@ -367,7 +369,7 @@ public class MineField : ConfinedArea
         List<MineGrid> droppingGrids = new List<MineGrid>();
         while (droppingGrids.Count == 0) {
             droppingGrids = (from MineGrid grid in Grids
-                             where !grid.IsMined && !grid.DetonationSystem.Detonated && grid.LootGenerator.WillDrop
+                             where !grid.IndicationSystem.IsFatal && !grid.DetonationSystem.IsDetonated && grid.LootGenerator.WillDrop
                              select grid).ToList();
 
             //reroll all
@@ -411,14 +413,14 @@ public class MineField : ConfinedArea
     }
 
     /// <summary>
-    /// Check if the field is clear, and only left with real mines.
+    /// Check if the field is clear, and only left with fatal mines.
     /// </summary>
     /// <returns>True if all dismissable mines are indeed dismissed.</returns>
     public bool IsClear() {
         if (!IsActivated) return false;
 
         foreach (MineGrid grid in Grids)
-            if (!grid.IsMined && !grid.DetonationSystem.Detonated) return false;
+            if (!grid.IndicationSystem.IsFatal && !grid.DetonationSystem.IsDetonated) return false;
 
         return true;
     }

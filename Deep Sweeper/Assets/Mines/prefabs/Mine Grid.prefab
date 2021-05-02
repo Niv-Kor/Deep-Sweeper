@@ -20917,7 +20917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afe1f1f30bf23242a43dd71b27f9967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitType: 0
 --- !u!114 &6609784980135266009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31344,7 +31343,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afe1f1f30bf23242a43dd71b27f9967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitType: 1
 --- !u!135 &8809633372046904892
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -31669,7 +31667,6 @@ GameObject:
   - component: {fileID: 8776437339755074208}
   - component: {fileID: 8776437339755074215}
   - component: {fileID: 8235023082413348610}
-  - component: {fileID: 6644598213463799633}
   - component: {fileID: 8851737615146684292}
   - component: {fileID: 4489756531865085746}
   - component: {fileID: 2025037600048598187}
@@ -31774,18 +31771,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56830c1929c6bf846bcea88efb74f5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6644598213463799633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8776437339755074214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfd1c743a6af81c4389277006d685ee7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8851737615146684292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31798,7 +31783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d850b26ac027fce4aa6982d966dd688c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatar: {fileID: 4106010005959101346}
+  cameraShakeIntensity: 1
 --- !u!114 &4489756531865085746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31811,7 +31796,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc34785fa66ab4c46bcfe0293c815202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatar: {fileID: 4106010005959101346}
   selections:
   - Mode: 1
     Color: {r: 1, g: 1, b: 1, a: 1}

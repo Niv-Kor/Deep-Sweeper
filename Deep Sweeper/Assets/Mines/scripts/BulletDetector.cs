@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class BulletDetector : MonoBehaviour
 {
-    [Tooltip("The type of hit type that occurs when a bullet hits this object.")]
-    [SerializeField] private BulletHitType hitType;
-
+    #region Class Members
     private MineGrid grid;
+    #endregion
 
     private void Start() {
         this.grid = GetComponentInParent<MineGrid>();
@@ -14,6 +13,9 @@ public class BulletDetector : MonoBehaviour
 
     private void OnParticleCollision(GameObject obj) {
         LayerMask layer = Layers.BULLET;
-        if (Layers.ContainedInMask(obj.layer, layer)) grid.TriggerHit(hitType, true);
+        if (Layers.ContainedInMask(obj.layer, layer)) {
+            Bullet bullet = obj.GetComponentInParent<Bullet>();
+            grid.DetonationSystem.TriggerHit(bullet, true);
+        }
     }
 }

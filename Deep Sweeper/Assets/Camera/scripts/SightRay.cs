@@ -17,7 +17,7 @@ public class SightRay : Singleton<SightRay>
         public IndicationSystem Indicator { get; private set; }
         public SelectionSystem Selector { get; private set; }
         public bool IsValueable {
-            get => !Grid.DetonationSystem.Detonated || Indicator.Value > 0;
+            get => !Grid.DetonationSystem.IsDetonated || Indicator.Value > 0;
         }
         #endregion
 
@@ -158,7 +158,7 @@ public class SightRay : Singleton<SightRay>
             //only fire the bullets if the indicator is fulfilled
             if (selectedIndicator.Indicator.IsIndicationFulfilled) {
                 IEnumerable<MineGrid> section = from neighbour in selectedIndicator.Grid.Section
-                                                where neighbour != null && !neighbour.DetonationSystem.Detonated && !neighbour.SelectionSystem.IsFlagged
+                                                where neighbour != null && !neighbour.DetonationSystem.IsDetonated && !neighbour.SelectionSystem.IsFlagged
                                                 select neighbour;
 
                 //fire a bullet at each of the neighbours
