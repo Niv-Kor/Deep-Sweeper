@@ -8,11 +8,19 @@ public abstract class SubmarineGun : MonoBehaviour
         Secondary
     }
 
+    #region Class Members
+    private Rigidbody submarineRB;
+    private SubmarineOrientation submarine;
+    #endregion
+
     #region Properties
     protected abstract GunType Type { get; }
     #endregion
 
     protected virtual void Start() {
+        this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
+        this.submarine = Submarine.Instance.Oriantation;
+
         //bind fire events
         SightRay.Instance.PrimaryHitEvent += delegate(SightRay.SightTargetType targetType, SightRay.TargetInfo target) {
             if (Type == GunType.Primary) OperateTarget(targetType, target);
@@ -40,6 +48,15 @@ public abstract class SubmarineGun : MonoBehaviour
                 default: FireAtNull(); break;
             }
         }
+    }
+
+    /// <summary>
+    /// Move the submarine backwards with a recoil shock.
+    /// </summary>
+    /// <param name="force">Recoil force</param>
+    protected virtual void Recoil(float force) {
+        Vector3 backwards = submarine.Forward * -1;
+        submarineRB.AddForce(backwards * force);
     }
 
     /// <summary>

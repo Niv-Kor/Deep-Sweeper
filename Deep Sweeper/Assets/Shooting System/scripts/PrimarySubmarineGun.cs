@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,18 +13,18 @@ public class PrimarySubmarineGun : SubmarineGun
     [Tooltip("The barrel object that contains all released bullets.")]
     [SerializeField] private GameObject barrel;
 
-    [Header("Physics")]
+    [Header("Settings")]
     [Tooltip("The force in which the fire recoil takes place.")]
-    [SerializeField] private float recoil;
+    [SerializeField] private float recoilForce;
 
-    [Tooltip("The speed of the bullet.")]
-    [SerializeField] private float speed;
+    [Tooltip("The time it takes to load a new bullet into the barrel.")]
+    [SerializeField] private float loadingTime = .5f;
     #endregion
 
     #region Class Members
     private ParticleSystem[] recoilParticles;
-    private Rigidbody submarineRB;
-    private SubmarineOrientation submarine;
+    private Coroutine loadCoroutine;
+    private bool loadable;
     #endregion
 
     #region Properties
@@ -42,25 +43,28 @@ public class PrimarySubmarineGun : SubmarineGun
 
     protected override void Start() {
         base.Start();
-        this.submarine = Submarine.Instance.Oriantation;
-
-        //create barrel
-        this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
+        this.loadable = true;
         this.recoilParticles = GetComponentsInChildren<ParticleSystem>();
     }
 
     /// <summary>
-    /// Move the submarine backwards with a recoil shock.
+    /// Load a new bullet into the barrel.
     /// </summary>
-    private void Recoil() {
-        Vector3 backwards = submarine.Forward * -1;
-        submarineRB.AddForce((backwards - Vector3.down) * recoil);
+    private IEnumerator LoadBullet() {
+        float timer = loadingTime;
+
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        loadable = true;
     }
 
     /// <summary>
     /// Launch a missile from the center of the sight.
     /// </summary>
-    /// <param name="fwdDir">The direction at which the bullet is fired</param>
+    /// <param name="fwdDir">The direction on which the bullet is fired</param>
     /// <param name="recoil">True to apply submarine recoil</param>
     /// <param name="targetGrid">The grid that's in the center of the sight at the time of launch</param>
     /// <param name="ignoreBarrelContent">
@@ -71,7 +75,7 @@ public class PrimarySubmarineGun : SubmarineGun
     /// </param>
     /// <returns>True if a bullet has been fired successfully.</returns>
     public bool Fire(Vector3 fwdDir, bool recoil, MineGrid targetGrid, bool ignoreBarrelContent = false) {
-        if (!ignoreBarrelContent && BarrelContent > 0) return false;
+        if (!loadable && !ignoreBarrelContent) return false;
 
         //create bullet
         GameObject bulletInstance = Instantiate(bulletPrefab);
@@ -93,9 +97,13 @@ public class PrimarySubmarineGun : SubmarineGun
 
         if (recoil) {
             foreach (ParticleSystem particle in recoilParticles) particle.Play();
-            Recoil();
+            Recoil(recoilForce);
         }
 
+        //load
+        loadable = false;
+        if (loadCoroutine != null) StopCoroutine(loadCoroutine);
+        loadCoroutine = StartCoroutine(LoadBullet());
         return true;
     }
 
@@ -109,6 +117,7 @@ public class PrimarySubmarineGun : SubmarineGun
 
             //fire a bullet at each of the neighbours
             if (section.Count() > 0) {
+                Recoil(recoilForce);
                 foreach (MineGrid neighbour in section) {
                     Vector3 neighbourPos = neighbour.Avatar.transform.position;
                     Vector3 neighbourDir = Vector3.Normalize(neighbourPos - transform.position);

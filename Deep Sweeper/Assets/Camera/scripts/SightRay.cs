@@ -59,6 +59,7 @@ public class SightRay : Singleton<SightRay>
     private TargetInfo selectedIndicator;
     private SubmarineOrientation submarine;
     private PlayerController controller;
+    private LevelFlow levelFlow;
     private LayerMask mineLayer, indicatorLayer;
     #endregion
 
@@ -88,6 +89,7 @@ public class SightRay : Singleton<SightRay>
 
     private void Start() {
         this.controller = PlayerController.Instance;
+        this.levelFlow = LevelFlow.Instance;
         this.submarine = Submarine.Instance.Oriantation;
         this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
         this.indicatorLayer = Layers.MINE_INDICATION;
@@ -133,8 +135,8 @@ public class SightRay : Singleton<SightRay>
         if (hit) {
             GameObject obj = raycastHit.collider.gameObject;
             MineGrid grid = obj.GetComponentInParent<MineGrid>();
-            Phase phase = LevelFlow.Instance.CurrentPhase;
-            bool allowedGrid = phase != null && phase.Field.ContainsGrid(grid);
+            Phase phase = levelFlow.CurrentPhase;
+            bool allowedGrid = levelFlow.DuringPhase && phase.Field.ContainsGrid(grid);
             HitDistance = raycastHit.distance;
 
             //only enable raycasting if the grid is within the current phase.

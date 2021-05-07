@@ -47,20 +47,19 @@ public class LevelFlow : Singleton<LevelFlow>
     #endregion
 
     #region Events
+    /// <param type=typeof(int)>New phase index</param>
     public event UnityAction<int> PhaseChangeEvent;
+
+    /// <param type=typeof(PhaseConfig)>The updated phase's configuration</param>
+    /// <param type=typeof(PhaseDifficultyConfig)>The updated phase's difficulty configuration</param>
     public event UnityAction<PhaseConfig, PhaseDifficultyConfig, int> PhaseUpdatedEvent;
     #endregion
 
     #region Properties
     public List<Phase> Phases { get; private set; }
     public bool DuringPhase { get; private set; }
-    public Phase CurrentPhase {
-        get { return (phaseIndex != -1) ? Phases[phaseIndex] : null; }
-    }
-
-    public string RegionName {
-        get { return region.ToString().Replace('_', ' '); }
-    }
+    public Phase CurrentPhase => (phaseIndex != -1) ? Phases[phaseIndex] : null;
+    public string RegionName => region.ToString().Replace('_', ' ');
     #endregion
 
     private void Awake() {
