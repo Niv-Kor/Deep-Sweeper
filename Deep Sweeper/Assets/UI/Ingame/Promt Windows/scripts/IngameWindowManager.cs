@@ -39,7 +39,7 @@ public class IngameWindowManager : Singleton<IngameWindowManager>
             StartCoroutine(ScaleEnter(window, scale));
 
             //display cursor
-            CursorViewer.Instance.Display = true;
+            CursorViewer.Instance.IsDisplayed = true;
             CursorViewer.Instance.Lock = true;
             return window;
         }

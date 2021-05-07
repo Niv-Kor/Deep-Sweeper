@@ -28,7 +28,7 @@ public class PromtWindow : MonoBehaviour
     /// </summary>
     public virtual void Close() {
         CursorViewer.Instance.Lock = false;
-        CursorViewer.Instance.Display = false;
+        CursorViewer.Instance.IsDisplayed = false;
         Destroy(gameObject);
     }
 

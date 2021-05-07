@@ -1,12 +1,19 @@
 ﻿using Constants;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using DeepSweeper.Camera;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class SightRay : Singleton<SightRay>
 {
-    public class MineInfo {
+    public enum SightTargetType
+    {
+        None,
+        Mine,
+        Indicator
+    }
+
+    public class TargetInfo
+    {
         #region Class Members
         private GameObject avatar;
         #endregion
@@ -21,7 +28,7 @@ public class SightRay : Singleton<SightRay>
         }
         #endregion
 
-        public MineInfo(GameObject mine) {
+        public TargetInfo(GameObject mine) {
             this.avatar = mine;
             this.Grid = mine.GetComponentInParent<MineGrid>();
             this.Activator = Grid.Activator;
@@ -48,58 +55,80 @@ public class SightRay : Singleton<SightRay>
     #endregion
 
     #region Class Members
-    private MineInfo selectedMine;
-    private MineInfo selectedIndicator;
-    private Transform camTransform;
-    private SubmarineGun gun;
+    private TargetInfo selectedMine;
+    private TargetInfo selectedIndicator;
+    private SubmarineOrientation submarine;
+    private PlayerController controller;
     private LayerMask mineLayer, indicatorLayer;
+    #endregion
+
+    #region Events
+    /// <param type=typeof(SightTargetType)>The type of locked target</param>
+    /// <param type=typeof(TargetInfo)>The locked target (or null if it doesn't exist</param>
+    public event UnityAction<SightTargetType, TargetInfo> PrimaryHitEvent;
+
+    /// <param type=typeof(SightTargetType)>The type of locked target</param>
+    /// <param type=typeof(TargetInfo)>The locked target (or null if it doesn't exist</param>
+    public event UnityAction<SightTargetType, TargetInfo> SecondaryHitEvent;
     #endregion
 
     #region Properties
     public float MaxDistance => maxDistance;
     public float HitDistance { get; private set; }
-    public MineGrid TargetMine {
+    public TargetInfo Target => selectedMine?? selectedIndicator;
+    public MineGrid TargetGrid => Target?.Grid;
+    public SightTargetType TargetType {
         get {
-            MineInfo mineInfo = selectedMine?? selectedIndicator;
-            return mineInfo?.Grid;
+            if (selectedMine != null) return SightTargetType.Mine;
+            else if (selectedIndicator != null) return SightTargetType.Indicator;
+            else return SightTargetType.None;
         }
     }
     #endregion
 
     private void Start() {
-        this.camTransform = IngameCameraManager.Instance.FPCam.transform;
-        this.gun = FindObjectOfType<SubmarineGun>();
+        this.controller = PlayerController.Instance;
+        this.submarine = Submarine.Instance.Oriantation;
         this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
         this.indicatorLayer = Layers.MINE_INDICATION;
         this.HitDistance = Mathf.Infinity;
+
+        controller.PrimaryOperationEvent += OnPrimaryOperationClick;
+        controller.SecondaryOperationEvent += OnSecondaryOperationClick;
     }
 
     private void Update() {
-        if (CursorViewer.Instance.Display) return;
+        if (IngameCameraManager.Instance.FPCam.IsDisplaying) CastRay();
+    }
 
-        CastRay();
+    /// <summary>
+    /// Activate when the primary operation key is pressed.
+    /// This function fires a torpedo.
+    /// </summary>
+    private void OnPrimaryOperationClick() {
+        if (!CursorViewer.Instance.IsDisplayed) PrimaryHitEvent?.Invoke(TargetType, Target);
 
-        bool mouseRight = Input.GetMouseButtonDown(1);
-        bool mouseLeft = Input.GetMouseButtonDown(0);
-
-        if (mouseLeft) Fire();
-        if (selectedMine != null) {
-            if (mouseRight) selectedMine.Selector.ToggleFlag();
-            if (mouseLeft) {
-                DeselectMines();
-                DeselectIndicators();
-                Crosshair.Instance.Release();
-            }
+        //release target
+        if (TargetType == SightTargetType.Mine) {
+            DeselectMines();
+            DeselectIndicators();
+            Crosshair.Instance.Release();
         }
+    }
+
+    /// <summary>
+    /// Activate when the secondary operation key is pressed.
+    /// If a mine is in sight range, it will toggle its flag state.
+    /// </summary>
+    private void OnSecondaryOperationClick() {
+        SecondaryHitEvent?.Invoke(TargetType, Target);
     }
 
     /// <summary>
     /// Cast a ray at mines to select them.
     /// </summary>
     private void CastRay() {
-        Vector3 origin = camTransform.position;
-        Vector3 direction = camTransform.forward;
-        bool hit = Physics.Raycast(origin, direction, out RaycastHit raycastHit, maxDistance, hitLayers);
+        bool hit = Physics.Raycast(submarine.Position, submarine.Forward, out RaycastHit raycastHit, maxDistance, hitLayers);
 
         if (hit) {
             GameObject obj = raycastHit.collider.gameObject;
@@ -146,52 +175,11 @@ public class SightRay : Singleton<SightRay>
     }
     
     /// <summary>
-    /// Fire the submarine gun.
-    /// </summary>
-    private void Fire() {
-        Vector3 upDir = camTransform.up;
-        Vector3 pos = camTransform.position;
-        Vector3 dir = camTransform.forward;
-
-        //split the bullet to the indicator's neighbours
-        if (selectedIndicator != null) {
-            //only fire the bullets if the indicator is fulfilled
-            if (selectedIndicator.Indicator.IsIndicationFulfilled) {
-                IEnumerable<MineGrid> section = from neighbour in selectedIndicator.Grid.Section
-                                                where neighbour != null && !neighbour.DetonationSystem.IsDetonated && !neighbour.SelectionSystem.IsFlagged
-                                                select neighbour;
-
-                //fire a bullet at each of the neighbours
-                if (section.Count() > 0) {
-                    foreach (MineGrid neighbour in section) {
-                        Vector3 neighbourPos = neighbour.Avatar.transform.position;
-                        Vector3 neighbourDir = Vector3.Normalize(neighbourPos - pos);
-                        gun.Fire(neighbourDir, upDir, false, neighbour, true);
-                    }
-                }
-                else DryFireForward();
-            }
-            //fire at the indicator itself
-            else DryFireForward();
-        }
-        //only fire at the targeted spot, or rather a selected mine
-        else DryFireForward();
-    }
-
-    /// <summary>
-    /// Fire a bullet forward.
-    /// This bullet will not be able to explode a mine.
-    /// </summary>
-    private void DryFireForward() {
-        gun.Fire(camTransform.forward, camTransform.up, true, TargetMine);
-    }
-
-    /// <summary>
     /// Select a mine object.
     /// </summary>
     /// <param name="mine">The object to select</param>
-    private MineInfo SelectMine(GameObject mine) {
-        MineInfo mineInfo = new MineInfo(mine);
+    private TargetInfo SelectMine(GameObject mine) {
+        TargetInfo mineInfo = new TargetInfo(mine);
 
         //check that the given mine is not an empty indication
         if (mineInfo.IsValueable) {

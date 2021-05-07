@@ -48,24 +48,19 @@ public class SubmarineMovementController : PlayerController3D
         this.startRestingPos = transform.position;
         this.resting = true;
         this.MovementAllowd = true;
+
         if (useFloat) StartCoroutine(Float());
     }
 
     private void Update() {
         if (!IsMovable) return;
 
-        //get user input
-        float horInput = Input.GetAxis("Horizontal");
-        float verInput = Input.GetAxis("Vertical");
-        float ascendInput = Input.GetAxis("Ascend");
-        float descendInput = Input.GetAxis("Descend");
-        float turboInput = Input.GetAxis("Turbo");
-        float heightInput = (Mathf.Abs(ascendInput) > Mathf.Abs(descendInput)) ? ascendInput : descendInput;
-
-        Move(horInput, verInput, heightInput, turboInput);
+        float ascendInput = controller.Vertical.y;
+        Vector3 moveVector = new Vector3(controller.Horizontal.x, controller.Vertical.y, controller.Horizontal.y);
+        PrepareMovement(moveVector);
 
         //unfreeze position y if ascending or descending
-        bool unfreezeCond = ascendInput > 0 || transform.position.y > minHeight;
+        bool unfreezeCond = controller.Vertical.y > 0 || transform.position.y > minHeight;
         var defaultConstaint = RigidbodyConstraints.FreezeRotationX |
                                RigidbodyConstraints.FreezeRotationY |
                                RigidbodyConstraints.FreezeRotationZ;
@@ -77,7 +72,7 @@ public class SubmarineMovementController : PlayerController3D
         if (useFloat) {
             bool prevRestingState = resting;
             bool ascending = ascendInput > 0;
-            bool descending = Mathf.Abs(descendInput) > 0;
+            bool descending = ascendInput < 0;
 
             if (!resting && !ascending && !descending) {
                 resting = true;
@@ -102,16 +97,16 @@ public class SubmarineMovementController : PlayerController3D
     /// <param name="verInput">Vertical movement power [-1:1]</param>
     /// <param name="heightInput">Ascending or descending movement power [0:1]</param>
     /// <param name="turboInput">Turbo movement power [0:1]</param>
-    private void Move(float horInput, float verInput, float heightInput, float turboInput) {
+    private void PrepareMovement(Vector3 vector) {
         if (!MovementAllowd) return;
 
-        float turboPercent = turboInput / 1;
+        float turboPercent = controller.Turbo;
         float speedMultiplier = turboPercent * (turboMultiplier - 1) + 1;
         float speed = horizontalSpeed * speedMultiplier;
-        Vector3 verDirection = directionUnit.transform.forward * verInput;
-        Vector3 horDirection = directionUnit.transform.right * horInput;
-        Vector3 direction = verDirection + horDirection;
-        Vector3 verticalVector = Vector3.up * heightInput * verticalSpeed;
+        Vector3 zDirection = directionUnit.transform.forward * vector.z;
+        Vector3 xDirection = directionUnit.transform.right * vector.x;
+        Vector3 direction = zDirection + xDirection;
+        Vector3 verticalVector = Vector3.up * vector.y * verticalSpeed;
         Vector3 forceVector = direction * speed + verticalVector;
         Move(forceVector);
     }

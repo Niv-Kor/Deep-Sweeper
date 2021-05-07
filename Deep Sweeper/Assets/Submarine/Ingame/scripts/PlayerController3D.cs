@@ -5,6 +5,7 @@ public abstract class PlayerController3D : MonoBehaviour
 {
     #region Class Members
     protected Rigidbody rigidBody;
+    protected PlayerController controller;
     protected bool m_movable;
     #endregion
 
@@ -19,6 +20,7 @@ public abstract class PlayerController3D : MonoBehaviour
     #endregion
 
     protected virtual void Awake() {
+        this.controller = PlayerController.Instance;
         this.rigidBody = GetComponent<Rigidbody>();
     }
 

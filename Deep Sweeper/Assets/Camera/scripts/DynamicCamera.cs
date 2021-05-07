@@ -13,7 +13,8 @@ namespace DeepSweeper.Camera
         #endregion
 
         #region Properties
-        public bool AlwaysOn { get => alwaysOn; }
+        public bool AlwaysOn => alwaysOn;
+        public bool IsDisplaying => Camera.enabled;
         public UnityEngine.Camera Camera { get; private set; }
         #endregion
 
@@ -26,7 +27,6 @@ namespace DeepSweeper.Camera
         /// </summary>
         /// <param name="flag">True to enable or false to disable</param>
         public void Enable(bool flag) {
-            string n = gameObject.name;
             if (Camera.enabled == flag) return;
 
             void Callback() { Camera.enabled = flag; }

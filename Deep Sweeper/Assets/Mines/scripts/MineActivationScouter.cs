@@ -1,12 +1,12 @@
 ﻿public class MineActivationScouter : ActivationScouter
 {
     private MineGrid grid;
-    private SubmarineOriantation submarine;
+    private SubmarineOrientation submarine;
 
     protected override void Start() {
         base.Start();
         this.grid = GetComponentInParent<MineGrid>();
-        this.submarine = FindObjectOfType<SubmarineOriantation>();
+        this.submarine = FindObjectOfType<SubmarineOrientation>();
     }
 
     /// <inheritdoc/>

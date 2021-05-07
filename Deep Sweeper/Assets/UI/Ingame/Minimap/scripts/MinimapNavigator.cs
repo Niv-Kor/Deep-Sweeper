@@ -28,7 +28,7 @@ public class MinimapNavigator : SonarRotator
     #endregion
 
     #region Class Members
-    private Transform player;
+    private SubmarineOrientation submarine;
     private LevelFlow flow;
     private RawImage arrow;
     private bool positiveTremble;
@@ -51,13 +51,13 @@ public class MinimapNavigator : SonarRotator
     #endregion
 
     private void Awake() {
+        this.submarine = Submarine.Instance.Oriantation;
         this.arrow = GetComponentInChildren<RawImage>();
+        this.flow = LevelFlow.Instance;
     }
 
     protected override void Start() {
         base.Start();
-        this.player = IngameCameraManager.Instance.Rig.transform;
-        this.flow = LevelFlow.Instance;
         this.positiveTremble = true;
         this.extraRotation = 0;
         this.trembleTimer = 0;
@@ -74,7 +74,7 @@ public class MinimapNavigator : SonarRotator
             return;
         }
 
-        Vector3 pos = player.position;
+        Vector3 pos = submarine.Position;
         Vector3 heightVec = Vector3.up * pos.y;
         Vector3 targetPos = flow.CurrentPhase.EntranceGate.transform.position;
         Vector3 target = Vector3.Scale(targetPos, Vector3.right + Vector3.forward) + heightVec;

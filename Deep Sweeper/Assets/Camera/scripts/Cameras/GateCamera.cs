@@ -4,6 +4,10 @@ namespace DeepSweeper.Camera
 {
     public class GateCamera : DynamicCamera
     {
+        protected override void Awake() {
+            base.Awake();
+        }
+
         /// <inheritdoc/>
         protected override void OnActivation() {
             DiegeticsManager.Instance.Activate(false, 0);

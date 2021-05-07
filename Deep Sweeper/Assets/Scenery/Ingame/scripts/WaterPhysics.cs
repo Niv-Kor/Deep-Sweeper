@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DeepSweeper.Camera;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class WaterPhysics : Singleton<WaterPhysics>
@@ -19,9 +20,6 @@ public class WaterPhysics : Singleton<WaterPhysics>
     [SerializeField] private float baseFloatForce = 1f;
 
     [Header("Vision")]
-    [Tooltip("Maximum distance that the camera may display.")]
-    [SerializeField] private float maxVisionDistance = 500f;
-
     [Tooltip("Maximum distance of clear vision before the cloud of fog.")]
     [SerializeField] private float fogDistance = 25f;
     #endregion
@@ -77,10 +75,6 @@ public class WaterPhysics : Singleton<WaterPhysics>
             this.Direction = Vector3.zero;
             this.Intensity = 0;
         }
-    }
-
-    private void OnValidate() {
-        Camera.main.farClipPlane = maxVisionDistance;
     }
 
     /// <summary>
