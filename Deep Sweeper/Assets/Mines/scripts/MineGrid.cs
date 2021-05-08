@@ -15,10 +15,6 @@ public class MineGrid : MonoBehaviour
     private int originLayer;
     #endregion
 
-    #region Events
-    public event UnityAction MineHitEvent;
-    #endregion
-
     #region Properties
     public GameObject Avatar => mine.gameObject;
     public DetonationSystem DetonationSystem { get; private set; }

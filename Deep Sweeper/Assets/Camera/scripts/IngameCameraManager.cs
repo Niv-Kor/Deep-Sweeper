@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using com.ootii.Cameras;
+using UnityEngine;
 
 namespace DeepSweeper.Camera
 {
@@ -10,7 +11,7 @@ namespace DeepSweeper.Camera
         [SerializeField] private DynamicCamera fpCam;
 
         [Tooltip("Camera rig object.")]
-        [SerializeField] private Transform rig;
+        [SerializeField] private CameraRig rig;
 
         [Tooltip("The first person camera's post processing manager component.")]
         [SerializeField] private PostProcessingManager fpPostProcess;
@@ -24,14 +25,12 @@ namespace DeepSweeper.Camera
         #endregion
 
         #region Properties
-        public DynamicCamera FPCam { get => fpCam; }
-        public DynamicCamera MinimapCam { get => minimapCam; }
-        public Transform Rig { get => rig; }
-        public PostProcessingManager FPPostProcess { get => fpPostProcess; }
-        public PostProcessingManager MinimapPostProcess { get => minimapPostProcess; }
+        public DynamicCamera FPCam => fpCam;
+        public DynamicCamera MinimapCam => minimapCam;
+        public CameraRig Rig => rig;
+        public PostProcessingManager FPPostProcess => fpPostProcess;
+        public PostProcessingManager MinimapPostProcess => minimapPostProcess;
+        protected override DynamicCamera DefaultCamera => FPCam;
         #endregion
-
-        /// <inheritdoc/>
-        protected override DynamicCamera GetDefaultCamera() => FPCam;
     }
 }

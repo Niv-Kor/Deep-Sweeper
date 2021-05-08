@@ -12,14 +12,12 @@ namespace DeepSweeper.Camera
 
         #region Properties
         public DynamicCamera CurrentActive { get; protected set; }
+        protected abstract DynamicCamera DefaultCamera { get; }
         #endregion
 
         private void Start() {
-            this.CurrentActive = GetDefaultCamera();
+            this.CurrentActive = DefaultCamera;
         }
-
-        /// <returns>The main camera in the scene.</returns>
-        protected abstract DynamicCamera GetDefaultCamera();
 
         /// <summary>
         /// Switch the main camera.

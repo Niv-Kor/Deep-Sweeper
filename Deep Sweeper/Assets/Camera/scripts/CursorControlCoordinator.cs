@@ -1,4 +1,4 @@
-﻿using com.ootii.Cameras;
+﻿using DeepSweeper.Camera;
 using UnityEngine;
 
 public class CursorControlCoordinator : MonoBehaviour
@@ -8,13 +8,13 @@ public class CursorControlCoordinator : MonoBehaviour
     [SerializeField] private PlayerController3D playerController;
 
     [Tooltip("The camera controller that the cursor's display status affects.")]
-    [SerializeField] private CameraController cameraController;
+    [SerializeField] private CameraRig cameraController;
     #endregion
 
     private void Awake() {
         //auto find the mandatory movement input components
-        if (playerController == null) playerController = FindObjectOfType<PlayerController3D>();
-        if (cameraController == null) cameraController = FindObjectOfType<CameraController>();
+        if (playerController == null) playerController = Submarine.Instance.Controller;
+        if (cameraController == null) cameraController = IngameCameraManager.Instance.Rig;
         CursorViewer.Instance.StatusChangeEvent += OnCursorDisplayStatusChange;
     }
 
@@ -25,7 +25,10 @@ public class CursorControlCoordinator : MonoBehaviour
     /// </summary>
     /// <param name="display">True if the cursor is now being displayed after the change</param>
     private void OnCursorDisplayStatusChange(bool display) {
-        if (cameraController != null) cameraController.enabled = !display;
+        if (cameraController != null) {
+            if (display) cameraController.Pause();
+            else cameraController.Resume();
+        }
         if (playerController != null) playerController.IsMovable = !display;
     }
 }

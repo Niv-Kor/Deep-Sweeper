@@ -70,11 +70,10 @@ public class Gate : MonoBehaviour
     public bool IsOpen { get; private set; }
     #endregion
 
-    private void Start() {
-        this.submarine = FindObjectOfType<SubmarineMovementController>();
+    private void Awake() {
+        this.submarine = Submarine.Instance.Controller;
         this.camController = FindObjectOfType<CameraController>();
         this.jukebox = GetComponent<Jukebox>();
-        this.initiated = false;
     }
 
     /// <summary>

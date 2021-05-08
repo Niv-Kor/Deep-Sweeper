@@ -22,13 +22,13 @@ namespace DeepSweeper.Camera
         #endregion
 
         #region Properties
-        public DynamicCamera BackgroundCam { get => backgroundCam; }
-        public DynamicCamera UICam { get => uiCam; }
-        public DynamicCamera SandboxCam { get => sandboxCam; }
-        public PostProcessingManager BackgroundPostProcess { get => backgroundPostProcess; }
+        public DynamicCamera BackgroundCam => backgroundCam;
+        public DynamicCamera UICam => uiCam;
+        public DynamicCamera SandboxCam => sandboxCam;
+        public PostProcessingManager BackgroundPostProcess => backgroundPostProcess;
+        protected override DynamicCamera DefaultCamera => BackgroundCam;
         #endregion
 
         /// <inheritdoc/>
-        protected override DynamicCamera GetDefaultCamera() => BackgroundCam;
     }
 }

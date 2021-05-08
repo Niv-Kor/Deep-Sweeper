@@ -26,6 +26,6 @@ public class SubmarineOrientation : MonoBehaviour
     #endregion
 
     private void Awake() {
-        this.rig = IngameCameraManager.Instance.Rig;
+        this.rig = IngameCameraManager.Instance.Rig.transform;
     }
 }

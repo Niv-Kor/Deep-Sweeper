@@ -1,13 +1,12 @@
-﻿public class Submarine : Singleton<Submarine> {
-    #region Class Members
-    private SubmarineOrientation m_orientation;
-    #endregion
-
+﻿public class Submarine : Singleton<Submarine>
+{
     #region Properties
-    public SubmarineOrientation Oriantation => m_orientation;
+    public SubmarineOrientation Oriantation { get; private set; }
+    public SubmarineMovementController Controller { get; private set; }
     #endregion
 
     private void Awake() {
-        this.m_orientation = GetComponent<SubmarineOrientation>();
+        this.Oriantation = GetComponent<SubmarineOrientation>();
+        this.Controller = GetComponent<SubmarineMovementController>();
     }
 }

@@ -191,21 +191,20 @@ public class LevelFlow : Singleton<LevelFlow>
         //retreat to the entrance gate and start over
         if (LifeSupply.Instance.LifeDown()) {
             SpatialsManager.Instance.Deactivate();
-            CameraController camContrller = FindObjectOfType<CameraController>();
+            CameraRig rig = IngameCameraManager.Instance.Rig;
             MineField currentField = CurrentPhase.Field;
-            camContrller.enabled = false;
+            rig.Pause();
 
             //move player back to the entrance gate and rotate it
             void PlayerRelocation() {
                 Gate entranceGate = CurrentPhase.EntranceGate;
                 Vector3 gatePos = entranceGate.transform.position;
                 Vector3 lookPos = currentField.Center;
-                Transform rig = IngameCameraManager.Instance.Rig.transform;
                 Transform player = Submarine.Instance.transform;
                 player.position = gatePos;
-                rig.LookAt(lookPos);
-                Vector3 rot = rig.rotation.eulerAngles;
-                rig.rotation = Quaternion.Euler(0, rot.y, rot.z);
+                rig.transform.LookAt(lookPos);
+                Vector3 rot = rig.transform.rotation.eulerAngles;
+                rig.transform.rotation = Quaternion.Euler(0, rot.y, rot.z);
             }
 
             //reset field and clear loot history
@@ -216,9 +215,7 @@ public class LevelFlow : Singleton<LevelFlow>
                 FlagsManager.Instance.ResetGauge();
             }
 
-            void Finish() {
-                camContrller.enabled = true;
-            }
+            void Finish() { rig.Resume(); }
 
             LoadingProcess process = new LoadingProcess();
             process.Enroll(PlayerRelocation, "retreating to the nearest phase entry");

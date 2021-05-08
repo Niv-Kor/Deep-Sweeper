@@ -1942,6 +1942,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 549996807}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &683360759 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2656385975825565815, guid: e63e7789a0760e043b5da38c58dd039f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2656385977621650216}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &683360760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683360759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91cd309b021db5a49a42f5c221616b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &724109812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5217,12 +5235,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2656385977621650216}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1905726281 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2656385975825565768, guid: e63e7789a0760e043b5da38c58dd039f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2656385977621650216}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1951080769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4772674715883918, guid: aca8bfa4d66b077448ac2a9116b08e71,
@@ -5478,7 +5490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fpCam: {fileID: 362684912}
-  rig: {fileID: 1905726281}
+  rig: {fileID: 683360760}
   fpPostProcess: {fileID: 1514007959}
   minimapCam: {fileID: 1237576265}
   minimapPostProcess: {fileID: 799261090}
@@ -8131,9 +8143,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656385975825565769, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385975825565769, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
       propertyPath: _InputSourceOwner
       value: 
       objectReference: {fileID: 894153086}
+    - target: {fileID: 2656385976961513051, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2656385977427607233, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
       propertyPath: m_RootOrder

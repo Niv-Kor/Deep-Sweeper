@@ -154,7 +154,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2399839786657313915}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f53e66139acdff468bf1d835be44f82, type: 3}
+  m_Script: {fileID: 11500000, guid: 32a35469c3b7bab45899688c3e1ca8a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysOn: 0
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2399839787399006965}
   - component: {fileID: 2399839787399006968}
   - component: {fileID: 2399839787399006967}
-  - component: {fileID: 6468954093105291621}
+  - component: {fileID: 4936869173832379769}
   m_Layer: 18
   m_Name: Gate
   m_TagString: Untagged
@@ -244,7 +244,9 @@ MonoBehaviour:
   pauseBeforeCam: 1
   pauseBeforeOpen: 1
   pauseAfterOpen: 1
---- !u!114 &6468954093105291621
+  blankScreenLerpTime: 1
+  blankScreenPauseTime: 1
+--- !u!114 &4936869173832379769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,7 +255,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2399839787399006964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5365e83f67566ad4388aca429386cf27, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ef49321e05e3de409d8e8f5f4eef4a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tunes:
@@ -266,4 +268,6 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
     relateOnDistance: 0
+    exportAsExternal: 0
     genre: 0
+  destroyStoppedTunes: 0
