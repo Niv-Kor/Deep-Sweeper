@@ -1,5 +1,5 @@
 ﻿using Constants;
-using DeepSweeper.ShootingSystem;
+using DeepSweeper.Player.ShootingSystem;
 using UnityEngine;
 
 public class BulletDetector : MonoBehaviour

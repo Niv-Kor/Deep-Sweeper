@@ -1,7 +1,7 @@
 ﻿using com.ootii.Cameras;
 using UnityEngine;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.CameraSet
 {
     public class IngameCameraManager : CameraManager<IngameCameraManager>
     {

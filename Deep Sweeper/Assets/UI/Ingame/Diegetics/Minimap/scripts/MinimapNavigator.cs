@@ -1,5 +1,5 @@
 ﻿using Constants;
-using DeepSweeper.Camera;
+using DeepSweeper.CameraSet;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;

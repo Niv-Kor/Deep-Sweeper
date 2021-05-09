@@ -1,9 +1,10 @@
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public enum GunSubType
     {
         None,
         Flagger,
-        Torpedo
+        TorpedoLauncher,
+        MachineGun
     }
 }

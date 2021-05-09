@@ -1,4 +1,4 @@
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public abstract class SecondarySubmarineGun : SubmarineGun
     {

@@ -1,7 +1,6 @@
-﻿using DeepSweeper.Camera;
+﻿using DeepSweeper.CameraSet;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class BoatsSpawnController : MonoBehaviour

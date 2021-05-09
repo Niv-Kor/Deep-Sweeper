@@ -1,4 +1,6 @@
-﻿public class Phase
+﻿using DeepSweeper.Level.PhaseGate;
+
+public class Phase
 {
     #region Class Members
     private Gate m_entranceGate;

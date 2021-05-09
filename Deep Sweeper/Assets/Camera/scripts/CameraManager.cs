@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.CameraSet
 {
     public abstract class CameraManager<T> : Singleton<T> where T : MonoBehaviour
     {

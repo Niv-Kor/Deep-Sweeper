@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public abstract class PrimarySubmarineGun : SubmarineGun
     {

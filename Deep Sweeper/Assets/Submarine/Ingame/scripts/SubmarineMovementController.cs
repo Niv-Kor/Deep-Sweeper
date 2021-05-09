@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DeepSweeper.Player;
+using System.Collections;
 using UnityEngine;
 
 public class SubmarineMovementController : PlayerController3D

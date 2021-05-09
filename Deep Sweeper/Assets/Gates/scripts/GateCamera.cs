@@ -1,6 +1,7 @@
-﻿using UnityEngine.Events;
+﻿using DeepSweeper.CameraSet;
+using UnityEngine.Events;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.Level.PhaseGate
 {
     public class GateCamera : DynamicCamera
     {

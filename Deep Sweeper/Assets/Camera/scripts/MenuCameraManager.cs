@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.CameraSet
 {
     public class MenuCameraManager : CameraManager<MenuCameraManager>
     {
@@ -28,7 +28,5 @@ namespace DeepSweeper.Camera
         public PostProcessingManager BackgroundPostProcess => backgroundPostProcess;
         protected override DynamicCamera DefaultCamera => BackgroundCam;
         #endregion
-
-        /// <inheritdoc/>
     }
 }

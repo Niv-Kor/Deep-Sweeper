@@ -1,6 +1,7 @@
+using DeepSweeper.Characters;
 using System.Collections.Generic;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public class WeaponManager<G> : CharacterAbilityManager<GunSubType> where G : SubmarineGun
     {

@@ -1,4 +1,4 @@
-﻿using DeepSweeper.Camera;
+﻿using DeepSweeper.CameraSet;
 using UnityEngine;
 
 public class SubmarineOrientation : MonoBehaviour

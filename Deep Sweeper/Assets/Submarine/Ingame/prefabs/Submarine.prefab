@@ -45,9 +45,9 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.7411765, g: 0.9607843, b: 1, a: 1}
-  m_Intensity: 0.8939996
+  m_Intensity: 0.5
   m_Range: 2000
-  m_SpotAngle: 55
+  m_SpotAngle: 35
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:
@@ -163,6 +163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2656385975825565768}
   - component: {fileID: 2656385975825565769}
+  - component: {fileID: 683360760}
   m_Layer: 10
   m_Name: Camera Rig
   m_TagString: Untagged
@@ -320,6 +321,48 @@ MonoBehaviour:
   EditorCameraStyle: 1
   EditorUseAdventureStyle: 1
   EditorShowEvents: 0
+--- !u!114 &683360760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656385975825565815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91cd309b021db5a49a42f5c221616b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1042190710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656385976206928387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e53b2ad8750284e9ef43ac438fb086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilities:
+  - Character: 1
+    Ability: 2
+--- !u!114 &1042190711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656385976206928387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729d19e9a5e5b2745a4d8d747c679aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilities:
+  - Character: 1
+    Ability: 1
 --- !u!1 &2656385976518402656
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,10 +684,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minHeight: 2
   horizontalSpeed: 5000
-  verticalSpeed: 700
+  verticalSpeed: 1200
   maxVelocity: 20
   turboMultiplier: 10
-  useFloat: 1
+  useFloat: 0
   floatSpeed: 1
   waveLengthRange: {x: 1, y: 4}
 --- !u!136 &946284196
@@ -5938,6 +5981,12 @@ PrefabInstance:
 --- !u!4 &2656385976206928388 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8872950292331890503, guid: 1afb2241515c90c479256850b77c1957,
+    type: 3}
+  m_PrefabInstance: {fileID: 6917086745028767043}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2656385976206928387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8872950292331890496, guid: 1afb2241515c90c479256850b77c1957,
     type: 3}
   m_PrefabInstance: {fileID: 6917086745028767043}
   m_PrefabAsset: {fileID: 0}

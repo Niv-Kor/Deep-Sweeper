@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public class BulletParticle : MonoBehaviour
     {

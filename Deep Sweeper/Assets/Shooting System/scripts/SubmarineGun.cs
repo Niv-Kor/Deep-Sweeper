@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public abstract class SubmarineGun : MonoBehaviour
     {
@@ -19,11 +19,11 @@ namespace DeepSweeper.ShootingSystem
             this.submarine = Submarine.Instance.Oriantation;
 
             //bind fire events
-            SightRay.Instance.PrimaryHitEvent += delegate (SightRay.SightTargetType targetType, SightRay.TargetInfo target) {
+            SightRay.Instance.PrimaryHitEvent += delegate (SightTargetType targetType, TargetInfo target) {
                 if (Type == GunType.Primary) OperateTarget(targetType, target);
             };
 
-            SightRay.Instance.SecondaryHitEvent += delegate (SightRay.SightTargetType targetType, SightRay.TargetInfo target) {
+            SightRay.Instance.SecondaryHitEvent += delegate (SightTargetType targetType, TargetInfo target) {
                 if (Type == GunType.Secondary) OperateTarget(targetType, target);
             };
         }
@@ -33,15 +33,15 @@ namespace DeepSweeper.ShootingSystem
         /// </summary>
         /// <param name="targetType">Type of target</param>
         /// <param name="target">Target info</param>
-        protected virtual void OperateTarget(SightRay.SightTargetType targetType, SightRay.TargetInfo target) {
+        protected virtual void OperateTarget(SightTargetType targetType, TargetInfo target) {
             if (target == null) {
                 FireAtNull();
                 return;
             }
             else {
                 switch (targetType) {
-                    case SightRay.SightTargetType.Mine: FireAtMine(target); break;
-                    case SightRay.SightTargetType.Indicator: FireAtIndicator(target); break;
+                    case SightTargetType.Mine: FireAtMine(target); break;
+                    case SightTargetType.Indicator: FireAtIndicator(target); break;
                     default: FireAtNull(); break;
                 }
             }
@@ -60,13 +60,13 @@ namespace DeepSweeper.ShootingSystem
         /// Fire at a grid indicator.
         /// </summary>
         /// <param name="target">Target grid's info (never null)</param>
-        protected abstract void FireAtIndicator(SightRay.TargetInfo target);
+        protected abstract void FireAtIndicator(TargetInfo target);
 
         /// <summary>
         /// Fire at a mine.
         /// </summary>
         /// <param name="target">Target grid's info (never null)</param>
-        protected abstract void FireAtMine(SightRay.TargetInfo target);
+        protected abstract void FireAtMine(TargetInfo target);
 
         /// <summary>
         /// Activate when the gun shoots at a null target.

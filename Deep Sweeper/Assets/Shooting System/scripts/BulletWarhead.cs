@@ -2,7 +2,7 @@ using Constants;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     [RequireComponent(typeof(ParticleSystem))]
     public class BulletWarhead : MonoBehaviour

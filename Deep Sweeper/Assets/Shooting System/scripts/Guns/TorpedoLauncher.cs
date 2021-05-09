@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public class TorpedoLauncher : PrimarySubmarineGun
     {
         #region Properties
-        public override GunSubType SubType => GunSubType.Torpedo;
+        public override GunSubType SubType => GunSubType.TorpedoLauncher;
         #endregion
 
         /// <inheritdoc/>
-        protected override void FireAtIndicator(SightRay.TargetInfo target) {
+        protected override void FireAtIndicator(TargetInfo target) {
             //only fire the bullets if the indicator is fulfilled
             if (target.Indicator.IsIndicationFulfilled) {
                 IEnumerable<MineGrid> section = from neighbour in target.Grid.Section
@@ -33,7 +33,7 @@ namespace DeepSweeper.ShootingSystem
         }
 
         /// <inheritdoc/>
-        protected override void FireAtMine(SightRay.TargetInfo target) {
+        protected override void FireAtMine(TargetInfo target) {
             Fire(transform.forward, true, target.Grid);
         }
 

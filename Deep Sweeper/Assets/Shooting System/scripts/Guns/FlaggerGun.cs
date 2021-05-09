@@ -1,4 +1,4 @@
-namespace DeepSweeper.ShootingSystem
+namespace DeepSweeper.Player.ShootingSystem
 {
     public class FlaggerGun : SecondarySubmarineGun
     {
@@ -7,10 +7,10 @@ namespace DeepSweeper.ShootingSystem
         #endregion
 
         /// <inheritdoc/>
-        protected override void FireAtIndicator(SightRay.TargetInfo target) {}
+        protected override void FireAtIndicator(TargetInfo target) {}
 
         /// <inheritdoc/>
-        protected override void FireAtMine(SightRay.TargetInfo target) {
+        protected override void FireAtMine(TargetInfo target) {
             target.Selector.ToggleFlag();
         }
 

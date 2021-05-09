@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.CameraSet
 {
     [RequireComponent(typeof(UnityEngine.Camera))]
     public class DynamicCamera : MonoBehaviour
@@ -15,11 +15,11 @@ namespace DeepSweeper.Camera
         #region Properties
         public bool AlwaysOn => alwaysOn;
         public bool IsDisplaying => Camera.enabled;
-        public UnityEngine.Camera Camera { get; private set; }
+        public Camera Camera { get; private set; }
         #endregion
 
         protected virtual void Awake() {
-            this.Camera = GetComponent<UnityEngine.Camera>();
+            this.Camera = GetComponent<Camera>();
         }
 
         /// <summary>

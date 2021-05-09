@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DeepSweeper.Camera
+namespace DeepSweeper.CameraSet
 {
     public class SandboxCamera : DynamicCamera
     {
