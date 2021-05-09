@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-public class BulletParticle : MonoBehaviour
+namespace DeepSweeper.ShootingSystem
 {
-    #region Class Members
-    private BulletHit hitParent;
-    #endregion
+    public class BulletParticle : MonoBehaviour
+    {
+        #region Class Members
+        private BulletHit hitParent;
+        #endregion
 
-    private void Start() {
-        this.hitParent = GetComponentInParent<BulletHit>();
-    }
+        private void Start() {
+            this.hitParent = GetComponentInParent<BulletHit>();
+        }
 
-    private void OnParticleSystemStopped() {
-        hitParent.NotifyParticlesDeath();
+        private void OnParticleSystemStopped() {
+            hitParent.NotifyParticlesDeath();
+        }
     }
 }

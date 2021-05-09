@@ -1,14 +1,9 @@
-public class SecondarySubmarineGun : SubmarineGun
+namespace DeepSweeper.ShootingSystem
 {
-    #region Properties
-    protected override GunType Type => GunType.Secondary;
-    #endregion
-
-    protected override void FireAtIndicator(SightRay.TargetInfo target) {}
-
-    protected override void FireAtMine(SightRay.TargetInfo target) {
-        target.Selector.ToggleFlag();
+    public abstract class SecondarySubmarineGun : SubmarineGun
+    {
+        #region Properties
+        public override GunType Type => GunType.Secondary;
+        #endregion
     }
-
-    protected override void FireAtNull() {}
 }

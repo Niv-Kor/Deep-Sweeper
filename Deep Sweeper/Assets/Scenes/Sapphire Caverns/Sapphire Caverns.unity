@@ -3390,6 +3390,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d05a0d760aa67d844b65e56fdb48b481, type: 3}
+--- !u!1 &1042190708 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2656385976206928387, guid: e63e7789a0760e043b5da38c58dd039f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2656385977621650216}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1042190710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042190708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e53b2ad8750284e9ef43ac438fb086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilities:
+  - Character: 1
+    Ability: 2
+--- !u!114 &1042190711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042190708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729d19e9a5e5b2745a4d8d747c679aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilities:
+  - Character: 1
+    Ability: 1
 --- !u!4 &1083019560 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4065650270165648, guid: 4679858013588224c8daaa21c2ae891c,
@@ -7577,6 +7613,10 @@ PrefabInstance:
       propertyPath: defaultCooldown
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 1548405799, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff, type: 3}
+      propertyPath: commandersConfig.Array.data[1].Character
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 595683363501056561, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: m_Material
@@ -7916,5 +7956,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Submarine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6023476869838811134, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 709063071996297132, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}

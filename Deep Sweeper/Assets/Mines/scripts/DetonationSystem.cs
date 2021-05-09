@@ -1,4 +1,5 @@
 ﻿using DeepSweeper.Camera;
+using DeepSweeper.ShootingSystem;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
