@@ -1,5 +1,6 @@
 using DeepSweeper.Characters;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -100,17 +101,35 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                 return;
             }
 
-            //find changed commander
             CharacterPersona prevCommander = initialized ? selectedCommander.Character : CharacterPersona.None;
+            bool duringPhase = LevelFlow.Instance.DuringPhase;
+
 
             foreach (var commander in commanders) {
                 bool selected = commanders.IndexOf(commander) == index;
-                commander.Select(selected, !initialized);
 
+                //allow free switching if the player hadn't started a phase yet
+                if (!duringPhase && !selected) commander.SetNextCooldownTime(0);
+
+                commander.Select(selected, !initialized);
                 if (selected) selectedCommander = commander;
             }
 
             CommanderChangedEvent?.Invoke(prevCommander, selectedCommander.Character);
+        }
+
+        /// <summary>
+        /// Get a specific commander thumbnail.
+        /// </summary>
+        /// <param name="character">The commander's character</param>
+        /// <param name="index">The index of the commander if there are multiple results (from left)</param>
+        /// <returns>The specified commander.</returns>
+        public CommanderThumbnail GetCommander(CharacterPersona character, int index = 0) {
+            List<CommanderThumbnail> list = (from commander in commanders
+                                             where commander.Character == character
+                                             select commander).ToList();
+
+            return (list.Count > 0) ? list[index] : null;
         }
     }
 }

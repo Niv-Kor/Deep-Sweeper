@@ -35,6 +35,11 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
             this.specialCooldown = -1;
         }
 
+        private void Start() {
+            //brighten the avatar as soon as the cooldown is over
+            cooldownTimer.CooldownOverEvent += delegate { avatarShader.Apply(true); };
+        }
+
         /// <summary>
         /// Set a commander for this thumbnail.
         /// </summary>
@@ -61,14 +66,17 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 
             IsSelected = flag;
             glow.Apply(flag);
-            avatarShader.Apply(flag);
 
             //apply cooldown
             if (!flag && !force) {
                 int cooldown = (specialCooldown == -1) ? DefaultCooldown : specialCooldown;
 
-                if (cooldown > 0) {
-                    cooldownTimer.Set(cooldown);
+                if (cooldown >= 0) {
+                    if (cooldown > 0) {
+                        cooldownTimer.Set(cooldown);
+                        avatarShader.Apply(false);
+                    }
+
                     CancelNextCooldownTime();
                 }
             }
