@@ -1,4 +1,6 @@
 ﻿using DeepSweeper.CameraSet;
+using DeepSweeper.Player;
+using GamedevUtil.Player;
 using UnityEngine;
 
 namespace DeepSweeper.UI

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DeepSweeper.Level.Mine;
+using System.Collections.Generic;
 using UnityEngine.Events;
 
 public class CoinGeneratorObject : LootGeneratorObject

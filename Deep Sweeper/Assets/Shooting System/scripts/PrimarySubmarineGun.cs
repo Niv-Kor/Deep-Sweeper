@@ -1,3 +1,4 @@
+using DeepSweeper.Level.Mine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// when the barrel is not empty.
         /// </param>
         /// <returns>True if a bullet has been fired successfully.</returns>
-        protected void Fire(Vector3 fwdDir, bool recoil, MineGrid targetGrid, bool ignoreBarrelContent = false) {
+        protected void Fire(Vector3 fwdDir, bool recoil, Level.Mine.MineGrid targetGrid, bool ignoreBarrelContent = false) {
             if (!loadable && !ignoreBarrelContent) return;
 
             //instantiate bullet

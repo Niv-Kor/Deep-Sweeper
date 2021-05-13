@@ -1,5 +1,6 @@
 ﻿using Constants;
 using DeepSweeper.CameraSet;
+using DeepSweeper.Level.Mine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

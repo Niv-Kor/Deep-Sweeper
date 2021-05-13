@@ -1,3 +1,4 @@
+using DeepSweeper.Level.Mine;
 using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
@@ -9,7 +10,7 @@ namespace DeepSweeper.Player.ShootingSystem
         #endregion
 
         #region Properties
-        public MineGrid Grid { get; private set; }
+        public Level.Mine.MineGrid Grid { get; private set; }
         public ObjectActivator Activator { get; private set; }
         public IndicationSystem Indicator { get; private set; }
         public SelectionSystem Selector { get; private set; }
@@ -20,7 +21,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
         public TargetInfo(GameObject mine) {
             this.avatar = mine;
-            this.Grid = mine.GetComponentInParent<MineGrid>();
+            this.Grid = mine.GetComponentInParent<Level.Mine.MineGrid>();
             this.Activator = Grid.Activator;
             this.Indicator = Grid.IndicationSystem;
             this.Selector = Grid.SelectionSystem;

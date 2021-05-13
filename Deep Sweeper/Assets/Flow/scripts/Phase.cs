@@ -1,4 +1,5 @@
-﻿using DeepSweeper.Level.PhaseGate;
+﻿using DeepSweeper.Level.Mine;
+using DeepSweeper.Level.PhaseGate;
 
 public class Phase
 {

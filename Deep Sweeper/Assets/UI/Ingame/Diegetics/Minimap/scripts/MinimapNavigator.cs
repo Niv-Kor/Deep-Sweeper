@@ -1,5 +1,6 @@
 ﻿using Constants;
 using DeepSweeper.CameraSet;
+using DeepSweeper.Player;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,18 +51,14 @@ public class MinimapNavigator : SonarRotator
     }
     #endregion
 
-    private void Awake() {
-        this.submarine = Submarine.Instance.Oriantation;
-        this.arrow = GetComponentInChildren<RawImage>();
-        this.flow = LevelFlow.Instance;
-    }
-
     protected override void Start() {
         base.Start();
         this.positiveTremble = true;
         this.extraRotation = 0;
         this.trembleTimer = 0;
-
+        this.flow = LevelFlow.Instance;
+        this.arrow = GetComponentInChildren<RawImage>();
+        this.submarine = Submarine.Instance.Orientation;
         Camera minimap = IngameCameraManager.Instance.MinimapCam.Camera;
         this.minDisplayDistance = minimap.orthographicSize / 4;
 

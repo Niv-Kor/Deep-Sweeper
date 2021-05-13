@@ -16,7 +16,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
         protected virtual void Start() {
             this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
-            this.submarine = Submarine.Instance.Oriantation;
+            this.submarine = Submarine.Instance.Orientation;
 
             //bind fire events
             SightRay.Instance.PrimaryHitEvent += delegate (SightTargetType targetType, TargetInfo target) {

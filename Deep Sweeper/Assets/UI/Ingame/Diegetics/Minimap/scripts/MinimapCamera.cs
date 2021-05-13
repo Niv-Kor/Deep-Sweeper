@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DeepSweeper.Player;
+using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public class MinimapCamera : MonoBehaviour

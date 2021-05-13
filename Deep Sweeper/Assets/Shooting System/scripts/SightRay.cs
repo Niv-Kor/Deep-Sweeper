@@ -1,5 +1,6 @@
 ﻿using Constants;
 using DeepSweeper.CameraSet;
+using DeepSweeper.Level.Mine;
 using DeepSweeper.UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -39,7 +40,7 @@ namespace DeepSweeper.Player.ShootingSystem
         public float MaxDistance => maxDistance;
         public float HitDistance { get; private set; }
         public TargetInfo Target => selectedMine ?? selectedIndicator;
-        public MineGrid TargetGrid => Target?.Grid;
+        public Level.Mine.MineGrid TargetGrid => Target?.Grid;
         public SightTargetType TargetType {
             get {
                 if (selectedMine != null) return SightTargetType.Mine;
@@ -52,7 +53,7 @@ namespace DeepSweeper.Player.ShootingSystem
         private void Start() {
             this.controller = PlayerController.Instance;
             this.levelFlow = LevelFlow.Instance;
-            this.submarine = Submarine.Instance.Oriantation;
+            this.submarine = Submarine.Instance.Orientation;
             this.mineLayer = Layers.MINE | Layers.FLAGGED_MINE;
             this.indicatorLayer = Layers.MINE_INDICATION;
             this.HitDistance = Mathf.Infinity;
@@ -96,7 +97,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
             if (hit) {
                 GameObject obj = raycastHit.collider.gameObject;
-                MineGrid grid = obj.GetComponentInParent<MineGrid>();
+                Level.Mine.MineGrid grid = obj.GetComponentInParent<Level.Mine.MineGrid>();
                 Phase phase = levelFlow.CurrentPhase;
                 bool allowedGrid = levelFlow.DuringPhase && phase.Field.ContainsGrid(grid);
                 HitDistance = raycastHit.distance;

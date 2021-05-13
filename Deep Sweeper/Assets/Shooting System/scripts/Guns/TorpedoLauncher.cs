@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DeepSweeper.Level.Mine;
 using System.Linq;
 using UnityEngine;
 
@@ -14,9 +15,9 @@ namespace DeepSweeper.Player.ShootingSystem
         protected override void FireAtIndicator(TargetInfo target) {
             //only fire the bullets if the indicator is fulfilled
             if (target.Indicator.IsIndicationFulfilled) {
-                IEnumerable<MineGrid> section = from neighbour in target.Grid.Section
-                                                where neighbour != null && !neighbour.DetonationSystem.IsDetonated && !neighbour.SelectionSystem.IsFlagged
-                                                select neighbour;
+                IEnumerable<MineGrid> section = (from neighbour in target.Grid.Section
+                                                 where neighbour != null && !neighbour.DetonationSystem.IsDetonated && !neighbour.SelectionSystem.IsFlagged
+                                                 select neighbour);
 
                 //fire a bullet at each of the neighbours
                 if (section.Count() > 0) {

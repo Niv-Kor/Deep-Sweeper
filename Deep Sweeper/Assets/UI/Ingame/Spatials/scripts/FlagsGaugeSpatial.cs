@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DeepSweeper.Flow;
+using DeepSweeper.Level.Mine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -35,7 +37,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     #region Properties
     public int AvailableFlags => GetCounter(AVAILABLE_FLAGS_COUNTER);
     public int AvailableMines => GetCounter(AVAILABLE_MINES_COUNTER);
-    private List<MineGrid> CurrentGrids => LevelFlow.Instance.CurrentPhase.Field.Grids;
+    private List<DeepSweeper.Level.Mine.MineGrid> CurrentGrids => LevelFlow.Instance.CurrentPhase.Field.Grids;
     #endregion
 
     protected override void Start() {
@@ -123,7 +125,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// </summary>
     private void OnDisplay() {
         //bind an event to each of the field's mines
-        foreach (MineGrid grid in CurrentGrids) {
+        foreach (DeepSweeper.Level.Mine.MineGrid grid in CurrentGrids) {
             DetonationSystem detonateionSys = grid.DetonationSystem;
             detonateionSys.DetonationEvent += OnMineSweeped;
             detonationSystems.Add(detonateionSys);

@@ -1,6 +1,8 @@
 ﻿using DeepSweeper.CameraSet;
 using DeepSweeper.Flow;
+using DeepSweeper.Level.Mine;
 using DeepSweeper.Level.PhaseGate;
+using DeepSweeper.Player;
 using System;
 using System.Collections.Generic;
 using UnityEditor;

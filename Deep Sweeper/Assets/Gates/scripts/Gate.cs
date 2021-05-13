@@ -1,5 +1,6 @@
 ﻿using com.ootii.Cameras;
 using DeepSweeper.CameraSet;
+using DeepSweeper.Player;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
