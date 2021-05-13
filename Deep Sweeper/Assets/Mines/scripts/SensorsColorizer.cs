@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace DeepSweeper.Level.Mine
 {
-    public class MineSensorsManager : MonoBehaviour
+    public class SensorsColorizer : MonoBehaviour
     {
         #region Exposed Editor Parameters
         [Header("Timing")]
@@ -24,9 +24,10 @@ namespace DeepSweeper.Level.Mine
         #endregion
 
         #region Class Members
-        private float pulseTimer;
         private List<Material> materials;
+        private SensorsManager mngr;
         private UnityAction interval;
+        private float pulseTimer;
         #endregion
 
         #region Events
@@ -35,7 +36,11 @@ namespace DeepSweeper.Level.Mine
 
         private void Awake() {
             this.pulseTimer = 0;
-            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            this.mngr = GetComponent<SensorsManager>();
+
+            List<Renderer> renderers = (from sensor in mngr.Sensors
+                                        select sensor.GetComponent<Renderer>()).ToList();
+
             this.materials = (from renderer in renderers
                               select renderer.material).ToList();
         }

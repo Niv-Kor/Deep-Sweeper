@@ -15,16 +15,10 @@ namespace DeepSweeper.Level.Mine
         [SerializeField] [Range(0f, 1f)] private float cameraShakeIntensity = 1;
         #endregion
 
-        #region Constants
-        private static readonly string DIG_SFX = "dig";
-        private static readonly string EXPLOSION_SFX = "explosion";
-        #endregion
-
         #region Class Members
-        private Jukebox jukebox;
         private SphereCollider col;
         private MeshRenderer[] renders;
-        private ParticleSystem[] particles;
+        private SensorsManager sensors;
         private Bullet hitTrigger;
         #endregion
 
@@ -38,10 +32,9 @@ namespace DeepSweeper.Level.Mine
 
         private void Awake() {
             GameObject avatar = Grid.Avatar;
-            this.particles = avatar.GetComponentsInChildren<ParticleSystem>();
+            this.sensors = avatar.GetComponentInChildren<SensorsManager>();
             this.renders = avatar.GetComponentsInChildren<MeshRenderer>();
             this.col = avatar.GetComponentInChildren<SphereCollider>();
-            this.jukebox = GetComponent<Jukebox>();
             this.IsDetonated = false;
         }
 
@@ -88,12 +81,8 @@ namespace DeepSweeper.Level.Mine
             col.enabled = false;
             IsDetonated = true;
 
-            if (explosion) {
-                if (Grid.IndicationSystem.IsFatal) jukebox.Play(EXPLOSION_SFX);
-                else jukebox.Play(DIG_SFX);
-
-                foreach (ParticleSystem part in particles) part.Play();
-            }
+            ///TODO 1f
+            sensors.BreakSensors(1f, explosion);
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace DeepSweeper.Level.Mine
 
         #region Class Members
         private Jukebox jukebox;
-        private MineSensorsManager sensorsMngr;
+        private SensorsColorizer sensorsColorizer;
         private SelectionMode m_mode;
         #endregion
 
@@ -77,7 +77,7 @@ namespace DeepSweeper.Level.Mine
                 //apply mode
                 if (permit) {
                     if (flagChange) jukebox?.Play(FLAG_CHECK_SFX);
-                    sensorsMngr.Colorize(config.Color);
+                    sensorsColorizer.Colorize(config.Color);
                     ModeApplicationEvent?.Invoke(m_mode, value);
                     m_mode = value;
                 }
@@ -88,7 +88,7 @@ namespace DeepSweeper.Level.Mine
         private void Awake() {
             this.jukebox = GetComponent<Jukebox>();
             this.Mark = GetComponentInChildren<MineMark>();
-            this.sensorsMngr = GetComponentInChildren<MineSensorsManager>();
+            this.sensorsColorizer = GetComponentInChildren<SensorsColorizer>();
             this.m_mode = SelectionMode.None;
         }
 
