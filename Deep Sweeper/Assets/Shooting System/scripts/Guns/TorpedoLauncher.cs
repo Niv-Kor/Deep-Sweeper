@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class TorpedoLauncher : PrimarySubmarineGun
+    public class TorpedoLauncher : PrimarySemiautomaticGun
     {
         #region Properties
         public override GunSubType SubType => GunSubType.TorpedoLauncher;
@@ -22,10 +22,11 @@ namespace DeepSweeper.Player.ShootingSystem
                 //fire a bullet at each of the neighbours
                 if (section.Count() > 0) {
                     Recoil(recoilForce);
+
                     foreach (MineGrid neighbour in section) {
                         Vector3 neighbourPos = neighbour.Avatar.transform.position;
                         Vector3 neighbourDir = Vector3.Normalize(neighbourPos - transform.position);
-                        Fire(neighbourDir, false, neighbour, true);
+                        PullTrigger(neighbourDir, neighbour, false, false, true);
                     }
                 }
                 else FireAtNull();
@@ -35,12 +36,12 @@ namespace DeepSweeper.Player.ShootingSystem
 
         /// <inheritdoc/>
         protected override void FireAtMine(TargetInfo target) {
-            Fire(transform.forward, true, target.Grid);
+            PullTrigger(transform.forward, target.Grid, true, true);
         }
 
         /// <inheritdoc/>
         protected override void FireAtNull() {
-            Fire(transform.forward, true, null);
+            PullTrigger(transform.forward, null, true, true);
         }
     }
 }

@@ -37,7 +37,7 @@ public class Jukebox : MonoBehaviour
     }
     #endregion
 
-    private void Start() {
+    private void Awake() {
         this.limiter = TunesLimiter.Instance;
         this.disposableAudio = DisposableAudioManager.Instance;
         this.volumeController = DistantVolumeController.Instance;
@@ -122,6 +122,15 @@ public class Jukebox : MonoBehaviour
             return list[index];
         }
         else return null;
+    }
+
+    /// <summary>
+    /// Play a random tune.
+    /// </summary>
+    public void PlayRandom() {
+        int index = Random.Range(0, Tunes.Count);
+        Tune tune = Tunes[index];
+        Play(tune);
     }
 
     /// <summary>

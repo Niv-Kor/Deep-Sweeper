@@ -69,9 +69,10 @@ public abstract class LootGeneratorObject : MonoBehaviour
     protected GameObject prevItem;
     protected LootItemPromise itemPromise;
     protected Vector3 originScale;
+    protected UnityAction collectAction;
     protected int m_itemValue;
     protected bool m_enabled;
-    protected UnityAction collectAction;
+    protected bool m_willDrop;
     private bool initialized;
     #endregion
 
@@ -81,7 +82,7 @@ public abstract class LootGeneratorObject : MonoBehaviour
 
     #region Properties
     public LayerMask CollideableLayers { get { return collidableLayers; } }
-    public bool WillDrop { get; protected set; }
+    public bool PreventDrop { get; set; }
     public LootItem Item { get; set; }
     public float Chance {
         get { return dropChance; }
@@ -89,6 +90,11 @@ public abstract class LootGeneratorObject : MonoBehaviour
             dropChance = Mathf.Clamp(value, 0f, 1f);
             WillDrop = ChanceUtils.UnstableCondition(dropChance);
         }
+    }
+
+    public bool WillDrop {
+        get => m_willDrop && !PreventDrop;
+        protected set { m_willDrop = value; }
     }
 
     public int ItemValue {

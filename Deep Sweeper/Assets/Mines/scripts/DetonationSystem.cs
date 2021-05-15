@@ -20,6 +20,8 @@ namespace DeepSweeper.Level.Mine
         private MeshRenderer[] renders;
         private SensorsManager sensors;
         private Bullet hitTrigger;
+        private bool enableDetonationCallback;
+        private bool enableDrop;
         #endregion
 
         #region Events
@@ -35,12 +37,54 @@ namespace DeepSweeper.Level.Mine
             this.sensors = avatar.GetComponentInChildren<SensorsManager>();
             this.renders = avatar.GetComponentsInChildren<MeshRenderer>();
             this.col = avatar.GetComponentInChildren<SphereCollider>();
+            this.enableDetonationCallback = true;
             this.IsDetonated = false;
+
+            DetonationEvent += ShakeCamera;
+            sensors.AllSensorsBrokenEvent += OnMineDetonated;
         }
 
-        private void Start() {
-            //assign an event trigger to the main camera
-            DetonationEvent += ShakeCamera;
+        /// <summary>
+        /// Activate when the mine is detonated completely.
+        /// </summary>
+        private void OnMineDetonated() {
+            bool fatal = Grid.IndicationSystem.IsFatal;
+
+            //dismiss grid
+            foreach (var render in renders) render.enabled = false;
+            col.enabled = false;
+            IsDetonated = true;
+
+            //always send callback if mine is fatal
+            enableDetonationCallback |= fatal;
+
+            if (!fatal) {
+                Grid.IndicationSystem.AllowRevelation(true);
+                Grid.IndicationSystem.Activate();
+                Grid.Activator.ActivateAndLock();
+                Grid.SelectionSystem.ApplyFlag(false);
+                Grid.LootGenerator.PreventDrop = !enableDrop;
+
+                int neighbours = Grid.IndicationSystem.Value;
+                List<MineGrid> section = Grid.Section;
+
+                //keep detonating neighbour grids recursively
+                if (neighbours == 0)
+                    foreach (MineGrid mineGrid in section)
+                        if (mineGrid != null)
+                            mineGrid.DetonationSystem.TriggerHit(null, enableDetonationCallback, enableDrop);
+
+                //try winning the phase
+                LevelFlow.Instance.TryNextPhase();
+            }
+
+            if (enableDetonationCallback) DetonationEvent?.Invoke();
+
+            //lose
+            if (fatal) {
+                DeathTint.Instance.Tint();
+                LevelFlow.Instance.Lose();
+            }
         }
 
         /// <summary>
@@ -70,67 +114,27 @@ namespace DeepSweeper.Level.Mine
         }
 
         /// <summary>
-        /// Vanish the mine.
+        /// Hit the mine.
         /// </summary>
-        /// <param name="explosion">True to explode the mine using particle effects</param>
-        private void Dismiss(bool explosion) {
-            if (IsDetonated) return;
-
-            DetonationEvent?.Invoke();
-            foreach (var render in renders) render.enabled = false;
-            col.enabled = false;
-            IsDetonated = true;
-
-            ///TODO 1f
-            sensors.BreakSensors(1f, explosion);
+        /// <param name="power">The power of the hit [0:1]</param>
+        private void Hit(float power) {
+            if (!IsDetonated) sensors.BreakSensors(power);
         }
 
         /// <summary>
         /// Explode the mine.
         /// </summary>
-        public void Explode() { Dismiss(true); }
-
-        /// <summary>
-        /// Quietly vanish the mine without explision.
-        /// </summary>
-        public void Vanish() { Dismiss(false); }
-
-        /// <summary>
-        /// Explode the mine.
-        /// </summary>
-        /// <param name="explosion">True to activate an explosion effect on revelation</param>
+        /// <param name="power">The power of the hit [0:1]</param>
+        /// <param name="sendDetonationCallback">True to send a callback upon detonation</param>
         /// <param name="allowDrop">True to allow the mine to drop an item</param>
-        private void Detonate(bool explosion, bool allowDrop = true) {
+        private void Detonate(float power, bool sendDetonationCallback, bool allowDrop = true) {
             bool ignored = Grid.SelectionSystem.IsFlagged;
             if (Grid.IndicationSystem.IsRevealed || ignored) return;
 
-            //lose
-            if (Grid.IndicationSystem.IsFatal) {
-                Dismiss(true);
-                DeathTint.Instance.Tint();
-                LevelFlow.Instance.Lose();
-            }
-            else {
-                Grid.IndicationSystem.AllowRevelation(true);
-                Grid.IndicationSystem.Activate();
-                Grid.Activator.ActivateAndLock();
-                Grid.SelectionSystem.ApplyFlag(false);
-
-                int neighbours = Grid.IndicationSystem.Value;
-                List<MineGrid> section = Grid.Section;
-
-                if (!allowDrop) Grid.LootGenerator.Chance = 0;
-                if (explosion) Dismiss(true);
-                else Dismiss(false);
-
-                //keep revealing grids recursively
-                if (neighbours == 0)
-                    foreach (MineGrid mineGrid in section)
-                        if (mineGrid != null)
-                            mineGrid.DetonationSystem.TriggerHit(null, explosion, allowDrop);
-
-                LevelFlow.Instance.TryNextPhase();
-            }
+            bool fatal = Grid.IndicationSystem.IsFatal;
+            enableDetonationCallback = sendDetonationCallback || fatal;
+            enableDrop = allowDrop;
+            Hit(power);
         }
 
         /// <summary>
@@ -139,14 +143,15 @@ namespace DeepSweeper.Level.Mine
         /// while a hit type of 'SectionHit' means that the mine's indicator has been hit,
         /// and the bullet is meant for each of the mine's neighbours.
         /// </summary>
-        /// <param name="hitType">The type of hit that occured</param>
-        /// <param name="explosion">True to activate an explosion effect on revelation</param>
+        /// <param name="bullet">The hitting bullet</param>
+        /// <param name="sendDetonationCallback">True to send a callback upon detonation</param>
         /// <param name="allowDrop">True to allow the mine to drop an item</param>
-        public void TriggerHit(Bullet bullet, bool explosion, bool allowDrop = true) {
+        public void TriggerHit(Bullet bullet, bool sendDetonationCallback, bool allowDrop = true) {
             if (bullet != null && hitTrigger == bullet) return;
             else hitTrigger = bullet;
 
-            Detonate(explosion, allowDrop);
+            float power = (bullet != null) ? bullet.Power : 1;
+            Detonate(power, sendDetonationCallback, allowDrop);
         }
     }
 }

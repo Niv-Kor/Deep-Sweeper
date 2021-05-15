@@ -4,7 +4,11 @@ namespace DeepSweeper.Player.ShootingSystem
     {
         #region Properties
         public override GunSubType SubType => GunSubType.Flagger;
+        public override GunMechanism Mechanism => GunMechanism.SemiAutomatic;
         #endregion
+
+        /// <inheritdoc/>
+        protected override void OnGunTriggerStop() {}
 
         /// <inheritdoc/>
         protected override void FireAtIndicator(TargetInfo target) {}

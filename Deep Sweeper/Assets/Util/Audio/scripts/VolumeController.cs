@@ -32,7 +32,6 @@ public class VolumeController : Singleton<VolumeController>
     public void SetVolume(Genre genre, float value) {
         AudioMixerGroup group = GetGenreGroup(genre);
         float volume = Mathf.Log10(value) * 20;
-        print("log volume: " + volume);
         string exposedVolumeParameter = genre.ToString() + EXPOSED_PARAMETER_SUFFIX;
         group.audioMixer.SetFloat(exposedVolumeParameter, volume);
     }

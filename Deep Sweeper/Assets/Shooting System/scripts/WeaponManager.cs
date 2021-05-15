@@ -16,7 +16,7 @@ namespace DeepSweeper.Player.ShootingSystem
             guns = new List<G>(gunsArr);
 
             //disable all guns
-            foreach (var gun in guns) gun.gameObject.SetActive(false);
+            foreach (var gun in guns) gun.IsActive = false;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <param name="flag">True to enable or false to disable</param>
         private void EnableGun(GunSubType gunType, bool flag) {
             G gun = guns.Find(x => x.SubType == gunType);
-            gun?.gameObject.SetActive(flag);
+            if (gun != null) gun.IsActive = flag;
         }
 
         /// <inheritdoc/>

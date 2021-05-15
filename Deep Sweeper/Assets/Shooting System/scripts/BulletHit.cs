@@ -1,22 +1,59 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
+    [RequireComponent(typeof(ParticleSystem))]
     public class BulletHit : MonoBehaviour
     {
-        private int particlesSystemsAmount;
+        #region Events
+        public event UnityAction FadeEvent;
+        #endregion
 
-        private void Start() {
-            ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>();
-            this.particlesSystemsAmount = systems.Length;
+        #region Class Members
+        private ParticleSystem particles;
+        private float animationTime;
+        #endregion
+
+        private void Awake() {
+            this.particles = GetComponent<ParticleSystem>();
+            this.animationTime = CountAnimationTime();
         }
 
         /// <summary>
-        /// Notify when a child particle system has ended.
-        /// When all particle systems end, this object destorys itself.
+        /// Count the total amount of the hit's animation time.
         /// </summary>
-        public void NotifyParticlesDeath() {
-            if (--particlesSystemsAmount == 0) Destroy(gameObject);
+        /// <returns>The hit's total animation time in seconds.</returns>
+        private float CountAnimationTime() {
+            var systems = new List<ParticleSystem>(GetComponentsInChildren<ParticleSystem>());
+            systems.Remove(particles);
+            float time = 0;
+
+            foreach (var system in systems) {
+                float duration = system.main.startLifetime.constantMax;
+                if (duration > time) time = duration;
+            }
+
+            return time;
+        }
+
+        /// <summary>
+        /// Invoke fade event after the total animation time has passed.
+        /// </summary>
+        private IEnumerator CountdownToFade() {
+            yield return new WaitForSeconds(animationTime);
+            FadeEvent?.Invoke();
+        }
+
+        /// <summary>
+        /// Activate the hit particles effect.
+        /// </summary>
+        public void Activate() {
+            particles.Play();
+            StopAllCoroutines();
+            StartCoroutine(CountdownToFade());
         }
     }
 }

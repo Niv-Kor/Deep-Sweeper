@@ -2,6 +2,7 @@
 using DeepSweeper.CameraSet;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.UI;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,6 +18,10 @@ namespace DeepSweeper.Player.ShootingSystem
         [SerializeField] private LayerMask hitLayers;
         #endregion
 
+        #region Constants
+        private static readonly float HOLD_EVENT_COOLDOWN = .1f;
+        #endregion
+
         #region Class Members
         private TargetInfo selectedMine;
         private TargetInfo selectedIndicator;
@@ -24,23 +29,30 @@ namespace DeepSweeper.Player.ShootingSystem
         private PlayerController controller;
         private LevelFlow levelFlow;
         private LayerMask mineLayer, indicatorLayer;
+        private Coroutine primaryOperationHoldCoroutine;
+        private Coroutine secondaryOperationHoldCoroutine;
         #endregion
 
         #region Events
-        /// <param type=typeof(SightTargetType)>The type of locked target</param>
-        /// <param type=typeof(TargetInfo)>The locked target (or null if it doesn't exist</param>
-        public event UnityAction<SightTargetType, TargetInfo> PrimaryHitEvent;
+        public event UnityAction PrimaryStopEvent;
+        public event UnityAction SecondaryStopEvent;
 
         /// <param type=typeof(SightTargetType)>The type of locked target</param>
         /// <param type=typeof(TargetInfo)>The locked target (or null if it doesn't exist</param>
-        public event UnityAction<SightTargetType, TargetInfo> SecondaryHitEvent;
+        /// <param type=typeof(bool)>True if the operation is persisting (key is held)</param>
+        public event UnityAction<SightTargetType, TargetInfo, bool> PrimaryTriggerEvent;
+
+        /// <param type=typeof(SightTargetType)>The type of locked target</param>
+        /// <param type=typeof(TargetInfo)>The locked target (or null if it doesn't exist</param>
+        /// <param type=typeof(bool)>True if the operation is persisting (key is held)</param>
+        public event UnityAction<SightTargetType, TargetInfo, bool> SecondaryTriggerEvent;
         #endregion
 
         #region Properties
         public float MaxDistance => maxDistance;
         public float HitDistance { get; private set; }
         public TargetInfo Target => selectedMine ?? selectedIndicator;
-        public Level.Mine.MineGrid TargetGrid => Target?.Grid;
+        public MineGrid TargetGrid => Target?.Grid;
         public SightTargetType TargetType {
             get {
                 if (selectedMine != null) return SightTargetType.Mine;
@@ -58,8 +70,8 @@ namespace DeepSweeper.Player.ShootingSystem
             this.indicatorLayer = Layers.MINE_INDICATION;
             this.HitDistance = Mathf.Infinity;
 
-            controller.PrimaryOperationEvent += OnPrimaryOperationClick;
-            controller.SecondaryOperationEvent += OnSecondaryOperationClick;
+            controller.PrimaryOperationStartEvent += OnPrimaryOperationClick;
+            controller.SecondaryOperationStartEvent += OnSecondaryOperationClick;
         }
 
         private void Update() {
@@ -71,13 +83,36 @@ namespace DeepSweeper.Player.ShootingSystem
         /// This function fires a torpedo.
         /// </summary>
         private void OnPrimaryOperationClick() {
-            if (!CursorViewer.Instance.IsDisplayed) PrimaryHitEvent?.Invoke(TargetType, Target);
+            if (!CursorViewer.Instance.IsDisplayed) PrimaryTriggerEvent?.Invoke(TargetType, Target, false);
 
-            //release target
+            controller.PrimaryOperationStopEvent += CancelPrimaryOperationHold;
+            primaryOperationHoldCoroutine = StartCoroutine(OnPrimaryOperationHold());
+        }
+
+        /// <summary>
+        /// Activate when the primary key hold breaks.
+        /// </summary>
+        private void CancelPrimaryOperationHold() {
+            PrimaryStopEvent?.Invoke();
+            StopCoroutine(primaryOperationHoldCoroutine);
+
+            /*//release target
             if (TargetType == SightTargetType.Mine) {
                 DeselectMines();
                 DeselectIndicators();
                 Crosshair.Instance.Release();
+            }*/
+
+            controller.PrimaryOperationStopEvent -= CancelPrimaryOperationHold;
+        }
+
+        /// <summary>
+        /// Activate as long as the primary operation key is held.
+        /// </summary>
+        private IEnumerator OnPrimaryOperationHold() {
+            while (true) {
+                PrimaryTriggerEvent?.Invoke(TargetType, Target, true);
+                yield return new WaitForSeconds(HOLD_EVENT_COOLDOWN);
             }
         }
 
@@ -86,7 +121,36 @@ namespace DeepSweeper.Player.ShootingSystem
         /// If a mine is in sight range, it will toggle its flag state.
         /// </summary>
         private void OnSecondaryOperationClick() {
-            SecondaryHitEvent?.Invoke(TargetType, Target);
+            SecondaryTriggerEvent?.Invoke(TargetType, Target, false);
+            controller.SecondaryOperationStopEvent += CancelSecondaryOperationHold;
+            secondaryOperationHoldCoroutine = StartCoroutine(OnSecondaryOperationHold());
+        }
+
+        /// <summary>
+        /// Activate when the secondary key hold breaks.
+        /// </summary>
+        private void CancelSecondaryOperationHold() {
+            SecondaryStopEvent?.Invoke();
+            StopCoroutine(secondaryOperationHoldCoroutine);
+
+            /*//release target
+            if (TargetType == SightTargetType.Mine) {
+                DeselectMines();
+                DeselectIndicators();
+                Crosshair.Instance.Release();
+            }
+*/
+            controller.SecondaryOperationStopEvent -= CancelSecondaryOperationHold;
+        }
+
+        /// <summary>
+        /// Activate as long as the secondary operation key is held.
+        /// </summary>
+        private IEnumerator OnSecondaryOperationHold() {
+            while (true) {
+                SecondaryTriggerEvent?.Invoke(TargetType, Target, true);
+                yield return new WaitForSeconds(HOLD_EVENT_COOLDOWN);
+            }
         }
 
         /// <summary>

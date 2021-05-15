@@ -1,4 +1,4 @@
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class PrimaryWeaponManager : WeaponManager<PrimarySubmarineGun> {}
+    public class PrimaryWeaponManager : WeaponManager<PrimaryGun> {}
 }
