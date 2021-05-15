@@ -8,10 +8,14 @@ namespace DeepSweeper.CameraSet
     {
         private class EffectFloatParameter
         {
+            #region Class Members
             private FloatParameter parameter;
+            #endregion
 
+            #region Properties
             public float OriginValue { get; private set; }
             public float TargetValue { get; set; }
+            #endregion
 
             /// <param name="parameter">The effect's parameter reference</param>
             public EffectFloatParameter(FloatParameter parameter) {
@@ -49,11 +53,16 @@ namespace DeepSweeper.CameraSet
         [Header("Wave Physics")]
         [Tooltip("The minimum possible distance that the camera will move while shaking.\n"
                + "The actual value is determined according to the intensity of the shake.")]
-        [SerializeField] Vector3 minIntensity;
+        [SerializeField] private Vector3 minIntensity;
 
         [Tooltip("The maximum possible distance that the camera will move while shaking.\n"
                + "The actual value is determined according to the intensity of the shake.")]
-        [SerializeField] Vector3 maxIntensity;
+        [SerializeField] private Vector3 maxIntensity;
+
+        [Tooltip("Minimum and maximum distance, by which the relative shake insenity is calculated.\n"
+               + "Maximum intensity takes place from the minumim distance, and minimum intensity takes"
+               + "place from the maximum distance.")]
+        [SerializeField] private Vector2Int distanceRange;
 
         [Tooltip("The frequency of the camera's shake.")]
         [SerializeField] private float frequency = 1;
@@ -175,6 +184,17 @@ namespace DeepSweeper.CameraSet
             StopAllCoroutines();
             ActivateFX(true, intensity);
             StartCoroutine(WaveShake(intensity));
+        }
+
+        /// <summary>
+        /// Shake the camera relative to its distance from an object.
+        /// </summary>
+        /// <param name="obj">The object against which to measure the distance</param>
+        public void ShakeRelativeTo(Transform obj) {
+            float dist = Vector3.Distance(transform.position, obj.position);
+            dist = Mathf.Max(distanceRange.x, dist);
+            float intensity = 1 - RangeMath.NumberOfRange(dist, distanceRange.x, distanceRange.y);
+            Shake(intensity);
         }
     }
 }

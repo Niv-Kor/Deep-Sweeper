@@ -1,5 +1,4 @@
 ﻿using DeepSweeper.CameraSet;
-using DeepSweeper.Player;
 using DeepSweeper.Player.ShootingSystem;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,11 +14,16 @@ namespace DeepSweeper.Level.Mine
         [SerializeField] [Range(0f, 1f)] private float cameraShakeIntensity = 1;
         #endregion
 
+        #region Constants
+        private static readonly float FATAL_CAMERA_SHAKE = 1;
+        #endregion
+
         #region Class Members
         private SphereCollider col;
         private MeshRenderer[] renders;
         private SensorsManager sensors;
         private Bullet hitTrigger;
+        private CameraShaker camShaker;
         private bool enableDetonationCallback;
         private bool enableDrop;
         #endregion
@@ -37,6 +41,7 @@ namespace DeepSweeper.Level.Mine
             this.sensors = avatar.GetComponentInChildren<SensorsManager>();
             this.renders = avatar.GetComponentsInChildren<MeshRenderer>();
             this.col = avatar.GetComponentInChildren<SphereCollider>();
+            this.camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
             this.enableDetonationCallback = true;
             this.IsDetonated = false;
 
@@ -59,6 +64,7 @@ namespace DeepSweeper.Level.Mine
             enableDetonationCallback |= fatal;
 
             if (!fatal) {
+                //reveal indicator
                 Grid.IndicationSystem.AllowRevelation(true);
                 Grid.IndicationSystem.Activate();
                 Grid.Activator.ActivateAndLock();
@@ -90,27 +96,9 @@ namespace DeepSweeper.Level.Mine
         /// <summary>
         /// Shake the camera as an explosion effect.
         /// </summary>
-        /// <param name="maxForce">
-        /// True if the camera should shake at max force,
-        /// or false if it should be relative to the mine's distance
-        /// </param>
         private void ShakeCamera() {
-            CameraShaker camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
-            SightRay ray = SightRay.Instance;
-
-            if (camShaker != null) {
-                float shakeStrength = cameraShakeIntensity;
-
-                //relative to distance from mine
-                if (!Grid.IndicationSystem.IsFatal) {
-                    Transform player = Submarine.Instance.transform;
-                    float dist = Vector3.Distance(transform.position, player.position);
-                    float clampedDist = Mathf.Clamp(dist, 0, ray.MaxDistance);
-                    shakeStrength = 1 - RangeMath.NumberOfRange(clampedDist, 0, ray.MaxDistance);
-                }
-
-                camShaker.Shake(shakeStrength);
-            }
+            if (Grid.IndicationSystem.IsFatal) camShaker.Shake(FATAL_CAMERA_SHAKE);
+            else camShaker.ShakeRelativeTo(transform);
         }
 
         /// <summary>

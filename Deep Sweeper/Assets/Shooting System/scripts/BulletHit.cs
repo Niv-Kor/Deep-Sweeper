@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using GamedevUtil;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,24 +19,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
         private void Awake() {
             this.particles = GetComponent<ParticleSystem>();
-            this.animationTime = CountAnimationTime();
-        }
-
-        /// <summary>
-        /// Count the total amount of the hit's animation time.
-        /// </summary>
-        /// <returns>The hit's total animation time in seconds.</returns>
-        private float CountAnimationTime() {
-            var systems = new List<ParticleSystem>(GetComponentsInChildren<ParticleSystem>());
-            systems.Remove(particles);
-            float time = 0;
-
-            foreach (var system in systems) {
-                float duration = system.main.startLifetime.constantMax;
-                if (duration > time) time = duration;
-            }
-
-            return time;
+            this.animationTime = ParticlesUtil.CountTotalAnimationTime(particles);
         }
 
         /// <summary>

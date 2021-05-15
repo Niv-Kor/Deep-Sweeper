@@ -50,7 +50,10 @@ namespace DeepSweeper.Player.ShootingSystem
             if (bullets.Count > 0) {
                 foreach (Bullet bullet in bullets) EnsureTargetHit(bullet, targetGrid);
                 if (ricochet) ActivateRicochet(true);
-                if (recoil) Recoil(recoilForce);
+                if (recoil) {
+                    Recoil(recoilForce);
+                    camShaker.Shake(cameraShake);
+                }
             }
         }
 

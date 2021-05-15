@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4122842123755644}
   - component: {fileID: 198657689533374026}
   - component: {fileID: 199136316677300890}
-  m_Layer: 0
-  m_Name: glow
+  m_Layer: 8
+  m_Name: Flow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,8 +266,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 40
-      minScalar: 20
+      scalar: 20
+      minScalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4813,8 +4813,8 @@ GameObject:
   - component: {fileID: 4844291515055092}
   - component: {fileID: 198684288590568938}
   - component: {fileID: 199308648780220028}
-  m_Layer: 0
-  m_Name: flarespikes_Thin
+  m_Layer: 8
+  m_Name: Flarespike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5006,7 +5006,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.49803922}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9561,8 +9561,8 @@ GameObject:
   - component: {fileID: 4659616700009460}
   - component: {fileID: 198716003155920944}
   - component: {fileID: 199313710700940440}
-  m_Layer: 0
-  m_Name: smokePuff
+  m_Layer: 8
+  m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9736,7 +9736,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.14509805}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.33333334}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9798,8 +9798,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 7
-      minScalar: 3
+      scalar: 14
+      minScalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14228,8 +14228,8 @@ GameObject:
   - component: {fileID: 4202549611881306}
   - component: {fileID: 198183221796487404}
   - component: {fileID: 199672697417068944}
-  m_Layer: 0
-  m_Name: impactSparks
+  m_Layer: 8
+  m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14465,8 +14465,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 20
-      minScalar: 10
+      scalar: 40
+      minScalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -19004,7 +19004,7 @@ GameObject:
   - component: {fileID: 199972528942600042}
   - component: {fileID: 198344661946723368}
   - component: {fileID: 5499030987907279729}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Pisto Bulletl Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23837,8 +23837,8 @@ GameObject:
   - component: {fileID: 4479510142115316}
   - component: {fileID: 198953783189206274}
   - component: {fileID: 199012140504858130}
-  m_Layer: 0
-  m_Name: flarespikes_wide
+  m_Layer: 8
+  m_Name: Wide Flarespike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24092,8 +24092,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 30
-      minScalar: 4
+      scalar: 60
+      minScalar: 30
       maxCurve:
         serializedVersion: 2
         m_Curve:

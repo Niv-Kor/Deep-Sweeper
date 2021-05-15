@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5140387815925716430}
   - component: {fileID: 8684283936982136828}
   - component: {fileID: 5534524145779625423}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Torpedo Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4856,7 +4856,7 @@ GameObject:
   - component: {fileID: 6655882795334000622}
   - component: {fileID: 928479675072301069}
   - component: {fileID: 8231004514412477561}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9596,7 +9596,7 @@ GameObject:
   - component: {fileID: 2479013012971417817}
   - component: {fileID: 2479013012971417816}
   - component: {fileID: 8419654505504867441}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Dust
   m_TagString: Untagged
   m_Icon: {fileID: 0}

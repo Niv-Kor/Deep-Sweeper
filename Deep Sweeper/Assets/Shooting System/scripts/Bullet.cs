@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GamedevUtil;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,7 +25,9 @@ namespace DeepSweeper.Player.ShootingSystem
 
         #region Class Members
         private ParticleSystem m_particleSys;
+        private ParticleSystem warheadParticles;
         private Jukebox jukebox;
+        private float? m_animationTime;
         #endregion
 
         #region Events
@@ -45,10 +48,22 @@ namespace DeepSweeper.Player.ShootingSystem
                 return m_particleSys;
             }
         }
+
+        private float AnimationTime {
+            get {
+                if (m_animationTime != null) return (float) m_animationTime;
+                else {
+                    m_animationTime = ParticlesUtil.CountTotalAnimationTime(ParticleSys);
+                    return (float) m_animationTime;
+                }
+            }
+        }
         #endregion
 
         private void Awake() {
             this.jukebox = GetComponent<Jukebox>();
+            TargetDetector detector = GetComponentInChildren<TargetDetector>();
+            this.warheadParticles = detector?.GetComponent<ParticleSystem>();
         }
 
         private void Start() {
@@ -62,13 +77,15 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <summary>
         /// Countdown until the bullet is no longer considered active.
         /// </summary>
-        private IEnumerator CountdownActivity() {
-            yield return new WaitForSeconds(timeToLive);
+        /// <param name="time">The time of cooldown (in seconds)</param>
+        private IEnumerator CountdownActivity(float time) {
+            yield return new WaitForSeconds(time);
             Stop();
+            InactiveEvent?.Invoke();
         }
 
         /// <summary>
-        /// Trigger a hit evet.
+        /// Trigger a hit event.
         /// </summary>
         /// <param name="position">Position of impact</param>
         /// <param name="rotation">Rotation at the time of impact</param>
@@ -80,10 +97,15 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <summary>
         /// Stop and deactivate the bullet.
         /// </summary>
-        public void Stop() {
+        /// <param name="includeAll">
+        /// True to stop all child particles including bullet trails.
+        /// If false, only the warhead is stopped.
+        /// </param>
+        public void Stop(bool includeAll = false) {
             IsActive = false;
-            ParticleSys.Stop();
-            InactiveEvent?.Invoke();
+
+            if (includeAll || warheadParticles is null) ParticleSys.Stop();
+            else warheadParticles.Stop();
         }
 
         /// <summary>
@@ -93,7 +115,9 @@ namespace DeepSweeper.Player.ShootingSystem
             ParticleSys.Play();
             IsActive = true;
             StopAllCoroutines();
-            StartCoroutine(CountdownActivity());
+
+            float cooldownTime = Mathf.Max(timeToLive, AnimationTime);
+            StartCoroutine(CountdownActivity(cooldownTime));
         }
     }
 }

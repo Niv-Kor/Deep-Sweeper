@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DeepSweeper.CameraSet;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
@@ -8,11 +9,15 @@ namespace DeepSweeper.Player.ShootingSystem
         #region Exposed Editor Parameters
         [Tooltip("A list of child ricochet effects to activate when the gun is triggered.")]
         [SerializeField] protected List<ParticleSystem> childRicochet;
+
+        [Tooltip("The camera's shake instensity at the time of launch")]
+        [SerializeField] [Range(0f, 1f)] protected float cameraShake;
         #endregion
 
         #region Class Members
         protected Rigidbody submarineRB;
         protected SubmarineOrientation submarine;
+        protected CameraShaker camShaker;
         #endregion
 
         #region Properties
@@ -27,6 +32,7 @@ namespace DeepSweeper.Player.ShootingSystem
         }
 
         protected virtual void Start() {
+            this.camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
             this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
             this.submarine = Submarine.Instance.Orientation;
             BindTriggerEventes();
