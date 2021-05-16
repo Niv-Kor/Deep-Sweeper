@@ -1,9 +1,9 @@
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class FlaggerGun : SecondarySubmarineGun
+    public class FlaggerGun : SubmarineGun
     {
         #region Properties
-        public override GunSubType SubType => GunSubType.Flagger;
+        public override GunType Type => GunType.Flagger;
         public override GunMechanism Mechanism => GunMechanism.SemiAutomatic;
         #endregion
 

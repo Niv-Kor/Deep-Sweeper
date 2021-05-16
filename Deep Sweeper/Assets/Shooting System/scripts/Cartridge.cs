@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    [RequireComponent(typeof(BulletHitsManager))]
-    public class CannonBarrel : Pool<Bullet>
+    public class Cartridge : Pool<Bullet>, IFirearmModule
     {
         #region Exposed Editor Parameters
         [Header("Prefabs")]
@@ -22,24 +21,23 @@ namespace DeepSweeper.Player.ShootingSystem
         #endregion
 
         #region Class Members
-        private Transform barrelParent;
-        private BulletHitsManager hitsMngr;
+        private Transform cartridgeParent;
         private bool slideable;
         #endregion
 
         #region Properties
+        public Firearm Firearm { get; set; }
         public bool IsLoading => !slideable;
         #endregion
 
         protected override void Awake() {
             base.Awake();
             this.slideable = true;
-            this.hitsMngr = GetComponent<BulletHitsManager>();
 
             //create barrel
-            this.barrelParent = new GameObject(BARREL_PARENT_NAME).transform;
-            barrelParent.SetParent(transform);
-            barrelParent.localPosition = Vector3.zero;
+            this.cartridgeParent = new GameObject(BARREL_PARENT_NAME).transform;
+            cartridgeParent.SetParent(transform);
+            cartridgeParent.localPosition = Vector3.zero;
         }
 
         private void Start() {
@@ -67,7 +65,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <param name="position"></param>
         /// <param name="rotation"></param>
         private void OnBulletImpact(Vector3 position, Vector3 rotation) {
-            hitsMngr.Activate(position, rotation);
+            Firearm.BulletsHitSystem.Activate(position, rotation);
         }
 
         /// <summary>
@@ -101,7 +99,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <returns>The newly created bullet.</returns>
         public override Bullet Make() {
             Bullet bullet = Instantiate(bulletPrefab);
-            bullet.transform.SetParent(barrelParent.transform);
+            bullet.transform.SetParent(cartridgeParent.transform);
             bullet.transform.localPosition = Vector3.zero;
             bullet.InactiveEvent += delegate { Return(bullet); };
             bullet.HitEvent += OnBulletImpact;

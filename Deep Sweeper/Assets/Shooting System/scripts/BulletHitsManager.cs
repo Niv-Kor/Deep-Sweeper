@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class BulletHitsManager : Pool<BulletHit>
+    public class BulletHitsManager : Pool<BulletHit>, IFirearmModule
     {
         #region Exposed Editor Parameters
         [Header("Prefabs")]
@@ -18,6 +18,10 @@ namespace DeepSweeper.Player.ShootingSystem
 
         #region Class Members
         private Transform hitsParent;
+        #endregion
+
+        #region Properties
+        public Firearm Firearm { get; set; }
         #endregion
 
         protected override void Awake() {

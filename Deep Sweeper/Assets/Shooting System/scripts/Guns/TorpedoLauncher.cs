@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class TorpedoLauncher : PrimarySemiautomaticGun
+    public class TorpedoLauncher : SubmarineGun
     {
         #region Properties
-        public override GunSubType SubType => GunSubType.TorpedoLauncher;
+        public override GunType Type => GunType.TorpedoLauncher;
+        public override GunMechanism Mechanism => GunMechanism.SemiAutomatic;
         #endregion
 
         /// <inheritdoc/>
@@ -43,5 +44,8 @@ namespace DeepSweeper.Player.ShootingSystem
         protected override void FireAtNull() {
             PullTrigger(transform.forward, null, true, true);
         }
+
+        /// <inheritdoc/>
+        protected override void OnGunTriggerStop() {}
     }
 }

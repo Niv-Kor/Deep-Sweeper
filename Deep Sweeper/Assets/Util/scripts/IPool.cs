@@ -3,7 +3,7 @@
     public interface IPool<T>
     {
         /// <summary>
-        /// Insert a fixed amount of items into the pool.
+        /// Manually insert a fixed amount of items into the pool.
         /// </summary>
         /// <param name="amount">The amount of items to insert</param>
         void Insert(int amount);

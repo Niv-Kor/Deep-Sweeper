@@ -5,25 +5,15 @@ using UnityEngine;
 
 namespace DeepSweeper.Characters
 {
-    public abstract class CharacterAbilityManager<T> : MonoBehaviour where T : System.Enum
+    public abstract class CharacterAbilityManager<T> : MonoBehaviour where T : IAbility
     {
-        [System.Serializable]
-        protected struct CharacterAbilityConfig
-        {
-            [Tooltip("The character that possesses the ability.")]
-            public CharacterPersona Character;
-
-            [Tooltip("Special ability of the specified character.")]
-            public T Ability;
-        }
-
         #region Exposed Editor Parameters
         [Tooltip("A list of ability configurations for the available pool of characters.")]
-        [SerializeField] protected List<CharacterAbilityConfig> abilities;
+        [SerializeField] protected List<CharacterAbilityConfig<T>> abilities;
         #endregion
 
         #region Properties
-        protected CharacterAbilityConfig CurrentConfig { get; set; }
+        protected CharacterAbilityConfig<T> CurrentConfig { get; set; }
         #endregion
 
         protected virtual void Awake() {
@@ -36,11 +26,11 @@ namespace DeepSweeper.Characters
         /// <param name="prev">Old commander character</param>
         /// <param name="next">New commander character</param>
         protected virtual void OnChangeCommander(CharacterPersona prev, CharacterPersona next) {
-            bool newAvailable = GetAbilityConfig(next, out CharacterAbilityConfig newConfig);
+            bool newAvailable = GetAbilityConfig(next, out CharacterAbilityConfig<T> newConfig);
 
             if (newAvailable) {
                 //remove old if exists
-                bool oldAvailable = GetAbilityConfig(prev, out CharacterAbilityConfig oldConfig);
+                bool oldAvailable = GetAbilityConfig(prev, out CharacterAbilityConfig<T> oldConfig);
                 if (oldAvailable) StripAbility(oldConfig.Ability);
 
                 //apply new
@@ -58,10 +48,16 @@ namespace DeepSweeper.Characters
         /// True if the ability configuration is available.
         /// If false, the ability returned is the default struct value.
         /// </returns>
-        protected bool GetAbilityConfig(CharacterPersona character, out CharacterAbilityConfig config) {
-            List<CharacterAbilityConfig> list = (from ability in abilities
-                                                 where ability.Character == character
-                                                 select ability).ToList();
+        protected bool GetAbilityConfig(CharacterPersona character, out CharacterAbilityConfig<T> config) {
+            if (abilities is null) {
+                config = default;
+                return false;
+            }
+
+            //find character's ability
+            var list = (from ability in abilities
+                        where ability.Character == character
+                        select ability).ToList();
 
             bool available = list.Count > 0;
             config = available ? list[0] : default;
@@ -69,15 +65,15 @@ namespace DeepSweeper.Characters
         }
 
         /// <summary>
-        /// Unlink the previous ability.
+        /// Unlink the previous abilites.
         /// </summary>
-        /// <param name="ability">The changed ability type</param>
+        /// <param name="abilities">The changed ability</param>
         protected abstract void StripAbility(T ability);
 
         /// <summary>
-        /// Apply the new ability.
+        /// Apply the new abilites.
         /// </summary>
-        /// <param name="ability">The new ability type</param>
+        /// <param name="ability">The new applied ability</param>
         protected abstract void ApplyAbility(T ability);
     }
 }
