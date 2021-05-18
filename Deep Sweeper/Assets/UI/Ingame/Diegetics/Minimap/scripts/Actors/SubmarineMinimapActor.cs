@@ -1,5 +1,4 @@
 ﻿using DeepSweeper.CameraSet;
-using UnityEngine;
 
 public class SubmarineMinimapActor : MinimapActor
 {
@@ -9,7 +8,7 @@ public class SubmarineMinimapActor : MinimapActor
 
     protected override void Awake() {
         base.Awake();
-        this.FPCam = IngameCameraManager.Instance.FPCam;
+        this.FPCam = CameraManager.Instance.GetCamera(CameraRole.Main);
     }
 
     /// <inheritdoc/>

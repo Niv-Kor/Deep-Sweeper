@@ -18,7 +18,8 @@ public class Suitcase : Singleton<Suitcase>
     }
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.items = new Stack<LootInfo>();
     }
 

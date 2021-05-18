@@ -1,5 +1,6 @@
 ﻿using DeepSweeper.CameraSet;
 using DeepSweeper.Level.Mine;
+using DeepSweeper.UI.Ingame.Sight;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,9 +9,6 @@ namespace DeepSweeper.Player.ShootingSystem
     public abstract class SubmarineGun : MonoBehaviour
     {
         #region Exposed Editor Parameters
-        [Tooltip("A list of child ricochet effects to activate when the gun is triggered.")]
-        [SerializeField] protected List<ParticleSystem> childRicochet;
-
         [Header("Recoil")]
         [Tooltip("The force in which the fire recoil takes place.")]
         [SerializeField] protected float recoilForce;
@@ -49,7 +47,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
         protected virtual void Start() {
             this.firearms = new List<Firearm>(GetComponentsInChildren<Firearm>());
-            this.camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
+            this.camShaker = CameraManager.Instance.GetCamera(CameraRole.Main).GetComponent<CameraShaker>();
             this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
             this.submarine = Submarine.Instance.Orientation;
             BindTriggerEventes();
@@ -146,14 +144,13 @@ namespace DeepSweeper.Player.ShootingSystem
         protected virtual void PullTrigger(Vector3 dir, MineGrid targetGrid, bool ricochet, bool recoil, bool ignoreBarrelContent = false) {
             if (!ignoreBarrelContent && !CanLoad) return;
 
-            List<Bullet> bullets = FireBullets(dir, ricochet);
+            List<Bullet> bullets = FireBullets(dir, ricochet, ignoreBarrelContent);
 
             if (bullets.Count > 0) {
+                CrosshairManager.Instance.ActiveCrosshair.Shoot();
+
                 foreach (Bullet bullet in bullets) EnsureTargetHit(bullet, targetGrid);
-                if (recoil) {
-                    Recoil(recoilForce);
-                    camShaker.Shake(cameraShake);
-                }
+                if (recoil) Recoil(recoilForce);
             }
         }
 
@@ -183,12 +180,13 @@ namespace DeepSweeper.Player.ShootingSystem
         /// </summary>
         /// <param name="dir">The direction towards which the bullets are facing</param>
         /// <param name="blastEffect">True to activate a blast effect for each of the successfully fired bullets</param>
+        /// <param name="ignoreLoadingTime">True to ignore the loading time and slide a bullet anyway</param>
         /// <returns>A list of all fired bullets.</returns>
-        protected virtual List<Bullet> FireBullets(Vector3 dir, bool blastEffect) {
+        protected virtual List<Bullet> FireBullets(Vector3 dir, bool blastEffect, bool ignoreLoadingTime = false) {
             List<Bullet> releasedBullets = new List<Bullet>();
 
             foreach (Firearm firearm in firearms) {
-                Bullet bullet = firearm.Cartridge.SlideBullet(dir);
+                Bullet bullet = firearm.Cartridge.SlideBullet(dir, ignoreLoadingTime);
 
                 if (bullet != null) {
                     releasedBullets.Add(bullet);
@@ -212,6 +210,7 @@ namespace DeepSweeper.Player.ShootingSystem
         protected virtual void Recoil(float force) {
             Vector3 backwards = submarine.Forward * -1;
             submarineRB.AddForce(backwards * force);
+            camShaker.Vibrate(cameraShake);
         }
 
         /// <summary>

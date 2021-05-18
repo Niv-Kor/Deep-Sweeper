@@ -61,7 +61,9 @@ public class WaterPhysics : Singleton<WaterPhysics>
     }
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
+
         //concatenate gravity event
         WavesChangeTrigger += OnWavesChange;
 

@@ -74,9 +74,12 @@ namespace DeepSweeper.Level.PhaseGate
         #endregion
 
         private void Awake() {
-            this.submarine = Submarine.Instance.Controller;
             this.camController = FindObjectOfType<CameraController>();
             this.jukebox = GetComponent<Jukebox>();
+        }
+
+        private void Start() {
+            this.submarine = Submarine.Instance.Controller;
         }
 
         /// <summary>
@@ -138,7 +141,7 @@ namespace DeepSweeper.Level.PhaseGate
             void ActivateDolly() {
                 camController.enabled = false;
                 StartCoroutine(MoveDolly());
-                IngameCameraManager.Instance.Switch(cam);
+                CameraManager.Instance.Switch(cam);
             }
 
             LoadingProcess process = new LoadingProcess();
@@ -166,7 +169,7 @@ namespace DeepSweeper.Level.PhaseGate
             void EnableCamera() {
                 camController.enabled = true;
                 StopAllCoroutines();
-                IngameCameraManager.Instance.Switch(IngameCameraManager.Instance.FPCam);
+                CameraManager.Instance.Switch(CameraRole.Main);
             }
 
             LoadingProcess process = new LoadingProcess();

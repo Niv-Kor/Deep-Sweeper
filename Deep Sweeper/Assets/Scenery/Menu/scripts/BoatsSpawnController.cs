@@ -64,6 +64,7 @@ public class BoatsSpawnController : MonoBehaviour
 
     #region Class Members
     private Queue<GameObject> boats;
+    private DynamicCamera mainCam;
     #endregion
 
     #region Properties
@@ -78,6 +79,7 @@ public class BoatsSpawnController : MonoBehaviour
 
     private void Start() {
         this.boats = new Queue<GameObject>();
+        this.mainCam = CameraManager.Instance.GetCamera(CameraRole.Main);
 
         //pre calculations
         for (int i = 0; i < areas.Count; i++) {
@@ -181,7 +183,8 @@ public class BoatsSpawnController : MonoBehaviour
         GameObject instance = boats.Dequeue();
         instance.transform.position = pos;
         instance.transform.rotation = Quaternion.LookRotation(area.BoatDirection, Vector3.up);
-        DynamicCamera mainCam = MenuCameraManager.Instance.BackgroundCam;
+
+        //calculate distance from camera
         Vector3 camPos = mainCam.transform.position;
         float boatCamDist = Vector3.Distance(camPos, instance.transform.position);
         float boatDistPercent = 1 - RangeMath.NumberOfRange(boatCamDist, area.CameraDistancesRange);

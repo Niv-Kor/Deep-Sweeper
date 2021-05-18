@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Torpedo Launcher Crosshair Controller
+  m_Controller: {fileID: 9100000, guid: 04525b4341f41024c9f3304e2339d129, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 67247b338c184a1448bbef14400473c2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c8a04dfca629bd04cbb1e90910f1e3f9, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9f99f3364cce0fb409c471dc698b8db2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 13b6504ba322acc429edb559c5aa2078, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 02a80c96dfa676b4ea9eb2fcaeafe0c9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 83d54317cdf35f2408de25e1c19f83a5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 70bca9b277991674d9dc6a4751702eec, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 70bca9b277991674d9dc6a4751702eec, type: 2}

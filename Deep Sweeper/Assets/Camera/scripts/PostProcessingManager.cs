@@ -4,6 +4,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace DeepSweeper.CameraSet
 {
+    [RequireComponent(typeof(PostProcessVolume))]
     public class PostProcessingManager : MonoBehaviour
     {
         #region Class Members

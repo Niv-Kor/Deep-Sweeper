@@ -38,7 +38,8 @@ public class TunesLimiter : Singleton<TunesLimiter>
     private IDictionary<string, TuneLimitData> subscriptors;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.subscriptors = new Dictionary<string, TuneLimitData>();
     }
 

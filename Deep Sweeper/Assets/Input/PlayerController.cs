@@ -3,7 +3,6 @@ using UnityEngine.Events;
 
 public class PlayerController : Singleton<PlayerController>
 {
-
     #region Class Members
     private PlayerControls controls;
     #endregion
@@ -27,7 +26,8 @@ public class PlayerController : Singleton<PlayerController>
     public float Turbo => controls.Player.Turbo.ReadValue<float>();
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.controls = new PlayerControls();
         controls.Enable();
 

@@ -18,7 +18,7 @@ namespace DeepSweeper.UI
         private void Awake() {
             //auto find the mandatory movement input components
             playerController ??= Submarine.Instance.Controller;
-            cameraController ??= IngameCameraManager.Instance.Rig;
+            cameraController ??= CameraManager.Instance.GetRig(CameraRole.Main);
             CursorViewer.Instance.StatusChangeEvent += OnCursorDisplayStatusChange;
         }
 

@@ -7,7 +7,8 @@ public class LootManager : Singleton<LootManager>
     private List<LootInfo> items;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.items = new List<LootInfo>();
     }
 

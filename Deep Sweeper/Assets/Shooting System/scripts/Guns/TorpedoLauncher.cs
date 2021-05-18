@@ -22,12 +22,13 @@ namespace DeepSweeper.Player.ShootingSystem
 
                 //fire a bullet at each of the neighbours
                 if (section.Count() > 0) {
-                    Recoil(recoilForce);
+                    bool recoiled = false;
 
                     foreach (MineGrid neighbour in section) {
                         Vector3 neighbourPos = neighbour.Avatar.transform.position;
                         Vector3 neighbourDir = Vector3.Normalize(neighbourPos - transform.position);
-                        PullTrigger(neighbourDir, neighbour, false, false, true);
+                        PullTrigger(neighbourDir, neighbour, !recoiled, !recoiled, true);
+                        recoiled = true;
                     }
                 }
                 else FireAtNull();

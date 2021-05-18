@@ -25,7 +25,7 @@ namespace DeepSweeper.CameraSet
 
         protected override void Awake() {
             base.Awake();
-            this.originFieldOfView = Camera.fieldOfView;
+            this.originFieldOfView = CameraComponent.fieldOfView;
         }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace DeepSweeper.CameraSet
         /// <param name="callback">A callback function to activate as soon as the process is done</param>
         private IEnumerator GrowView(bool grow, float time, UnityAction callback = null) {
             float timer = 0;
-            float from = Camera.fieldOfView;
+            float from = CameraComponent.fieldOfView;
             float to = grow ? originFieldOfView : SMALLEST_VIEW;
 
             while (timer <= time) {
                 timer += Time.deltaTime;
-                Camera.fieldOfView = Mathf.Lerp(from, to, timer / time);
+                CameraComponent.fieldOfView = Mathf.Lerp(from, to, timer / time);
                 yield return null;
             }
 
@@ -50,7 +50,7 @@ namespace DeepSweeper.CameraSet
 
         /// <inheritdoc/>
         protected override void BeforeActivation() {
-            Camera.fieldOfView = SMALLEST_VIEW;
+            CameraComponent.fieldOfView = SMALLEST_VIEW;
         }
 
         /// <inheritdoc/>

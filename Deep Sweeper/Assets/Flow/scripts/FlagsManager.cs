@@ -16,7 +16,8 @@ namespace DeepSweeper.Flow
         public int AvailableFlags { get; private set; }
         #endregion
 
-        private void Awake() {
+        protected override void Awake() {
+            base.Awake();
             LevelFlow.Instance.PhaseUpdatedEvent += delegate (PhaseConfig pahseConfig, PhaseDifficultyConfig diffConfig, int index) {
                 CollectFieldInfo();
             };

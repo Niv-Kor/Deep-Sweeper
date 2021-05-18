@@ -9,7 +9,8 @@
     public DifficultyLevel Difficulty { get; set; }
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.BasePayment = MIN_PAYMENT;
         this.Difficulty = DifficultyLevel.Easy;
     }

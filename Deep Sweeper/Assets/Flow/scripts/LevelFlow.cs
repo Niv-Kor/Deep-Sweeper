@@ -64,7 +64,8 @@ public class LevelFlow : Singleton<LevelFlow>
     public string RegionName => region.ToString().Replace('_', ' ');
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.Phases = new List<Phase>();
         this.DuringPhase = false;
         this.phaseIndex = -1;
@@ -193,7 +194,7 @@ public class LevelFlow : Singleton<LevelFlow>
         //retreat to the entrance gate and start over
         if (LifeSupply.Instance.LifeDown()) {
             SpatialsManager.Instance.Deactivate();
-            CameraRig rig = IngameCameraManager.Instance.Rig;
+            CameraRig rig = CameraManager.Instance.GetRig(CameraRole.Main);
             MineField currentField = CurrentPhase.Field;
             rig.Pause();
 

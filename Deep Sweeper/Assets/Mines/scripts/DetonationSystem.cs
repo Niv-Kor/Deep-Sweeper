@@ -41,7 +41,7 @@ namespace DeepSweeper.Level.Mine
             this.sensors = avatar.GetComponentInChildren<SensorsManager>();
             this.renders = avatar.GetComponentsInChildren<MeshRenderer>();
             this.col = avatar.GetComponentInChildren<SphereCollider>();
-            this.camShaker = IngameCameraManager.Instance.FPCam.GetComponent<CameraShaker>();
+            this.camShaker = CameraManager.Instance.GetCamera(CameraRole.Main).GetComponent<CameraShaker>();
             this.enableDetonationCallback = true;
             this.IsDetonated = false;
 

@@ -4,6 +4,6 @@ namespace DeepSweeper.Characters
     {
         None,
         Alana,
-        B
+        Saul
     }
 }

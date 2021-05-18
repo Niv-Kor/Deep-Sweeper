@@ -79,13 +79,12 @@ namespace DeepSweeper.Menu
         /// </summary>
         /// <param name="flag">True to show or false to hide</param>
         private void DisplaySandbox(bool flag) {
-            MenuCameraManager camMngr = MenuCameraManager.Instance;
-            var postProcess = camMngr.BackgroundPostProcess;
-            var mainCam = camMngr.BackgroundCam;
-            var sandboxCam = camMngr.SandboxCam;
-            var nextCam = flag ? sandboxCam : mainCam;
+            CameraManager.Instance.Get(CameraRole.Main, out CameraSetConfig mainCamConfig);
+            CameraManager.Instance.Get(CameraRole.Sandbox, out CameraSetConfig sandboxCamConfig);
+            var postProcess = mainCamConfig.PostProcessing;
+            var nextCam = flag ? sandboxCamConfig.Role : mainCamConfig.Role;
             postProcess.Activate(flag, blurBackgroundTime);
-            camMngr.Switch(nextCam);
+            CameraManager.Instance.Switch(nextCam);
         }
 
         /// <inheritdoc/>

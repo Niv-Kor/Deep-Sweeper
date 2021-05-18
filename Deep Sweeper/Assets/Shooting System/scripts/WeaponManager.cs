@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class WeaponManager : CharacterAbilityManager<WeaponAbility>
+    public class WeaponManager : CharacterAbilityManager<WeaponManager, WeaponAbility>
     {
         #region Class Members
         private List<SubmarineGun> guns;

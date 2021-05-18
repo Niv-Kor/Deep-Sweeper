@@ -4,7 +4,8 @@
     private Jukebox jukebox;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.jukebox = GetComponent<Jukebox>();
     }
 

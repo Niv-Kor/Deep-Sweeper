@@ -7,13 +7,14 @@ namespace DeepSweeper.Player
     {
         #region Class Members
         private Transform rig;
+        private Transform cam;
         #endregion
 
         #region Properties
-        public Vector3 Position => transform.position;
-        public Vector3 Forward => rig.forward;
+        public Vector3 Position => cam.position;
+        public Vector3 Forward => cam.forward;
         public Vector3 Right => rig.right;
-        public Vector3 Up => rig.up;
+        public Vector3 Up => cam.up;
         public Phase CurrentPhase {
             get {
                 foreach (Phase phase in LevelFlow.Instance.Phases) {
@@ -28,7 +29,8 @@ namespace DeepSweeper.Player
         #endregion
 
         private void Awake() {
-            this.rig = IngameCameraManager.Instance.Rig.transform;
+            this.cam = CameraManager.Instance.GetCamera(CameraRole.Main).transform;
+            this.rig = CameraManager.Instance.GetRig(CameraRole.Main).transform;
         }
     }
 }

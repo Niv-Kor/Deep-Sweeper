@@ -62,8 +62,8 @@ namespace DeepSweeper.Player.ShootingSystem
         /// Activate when a bullet hits a target.
         /// This function instantiates a hit effect at the place of impact.
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="rotation"></param>
+        /// <param name="position">The position of the bullet's impact</param>
+        /// <param name="rotation">The roatation of the bullet at the time of impact</param>
         private void OnBulletImpact(Vector3 position, Vector3 rotation) {
             Firearm.BulletsHitSystem.Activate(position, rotation);
         }
@@ -72,12 +72,13 @@ namespace DeepSweeper.Player.ShootingSystem
         /// Get a bullet ready to shoot.
         /// </summary>
         /// <param name="direction">The shooting direction</param>
+        /// <param name="ignoreLoadingTime">True to ignore the loading time and slide a bullet anyway</param>
         /// <returns>
         /// The first bullet in the stack
         /// (or null if the cannon has not finished loadeding yet).
         /// </returns>
-        public Bullet SlideBullet(Vector3 direction) {
-            if (!slideable) return null;
+        public Bullet SlideBullet(Vector3 direction, bool ignoreLoadingTime = false) {
+            if (!slideable && !ignoreLoadingTime) return null;
 
             Bullet bullet = Take();
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 310547112206825936}
   - component: {fileID: 4516362462149117412}
   - component: {fileID: 4516362462149117415}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Machine Gun Firearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7574489139525591205}
   - component: {fileID: 7758760658708486881}
   - component: {fileID: 7769049330940882161}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Spike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4849,7 +4849,7 @@ GameObject:
   - component: {fileID: 7574489137218387629}
   - component: {fileID: 7770422220113801873}
   - component: {fileID: 7769069462954999521}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Ricochet
   m_TagString: FX
   m_Icon: {fileID: 0}
@@ -9668,7 +9668,7 @@ GameObject:
   - component: {fileID: 7567138737706747203}
   - component: {fileID: 7769663960607926427}
   - component: {fileID: 7770880224705480167}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14470,7 +14470,7 @@ GameObject:
   - component: {fileID: 7567153784315912653}
   - component: {fileID: 7769254134702894215}
   - component: {fileID: 7770564852750139175}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

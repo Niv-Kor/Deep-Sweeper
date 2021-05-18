@@ -20,11 +20,13 @@ public class Radar : MonoBehaviour
     #region Class Members
     private Collider[] colRes;
     private List<Collider> prevRes;
+    private DynamicCamera FPCam;
     #endregion
 
     private void Start() {
         this.colRes = new Collider[MAX_COLLISIONS];
         this.prevRes = new List<Collider>();
+        this.FPCam = CameraManager.Instance.GetCamera(CameraRole.Main);
     }
 
     private void Update() {
@@ -68,7 +70,7 @@ public class Radar : MonoBehaviour
     /// <param name="point">The point to check</param>
     /// <returns>The distance of a point from the radar's line ray.</returns>
     private float CalcDistanceFromRay(Vector3 point) {
-        Vector3 dir = IngameCameraManager.Instance.FPCam.transform.forward;
+        Vector3 dir = FPCam.transform.forward;
         Vector3 pos = transform.position - dir * radius;
         return Vector3.Cross(dir, point - pos).magnitude;
     }

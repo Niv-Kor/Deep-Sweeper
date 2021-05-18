@@ -12,7 +12,8 @@ public class GameAdvancement : Singleton<GameAdvancement>
     private List<int> openLevels;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.openLevels = LoadLevels();
     }
 

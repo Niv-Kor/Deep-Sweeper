@@ -27,7 +27,7 @@ public class SonarRotator : MonoBehaviour
     #endregion
 
     protected virtual void Start() {
-        this.camTransform = IngameCameraManager.Instance.Rig.transform;
+        this.camTransform = CameraManager.Instance.GetRig(CameraRole.Main).transform;
         this.rect = GetComponent<RectTransform>();
         StartCoroutine(Rotate());
     }

@@ -35,7 +35,8 @@ public abstract class PhaseSpatial<T> : Singleton<T> where T : MonoBehaviour
     }
     #endregion
 
-    protected virtual void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.canvas = GetComponent<CanvasGroup>();
     }
 

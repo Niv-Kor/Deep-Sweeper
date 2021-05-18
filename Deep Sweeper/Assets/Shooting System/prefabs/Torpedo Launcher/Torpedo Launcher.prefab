@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7951115089557841845}
   - component: {fileID: 859837666959365338}
   - component: {fileID: 3860539857948979685}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Firearm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4918,7 +4918,7 @@ GameObject:
   - component: {fileID: 6296603871977565263}
   - component: {fileID: 3187146308125721620}
   - component: {fileID: 4479026304258816143}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Ricochet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14554,6 +14554,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0750af82492f2404ebe54d3417de8450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  childRicochet: []
   recoilForce: 50000
   cameraShake: 0

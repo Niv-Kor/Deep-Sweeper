@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Machine Gun Crosshair Controller
+  m_Controller: {fileID: 9100000, guid: 04525b4341f41024c9f3304e2339d129, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 67247b338c184a1448bbef14400473c2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 67247b338c184a1448bbef14400473c2, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9f99f3364cce0fb409c471dc698b8db2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9f99f3364cce0fb409c471dc698b8db2, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 02a80c96dfa676b4ea9eb2fcaeafe0c9, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 02a80c96dfa676b4ea9eb2fcaeafe0c9, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7e1003d4521ff5e4398b1b77455bef47, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 90bf80a7473c46c479d1d88d3c91d9ed, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 70bca9b277991674d9dc6a4751702eec, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8b61aba7fc2262c4eab0020a949a22bd, type: 2}

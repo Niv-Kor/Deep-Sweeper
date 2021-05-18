@@ -106,18 +106,25 @@ namespace DeepSweeper.CameraSet
         #endregion
 
         #region Class Members
-        private Vector3 originPos;
+        private Camera cameraCmp;
         private EffectFloatParameter ambientOcclusion;
         private EffectFloatParameter chromaticAberration;
         private EffectFloatParameter depthOfField;
         private EffectFloatParameter bloom;
+        private Coroutine shakeCoroutine;
+        private Coroutine vibrationCoroutine;
+        private Vector3 originPos;
+        private float originFieldOfView;
         #endregion
 
-        private void Start() {
+        private void Awake() {
             this.originPos = transform.localPosition;
+            this.cameraCmp = GetComponent<Camera>();
+            this.originFieldOfView = cameraCmp.fieldOfView;
+        }
 
-            //post processing effects
-            PostProcessingManager postProcessMngr = IngameCameraManager.Instance.FPPostProcess;
+        private void Start() {
+            PostProcessingManager postProcessMngr = CameraManager.Instance.GetPostProcessManager(CameraRole.Main);
             this.ambientOcclusion = new EffectFloatParameter(postProcessMngr.AmbientOcclusion?.intensity);
             this.chromaticAberration = new EffectFloatParameter(postProcessMngr.ChromaticAberration?.intensity);
             this.depthOfField = new EffectFloatParameter(postProcessMngr.DepthOfField?.aperture);
@@ -125,16 +132,22 @@ namespace DeepSweeper.CameraSet
         }
 
         /// <summary>
-        /// Shake the camera on its X axis.
+        /// Shake the camera.
         /// </summary>
         /// <param name="intensity">The percentage of shake power [0:1]</param>
-        private IEnumerator WaveShake(float intensity) {
+        /// <param name="xAxis">True to include an X axis shake</param>
+        /// <param name="yAxis">True to include a Y axis shake</param>
+        /// <param name="zAxis">True to include a Z axis shake</param>
+        private IEnumerator WaveShake(float intensity, bool xAxis = true, bool yAxis = true, bool zAxis = true) {
+            if (!xAxis && !yAxis && !zAxis) yield break;
+
             float timer = 0;
             float exponentialDecay;
             float dirX = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
             float dirY = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
             float dirZ = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
-            Vector3 direction = new Vector3(dirX, dirY, dirZ);
+            Vector3 multiplier = new Vector3(xAxis ? 1 : 0, yAxis ? 1 : 0, zAxis ? 1 : 0);
+            Vector3 direction = Vector3.Scale(new Vector3(dirX, dirY, dirZ), multiplier);
             Vector3 waveLength = RangeMath.PercentOfVectorRange(intensity, minIntensity, maxIntensity);
 
             do {
@@ -144,11 +157,40 @@ namespace DeepSweeper.CameraSet
                 float dampedOscillation = exponentialDecay * sineWave;
                 Vector3 delta = Vector3.Scale(dampedOscillation * waveLength, direction);
                 transform.localPosition = originPos + delta;
+
                 yield return null;
             }
             while (exponentialDecay > minimalDecay);
 
             transform.localPosition = originPos;
+            ActivateFX(false);
+        }
+
+        /// <summary>
+        /// Rapidly change the camera's field of view back and forth,
+        /// creating a vibartion effect.
+        /// </summary>
+        /// <param name="intensity">The percentage of vibration power [0:1]</param>
+        private IEnumerator WaveVibrate(float intensity) {
+            float timer = 0;
+            float exponentialDecay;
+            float waveLength1 = RangeMath.PercentOfRange(intensity, minIntensity.z, maxIntensity.z);
+            float dir = intensity * ((Random.Range(0f, 1f) > .5f) ? 1 : -1);
+            originFieldOfView = cameraCmp.fieldOfView;
+
+            do {
+                timer += Time.deltaTime;
+                exponentialDecay = Mathf.Exp(-timer / entropy);
+                float sineWave = Mathf.Sin(frequency * timer);
+                float dampedOscillation = exponentialDecay * sineWave;
+                float delta = dampedOscillation * waveLength1 * dir;
+                cameraCmp.fieldOfView = originFieldOfView + delta;
+
+                yield return null;
+            }
+            while (exponentialDecay > minimalDecay);
+
+            cameraCmp.fieldOfView = originFieldOfView;
             ActivateFX(false);
         }
 
@@ -173,28 +215,49 @@ namespace DeepSweeper.CameraSet
         }
 
         /// <summary>
-        /// Shake the camera on its X axis.
+        /// Shake the camera.
         /// </summary>
         /// <param name="intensity">The percentage of shake power [0:1]</param>
-        public void Shake(float intensity = 1) {
+        /// <param name="xAxis">True to include an X axis shake</param>
+        /// <param name="yAxis">True to include a Y axis shake</param>
+        /// <param name="zAxis">True to include a Z axis shake</param>
+        public void Shake(float intensity = 1, bool xAxis = true, bool yAxis = true, bool zAxis = true) {
             intensity = Mathf.Clamp(intensity, 0, 1);
             if (intensity == 0) return;
 
-            transform.localPosition = originPos;
-            StopAllCoroutines();
+            if (shakeCoroutine != null) StopCoroutine(shakeCoroutine);
+            transform.localPosition = Vector3.zero;
             ActivateFX(true, intensity);
-            StartCoroutine(WaveShake(intensity));
+            shakeCoroutine = StartCoroutine(WaveShake(intensity, xAxis, yAxis, zAxis));
         }
 
         /// <summary>
         /// Shake the camera relative to its distance from an object.
         /// </summary>
         /// <param name="obj">The object against which to measure the distance</param>
-        public void ShakeRelativeTo(Transform obj) {
+        /// <param name="xAxis">True to include an X axis shake</param>
+        /// <param name="yAxis">True to include a Y axis shake</param>
+        /// <param name="zAxis">True to include a Z axis shake</param>
+        public void ShakeRelativeTo(Transform obj, bool xAxis = true, bool yAxis = true, bool zAxis = true) {
             float dist = Vector3.Distance(transform.position, obj.position);
             dist = Mathf.Max(distanceRange.x, dist);
             float intensity = 1 - RangeMath.NumberOfRange(dist, distanceRange.x, distanceRange.y);
-            Shake(intensity);
+            Shake(intensity, xAxis, yAxis, zAxis);
+        }
+
+        /// <summary>
+        /// Rapidly change the camera's field of view back and forth,
+        /// creating a vibartion effect.
+        /// </summary>
+        /// <param name="intensity">The percentage of shake power [0:1]</param>
+        public void Vibrate(float intensity = 1) {
+            intensity = Mathf.Clamp(intensity, 0, 1);
+            if (intensity == 0) return;
+
+            if (vibrationCoroutine != null) StopCoroutine(vibrationCoroutine);
+            cameraCmp.fieldOfView = originFieldOfView;
+            ActivateFX(true, intensity);
+            vibrationCoroutine = StartCoroutine(WaveVibrate(intensity));
         }
     }
 }

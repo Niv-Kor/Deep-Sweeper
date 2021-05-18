@@ -23,7 +23,6 @@ public class Jukebox : MonoBehaviour
     private GameObject audioParent;
     private DistantVolumeController volumeController;
     private DisposableAudioManager disposableAudio;
-    private bool isExternalAudioSource;
     #endregion
 
     #region Properties

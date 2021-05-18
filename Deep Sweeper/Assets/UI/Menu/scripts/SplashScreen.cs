@@ -43,7 +43,8 @@ public class SplashScreen : Singleton<SplashScreen>
     private int stages;
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         this.canvas = GetComponent<CanvasGroup>();
         this.stages = 0;
 

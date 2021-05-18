@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2520029440961004957}
   - component: {fileID: 6747137078315451750}
   m_Layer: 7
-  m_Name: Bullet Shell
+  m_Name: Machine Gun Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,7 +108,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0

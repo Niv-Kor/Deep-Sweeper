@@ -1,4 +1,5 @@
 using DeepSweeper.Characters;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,6 +25,11 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         [SerializeField] private float space;
 
         [Header("Timing")]
+        [Tooltip("The time the user has to wait before changin a commander (in seconds).\n"
+               + "This parameter is critical for preventing bugs that might occur when the"
+               + "player changes a commander too recently.")]
+        [SerializeField] private float mandatoryCooldown = .1f;
+
         [Tooltip("The default cooldown time between each two commanders (in seconds).")]
         [SerializeField] private int defaultCooldown;
         #endregion
@@ -32,7 +38,9 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         private Vector2 thumbnailDim;
         private List<CommanderThumbnail> commanders;
         private CommanderThumbnail selectedCommander;
+        private int defaultCommenaderIndex;
         private bool initialized;
+        private bool changeable;
         #endregion
 
         #region Events
@@ -41,15 +49,18 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         public event UnityAction<CharacterPersona, CharacterPersona> CommanderChangedEvent;
         #endregion
 
-        private void Awake() {
+        protected override void Awake() {
+            base.Awake();
             this.commanders = new List<CommanderThumbnail>();
         }
 
         private void Start() {
             RectTransform thumbnailRect = thumbnailPrefab.GetComponent<RectTransform>();
             this.thumbnailDim = thumbnailRect.sizeDelta;
+            this.defaultCommenaderIndex = 0;
+            this.changeable = true;
             CreateThumbnails();
-            OnCommanderSelect(0);
+            OnCommanderSelect(defaultCommenaderIndex);
             this.initialized = true;
 
             //bind events
@@ -89,11 +100,20 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         }
 
         /// <summary>
+        /// Run the mandatory cooldown between commander changes.
+        /// When the timer ends, the player is able to change commanders again.
+        /// </summary>
+        private IEnumerator RunCooldownTimer() {
+            yield return new WaitForSeconds(mandatoryCooldown);
+            changeable = true;
+        }
+
+        /// <summary>
         /// Select a single commander and deselect the rest.
         /// </summary>
         /// <param name="index">Index of the commander to select</param>
         private void OnCommanderSelect(int index) {
-            if (index >= commanders.Count || index < 0) return;
+            if (!changeable || index >= commanders.Count || index < 0) return;
 
             //on cooldown
             if (commanders[index].OnCooldown) {
@@ -116,6 +136,8 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
             }
 
             CommanderChangedEvent?.Invoke(prevCommander, selectedCommander.Character);
+            changeable = false;
+            StartCoroutine(RunCooldownTimer());
         }
 
         /// <summary>
@@ -130,6 +152,16 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                                              select commander).ToList();
 
             return (list.Count > 0) ? list[index] : null;
+        }
+
+        /// <summary>
+        /// Subscribe to a commander change event.
+        /// </summary>
+        /// <param name="listener">The listener to activate when a commander changes</param>
+        /// <returns>The default first commander on level startup.</returns>
+        public CharacterPersona SubscribeToCommanderChange(UnityAction<CharacterPersona, CharacterPersona> listener) {
+            CommanderChangedEvent += listener;
+            return commandersConfig[defaultCommenaderIndex].Character;
         }
     }
 }

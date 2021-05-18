@@ -59,7 +59,8 @@ public class MinimapNavigator : SonarRotator
         this.flow = LevelFlow.Instance;
         this.arrow = GetComponentInChildren<RawImage>();
         this.submarine = Submarine.Instance.Orientation;
-        Camera minimap = IngameCameraManager.Instance.MinimapCam.Camera;
+
+        Camera minimap = CameraManager.Instance.GetCamera(CameraRole.Minimap).CameraComponent;
         this.minDisplayDistance = minimap.orthographicSize / 4;
 
         StartCoroutine(FlickerArrow());

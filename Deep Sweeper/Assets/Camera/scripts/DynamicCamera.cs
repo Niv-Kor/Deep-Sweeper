@@ -3,23 +3,21 @@ using UnityEngine.Events;
 
 namespace DeepSweeper.CameraSet
 {
-    [RequireComponent(typeof(UnityEngine.Camera))]
+    [RequireComponent(typeof(Camera))]
     public class DynamicCamera : MonoBehaviour
     {
-        #region Exposed Editor Parameters
-        [Tooltip("True to always keep this camera on,\n"
-               + "no matter any camera switches that take place during the game")]
-        [SerializeField] private bool alwaysOn;
+        #region Class Members
+        private AudioListener audioCmp;
         #endregion
 
         #region Properties
-        public bool AlwaysOn => alwaysOn;
-        public bool IsDisplaying => Camera.enabled;
-        public Camera Camera { get; private set; }
+        public bool IsDisplaying => CameraComponent.enabled;
+        public Camera CameraComponent { get; private set; }
         #endregion
 
         protected virtual void Awake() {
-            this.Camera = GetComponent<Camera>();
+            this.CameraComponent = GetComponent<Camera>();
+            this.audioCmp = GetComponent<AudioListener>();
         }
 
         /// <summary>
@@ -27,9 +25,12 @@ namespace DeepSweeper.CameraSet
         /// </summary>
         /// <param name="flag">True to enable or false to disable</param>
         public void Enable(bool flag) {
-            if (Camera.enabled == flag) return;
+            if (CameraComponent.enabled == flag) return;
 
-            void Callback() { Camera.enabled = flag; }
+            void Callback() {
+                CameraComponent.enabled = flag;
+                if (audioCmp != null) audioCmp.enabled = flag;
+            }
 
             //preliminary callbacks
             if (flag) BeforeActivation();

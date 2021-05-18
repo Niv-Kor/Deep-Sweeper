@@ -44,7 +44,8 @@ public class TerrainOutlineRenderer : Singleton<TerrainOutlineRenderer>
     }
     #endregion
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         InitTerrain();
 
         this.lastHeightSetting = heightPercent;

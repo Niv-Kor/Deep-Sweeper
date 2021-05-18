@@ -7,7 +7,8 @@
         public SubmarineMovementController Controller { get; private set; }
         #endregion
 
-        private void Awake() {
+        protected override void Awake() {
+            base.Awake();
             this.Orientation = GetComponent<SubmarineOrientation>();
             this.Controller = GetComponent<SubmarineMovementController>();
         }
