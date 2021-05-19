@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DeepSweeper.Characters
 {
-    public abstract class CharacterAbilityManager<T, A> : Singleton<T> where T : MonoBehaviour where A : IAbility
+    public abstract class CharacterAbilityManager<T, A> : Singleton<T> where T : MonoBehaviour where A : IAbilityModel
     {
         #region Exposed Editor Parameters
         [Tooltip("A list of ability configurations for the available pool of characters.")]

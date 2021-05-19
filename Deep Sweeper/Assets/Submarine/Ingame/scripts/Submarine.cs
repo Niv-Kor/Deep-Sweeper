@@ -4,13 +4,13 @@
     {
         #region Properties
         public SubmarineOrientation Orientation { get; private set; }
-        public SubmarineMovementController Controller { get; private set; }
+        public MobilityController Controller { get; private set; }
         #endregion
 
         protected override void Awake() {
             base.Awake();
             this.Orientation = GetComponent<SubmarineOrientation>();
-            this.Controller = GetComponent<SubmarineMovementController>();
+            this.Controller = GetComponent<MobilityController>();
         }
     }
 }

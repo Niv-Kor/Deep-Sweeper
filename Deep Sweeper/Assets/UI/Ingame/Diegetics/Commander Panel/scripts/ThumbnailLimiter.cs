@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderThumbnailForbidden : MonoBehaviour {
+    public class ThumbnailLimiter : MonoBehaviour {
         #region Exposed Editor Parameters
         [Header("Animation")]
         [Tooltip("The scale from which the forbidden sign start animation.")]

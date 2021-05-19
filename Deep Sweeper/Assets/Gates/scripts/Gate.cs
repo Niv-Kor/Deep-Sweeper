@@ -57,7 +57,7 @@ namespace DeepSweeper.Level.PhaseGate
         private Jukebox jukebox;
         private ForceField forceField;
         private Transform emblem;
-        private SubmarineMovementController submarine;
+        private MobilityController submarine;
         private CameraController camController;
         private bool initiated;
         #endregion
@@ -136,7 +136,7 @@ namespace DeepSweeper.Level.PhaseGate
         /// <returns></returns>
         private IEnumerator AnimateGateOpening() {
             yield return new WaitForSeconds(pauseBeforeCam);
-            submarine.MovementAllowd = false;
+            submarine.IsMovable = false;
 
             void ActivateDolly() {
                 camController.enabled = false;
@@ -176,7 +176,7 @@ namespace DeepSweeper.Level.PhaseGate
             process.Enroll(EnableCamera);
 
             void FullyTransparent() {
-                submarine.MovementAllowd = true;
+                submarine.IsMovable = true;
             }
 
             BlankScreen.Instance.Apply(blankScreenLerpTime, blankScreenPauseTime, process, FullyTransparent);

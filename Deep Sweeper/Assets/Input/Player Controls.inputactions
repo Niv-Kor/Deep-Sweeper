@@ -30,14 +30,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Turbo",
-                    "type": "PassThrough",
-                    "id": "decc1732-e735-42e4-b517-203b4cf56d54",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Primary Operation",
                     "type": "Button",
                     "id": "ec7d0841-28b3-4009-a372-296d83b20586",
@@ -85,17 +77,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Secondary Operation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1479b758-0aac-4762-86f8-8468171ed542",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Turbo",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

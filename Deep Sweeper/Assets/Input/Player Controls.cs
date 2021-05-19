@@ -43,14 +43,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Turbo"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""decc1732-e735-42e4-b517-203b4cf56d54"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Primary Operation"",
                     ""type"": ""Button"",
                     ""id"": ""ec7d0841-28b3-4009-a372-296d83b20586"",
@@ -98,17 +90,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Secondary Operation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1479b758-0aac-4762-86f8-8468171ed542"",
-                    ""path"": ""<Keyboard>/shift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Turbo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -313,7 +294,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_Horizontal = m_Player.FindAction("Horizontal", throwIfNotFound: true);
         m_Player_Vertical = m_Player.FindAction("Vertical", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Turbo = m_Player.FindAction("Turbo", throwIfNotFound: true);
         m_Player_PrimaryOperation = m_Player.FindAction("Primary Operation", throwIfNotFound: true);
         m_Player_SecondaryOperation = m_Player.FindAction("Secondary Operation", throwIfNotFound: true);
         // UI
@@ -375,7 +355,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Horizontal;
     private readonly InputAction m_Player_Vertical;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Turbo;
     private readonly InputAction m_Player_PrimaryOperation;
     private readonly InputAction m_Player_SecondaryOperation;
     public struct PlayerActions
@@ -385,7 +364,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Horizontal => m_Wrapper.m_Player_Horizontal;
         public InputAction @Vertical => m_Wrapper.m_Player_Vertical;
         public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @Turbo => m_Wrapper.m_Player_Turbo;
         public InputAction @PrimaryOperation => m_Wrapper.m_Player_PrimaryOperation;
         public InputAction @SecondaryOperation => m_Wrapper.m_Player_SecondaryOperation;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -406,9 +384,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
-                @Turbo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
-                @Turbo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
-                @Turbo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurbo;
                 @PrimaryOperation.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryOperation;
                 @PrimaryOperation.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryOperation;
                 @PrimaryOperation.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryOperation;
@@ -428,9 +403,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
-                @Turbo.started += instance.OnTurbo;
-                @Turbo.performed += instance.OnTurbo;
-                @Turbo.canceled += instance.OnTurbo;
                 @PrimaryOperation.started += instance.OnPrimaryOperation;
                 @PrimaryOperation.performed += instance.OnPrimaryOperation;
                 @PrimaryOperation.canceled += instance.OnPrimaryOperation;
@@ -511,7 +483,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnHorizontal(InputAction.CallbackContext context);
         void OnVertical(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnTurbo(InputAction.CallbackContext context);
         void OnPrimaryOperation(InputAction.CallbackContext context);
         void OnSecondaryOperation(InputAction.CallbackContext context);
     }

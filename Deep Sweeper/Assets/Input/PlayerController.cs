@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,30 +18,31 @@ public class PlayerController : Singleton<PlayerController>
 
     /// <param type=typeof(int)>Commander's index</param>
     public event UnityAction<int> CommanderSelectionEvent;
+
+    /// <param type=typeof(float)>
+    /// A positive (0:1] value when ascending
+    /// or a negative [-1:0) when descending.
+    /// </param>
+    public event UnityAction<float> VerticalMovementEvent;
+
+    /// <param type=typeof(Vector2)>
+    /// X slot represents a Z axis movement (backwards [-1:0) and forwards (0:1])
+    /// and Y slot represents an X axis movement (left [-1:0) and right (0:1])
+    /// </param>
+    public event UnityAction<Vector2> HorizontalMovementEvent;
     #endregion
 
     #region Properties
     public Vector2 Horizontal => controls.Player.Horizontal.ReadValue<Vector2>();
     public Vector2 Vertical => controls.Player.Vertical.ReadValue<Vector2>();
     public Vector2 MouseDelta => controls.Player.Look.ReadValue<Vector2>();
-    public float Turbo => controls.Player.Turbo.ReadValue<float>();
     #endregion
 
     protected override void Awake() {
         base.Awake();
         this.controls = new PlayerControls();
         controls.Enable();
-
-        //bind event
-        controls.Player.PrimaryOperation.started += delegate { PrimaryOperationStartEvent?.Invoke(); };
-        controls.Player.PrimaryOperation.canceled += delegate { PrimaryOperationStopEvent?.Invoke(); };
-        controls.Player.SecondaryOperation.started += delegate { SecondaryOperationStartEvent?.Invoke(); };
-        controls.Player.SecondaryOperation.canceled += delegate { SecondaryOperationStopEvent?.Invoke(); };
-        controls.UI.CursorDisplay.started += delegate { CursorDisplayEvent?.Invoke(); };
-        controls.UI.CursorHide.started += delegate { CursorDisplayHide?.Invoke(); };
-        controls.UI.CommanderSelection1.started += delegate { CommanderSelectionEvent?.Invoke(0); };
-        controls.UI.CommanderSelection2.started += delegate { CommanderSelectionEvent?.Invoke(1); };
-        controls.UI.CommanderSelection3.started += delegate { CommanderSelectionEvent?.Invoke(2); };
+        BindEvents();
     }
 
     private void OnEnable() {
@@ -49,5 +51,40 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnDisable() {
         controls.Disable();
+    }
+
+    private void BindEvents() {
+        //mobility
+        controls.Player.Horizontal.performed += delegate { StartCoroutine(InvokeHorizontalMovement()); };
+        controls.Player.Vertical.performed += delegate { StartCoroutine(InvokeVerticalMovement()); };
+
+        //shooting system
+        controls.Player.PrimaryOperation.started += delegate { PrimaryOperationStartEvent?.Invoke(); };
+        controls.Player.PrimaryOperation.canceled += delegate { PrimaryOperationStopEvent?.Invoke(); };
+        controls.Player.SecondaryOperation.started += delegate { SecondaryOperationStartEvent?.Invoke(); };
+        controls.Player.SecondaryOperation.canceled += delegate { SecondaryOperationStopEvent?.Invoke(); };
+
+        //cursor operations
+        controls.UI.CursorDisplay.started += delegate { CursorDisplayEvent?.Invoke(); };
+        controls.UI.CursorHide.started += delegate { CursorDisplayHide?.Invoke(); };
+
+        //commander system
+        controls.UI.CommanderSelection1.started += delegate { CommanderSelectionEvent?.Invoke(0); };
+        controls.UI.CommanderSelection2.started += delegate { CommanderSelectionEvent?.Invoke(1); };
+        controls.UI.CommanderSelection3.started += delegate { CommanderSelectionEvent?.Invoke(2); };
+    }
+
+    private IEnumerator InvokeHorizontalMovement() {
+        while (Horizontal.magnitude > 0) {
+            HorizontalMovementEvent?.Invoke(Horizontal);
+            yield return null;
+        }
+    }
+
+    private IEnumerator InvokeVerticalMovement() {
+        while (Mathf.Abs(Vertical.y) > 0) {
+            VerticalMovementEvent?.Invoke(Vertical.y);
+            yield return null;
+        }
     }
 }

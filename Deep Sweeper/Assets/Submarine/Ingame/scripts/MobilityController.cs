@@ -1,11 +1,10 @@
-﻿using DeepSweeper.Player;
-using GamedevUtil.Player;
+﻿using GamedevUtil.Player;
 using System.Collections;
 using UnityEngine;
 
 namespace DeepSweeper.Player
 {
-    public class SubmarineMovementController : PlayerController3D
+    public class MobilityController : PlayerController3D
     {
         #region Exposed Editor Parameters
         [Header("Movement Settings")]
@@ -27,6 +26,8 @@ namespace DeepSweeper.Player
         #endregion
 
         #region Class Members
+        private RigidbodyConstraints defaultConstraints;
+        private RigidbodyConstraints yFreezeConstraint;
         private DirectionUnit directionUnit;
         private Vector3 startRestingPos;
         private float waveLength;
@@ -34,35 +35,40 @@ namespace DeepSweeper.Player
         #endregion
 
         #region Properties
-        public bool MovementAllowd { get; set; }
         public MobilityConfig MobilitySettings { get; set; }
         #endregion
+
+        protected override void Awake() {
+            base.Awake();
+            this.defaultConstraints = rigidBody.constraints;
+            this.yFreezeConstraint = defaultConstraints | RigidbodyConstraints.FreezePositionY;
+        }
 
         private void Start() {
             this.directionUnit = DirectionUnit.Instance;
             this.waveLength = RangeMath.PercentOfRange(WaterPhysics.Instance.IntensityPercentage, waveLengthRange);
             this.startRestingPos = transform.position;
             this.resting = true;
-            this.MovementAllowd = true;
+
+            //bind events
+            controller.HorizontalMovementEvent += MoveHorizontally;
+            controller.VerticalMovementEvent += MoveVertically;
 
             if (useFloat) StartCoroutine(Float());
         }
 
         private void Update() {
-            if (!IsMovable) return;
+            /*if (!IsMovable) return;
 
             float ascendInput = controller.Vertical.y;
             Vector3 moveVector = new Vector3(controller.Horizontal.x, controller.Vertical.y, controller.Horizontal.y);
-            PrepareMovement(moveVector);
+            if (moveVector != Vector3.zero) MoveHorizontally(moveVector);
 
-            //unfreeze position y if ascending or descending
+            //unfreeze Y position if ascending or descending
             bool unfreezeCond = controller.Vertical.y > 0 || transform.position.y > minHeight;
-            var defaultConstaint = RigidbodyConstraints.FreezeRotationX |
-                                   RigidbodyConstraints.FreezeRotationY |
-                                   RigidbodyConstraints.FreezeRotationZ;
 
-            var yFreezeConstaint = defaultConstaint | RigidbodyConstraints.FreezePositionY;
-            rigidBody.constraints = unfreezeCond ? defaultConstaint : yFreezeConstaint;
+            var yFreezeConstraint = defaultConstaint | RigidbodyConstraints.FreezePositionY;
+            rigidBody.constraints = unfreezeCond ? defaultConstaint : yFreezeConstraint;
 
             //float
             if (useFloat) {
@@ -83,27 +89,36 @@ namespace DeepSweeper.Player
                     if (resting) StartCoroutine(Float());
                     else StopCoroutine(Float());
                 }
-            }
+            }*/
         }
 
         /// <summary>
-        /// Move the submarine.
+        /// Move the submarine horizontally (across the X and Z axes).
         /// </summary>
-        /// <param name="horInput">Horizontal movement power [-1:1]</param>
-        /// <param name="verInput">Vertical movement power [-1:1]</param>
-        /// <param name="heightInput">Ascending or descending movement power [0:1]</param>
-        /// <param name="turboInput">Turbo movement power [0:1]</param>
-        private void PrepareMovement(Vector3 vector) {
-            if (!MovementAllowd) return;
-
-            float turboPercent = controller.Turbo;
-            float speedMultiplier = turboPercent * (MobilitySettings.TurboMultiplier - 1) + 1;
-            float speed = MobilitySettings.HorizontalSpeed * speedMultiplier;
-            Vector3 zDirection = directionUnit.transform.forward * vector.z;
+        /// <param name="vector">
+        /// X slot represents a Z axis movement (backwards [-1:0) and forwards (0:1])
+        /// and Y slot represents an X axis movement (left [-1:0) and right (0:1])
+        /// </param>
+        private void MoveHorizontally(Vector2 vector) {
+            float speed = MobilitySettings.HorizontalSpeed;
+            Vector3 zDirection = directionUnit.transform.forward * vector.y;
             Vector3 xDirection = directionUnit.transform.right * vector.x;
             Vector3 direction = zDirection + xDirection;
-            Vector3 verticalVector = Vector3.up * vector.y * MobilitySettings.VerticalSpeed;
-            Vector3 forceVector = direction * speed + verticalVector;
+            Vector3 forceVector = direction * speed;
+            Move(forceVector);
+        }
+
+        /// <summary>
+        /// Move the submarine vertically (across the Y axis).
+        /// </summary>
+        /// <param name="vector">
+        /// A positive (0:1] value when ascending
+        /// or a negative [-1:0) when descending.
+        /// </param>
+        private void MoveVertically(float value) {
+            float speed = MobilitySettings.VerticalSpeed;
+            Vector3 direction = Vector3.up * value;
+            Vector3 forceVector = direction * speed;
             Move(forceVector);
         }
 

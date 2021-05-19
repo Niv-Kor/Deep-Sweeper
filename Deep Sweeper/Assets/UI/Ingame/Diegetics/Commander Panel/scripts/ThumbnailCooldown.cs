@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderThumbnailCooldown : MonoBehaviour
+    public class ThumbnailCooldown : MonoBehaviour
     {
         #region Class Members
         private Image radialClock;

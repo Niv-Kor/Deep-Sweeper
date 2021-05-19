@@ -4,7 +4,7 @@ using DeepSweeper.Player.ShootingSystem;
 
 namespace DeepSweeper.UI.Ingame.Sight
 {
-    public class CrosshairManager : CharacterAbilityManager<CrosshairManager, CrosshairAbility>
+    public class CrosshairManager : CharacterAbilityManager<CrosshairManager, CrosshairAbilityModel>
     {
         #region Properties
         public Crosshair ActiveCrosshair { get; private set; }
@@ -53,13 +53,13 @@ namespace DeepSweeper.UI.Ingame.Sight
         }
 
         /// <inheritdoc/>
-        protected override void StripAbility(CrosshairAbility ability) {
+        protected override void StripAbility(CrosshairAbilityModel ability) {
             Crosshair crosshair = EnableCrosshair(ability.Gun, false);
             if (crosshair == ActiveCrosshair) ActiveCrosshair = null;
         }
 
         /// <inheritdoc/>
-        protected override void ApplyAbility(CrosshairAbility ability) {
+        protected override void ApplyAbility(CrosshairAbilityModel ability) {
             Crosshair crosshair = EnableCrosshair(ability.Gun, true);
             if (crosshair != null) ActiveCrosshair = crosshair;
         }

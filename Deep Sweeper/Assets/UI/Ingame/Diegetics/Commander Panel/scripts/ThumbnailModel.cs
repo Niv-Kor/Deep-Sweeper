@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
     [Serializable]
-    public struct CommanderThumbnailConfig
+    public struct ThumbnailModel
     {
         [Tooltip("The character of this commander.")]
         public CharacterPersona Character;

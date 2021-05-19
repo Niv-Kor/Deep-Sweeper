@@ -5221,7 +5221,7 @@ MonoBehaviour:
   - Character: 1
     Ability:
       HorizontalSpeed: 5000
-      VerticalSpeed: 1200
+      VerticalSpeed: 300
       TurboMultiplier: 10
       DashMultiplier: 0
       RollAngle: 0
@@ -5229,7 +5229,7 @@ MonoBehaviour:
   - Character: 2
     Ability:
       HorizontalSpeed: 10000
-      VerticalSpeed: 2000
+      VerticalSpeed: 100
       TurboMultiplier: 10
       DashMultiplier: 5
       RollAngle: 10

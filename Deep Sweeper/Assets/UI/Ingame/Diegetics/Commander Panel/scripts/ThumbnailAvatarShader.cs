@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderThumbnailAvatarShader : MonoBehaviour
+    public class ThumbnailAvatarShader : MonoBehaviour
     {
         #region Exposed Editor Parameters
         [Header("Color")]

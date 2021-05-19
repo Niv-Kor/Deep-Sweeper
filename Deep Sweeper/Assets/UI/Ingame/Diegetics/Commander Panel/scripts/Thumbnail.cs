@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderThumbnail : MonoBehaviour
+    public class Thumbnail : MonoBehaviour
     {
         #region Exposed Editor Parameters
         [Header("Prefabs")]
@@ -13,10 +13,10 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         #endregion
 
         #region Class Members
-        private CommanderThumbnailGlow glow;
-        private CommanderThumbnailCooldown cooldownTimer;
-        private CommanderThumbnailAvatarShader avatarShader;
-        private CommanderThumbnailForbidden forbiddenEffect;
+        private ThumbnailGlow glow;
+        private ThumbnailCooldown cooldownTimer;
+        private ThumbnailAvatarShader avatarShader;
+        private ThumbnailLimiter forbiddenEffect;
         private int specialCooldown;
         #endregion
 
@@ -28,10 +28,10 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         #endregion
 
         private void Awake() {
-            this.glow = GetComponentInChildren<CommanderThumbnailGlow>();
-            this.cooldownTimer = GetComponentInChildren<CommanderThumbnailCooldown>();
-            this.avatarShader = GetComponentInChildren<CommanderThumbnailAvatarShader>();
-            this.forbiddenEffect = GetComponentInChildren<CommanderThumbnailForbidden>();
+            this.glow = GetComponentInChildren<ThumbnailGlow>();
+            this.cooldownTimer = GetComponentInChildren<ThumbnailCooldown>();
+            this.avatarShader = GetComponentInChildren<ThumbnailAvatarShader>();
+            this.forbiddenEffect = GetComponentInChildren<ThumbnailLimiter>();
             this.specialCooldown = -1;
         }
 
@@ -45,7 +45,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         /// </summary>
         /// <param name="config">The configuration parameters</param>
         /// <param name="defaultCooldown">The default cooldown time to apply to this commander</param>
-        public void SetCommander(CommanderThumbnailConfig config, int defaultCooldown) {
+        public void SetCommander(ThumbnailModel config, int defaultCooldown) {
             Character = config.Character;
             avatarCmp.texture = config.Sprite;
             avatarCmp.color = Color.white;

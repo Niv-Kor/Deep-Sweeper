@@ -5,7 +5,7 @@ namespace DeepSweeper.Player
     public class MobilityManager : CharacterAbilityManager<MobilityManager, MobilityConfig>
     {
         #region Class Members
-        private SubmarineMovementController submarine;
+        private MobilityController submarine;
         #endregion
 
         protected override void Start() {

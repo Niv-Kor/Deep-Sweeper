@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderThumbnailGlow : MonoBehaviour
+    public class ThumbnailGlow : MonoBehaviour
     {
         #region Exposed Editor Parameters
         [Header("Prefabs")]

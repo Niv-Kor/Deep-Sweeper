@@ -12,10 +12,10 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         #region Exposed Editor Parameter
         [Header("Prefabs")]
         [Tooltip("The commander thumbnail prefabs")]
-        [SerializeField] private CommanderThumbnail thumbnailPrefab;
+        [SerializeField] private Thumbnail thumbnailPrefab;
 
         [Tooltip("A list of available playable commanders.")]
-        [SerializeField] private List<CommanderThumbnailConfig> commandersConfig;
+        [SerializeField] private List<ThumbnailModel> commandersConfig;
 
         [Header("Placement")]
         [Tooltip("The position of first thumbnail in line from the left.")]
@@ -36,8 +36,8 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 
         #region Class Members
         private Vector2 thumbnailDim;
-        private List<CommanderThumbnail> commanders;
-        private CommanderThumbnail selectedCommander;
+        private List<Thumbnail> commanders;
+        private Thumbnail selectedCommander;
         private int defaultCommenaderIndex;
         private bool initialized;
         private bool changeable;
@@ -51,7 +51,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 
         protected override void Awake() {
             base.Awake();
-            this.commanders = new List<CommanderThumbnail>();
+            this.commanders = new List<Thumbnail>();
         }
 
         private void Start() {
@@ -88,7 +88,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                 }
 
                 //instantiate thumbnail
-                CommanderThumbnail instance = Instantiate(thumbnailPrefab);
+                Thumbnail instance = Instantiate(thumbnailPrefab);
                 int thumbnailIndex = i - noneChar;
                 Vector3 position = firstPosition + Vector3.right * unitWidth * thumbnailIndex;
                 instance.transform.SetParent(transform);
@@ -145,8 +145,8 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         /// <param name="character">The commander's character</param>
         /// <param name="index">The index of the commander if there are multiple results (from left)</param>
         /// <returns>The specified commander.</returns>
-        public CommanderThumbnail GetCommander(CharacterPersona character, int index = 0) {
-            List<CommanderThumbnail> list = (from commander in commanders
+        public Thumbnail GetCommander(CharacterPersona character, int index = 0) {
+            List<Thumbnail> list = (from commander in commanders
                                              where commander.Character == character
                                              select commander).ToList();
 

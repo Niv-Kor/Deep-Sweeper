@@ -3,5 +3,5 @@ using System.Collections.Generic;
 
 namespace DeepSweeper.Characters
 {
-    public interface IAbility {}
+    public interface IAbilityModel {}
 }
