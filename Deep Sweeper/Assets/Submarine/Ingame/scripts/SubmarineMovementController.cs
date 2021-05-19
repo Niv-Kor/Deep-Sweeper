@@ -12,17 +12,8 @@ namespace DeepSweeper.Player
         [Tooltip("Minimum height of the submarine above the ground.")]
         [SerializeField] private float minHeight = 1;
 
-        [Tooltip("The submarine's movement speed.")]
-        [SerializeField] private float horizontalSpeed = 1;
-
-        [Tooltip("The submarine's ascending speed.")]
-        [SerializeField] private float verticalSpeed = 1;
-
         [Tooltip("The maximum velocity magnitude is determined by current speed divided by 'relativeMaxMagnitude'.")]
         [SerializeField] [Range(1, 50f)] private float maxVelocity = 10;
-
-        [Tooltip("The number with which the submarine's speed multiplies when using the turbo feature.")]
-        [SerializeField] private float turboMultiplier = 2f;
 
         [Header("Wave Floating Settings")]
         [Tooltip("True to allow the submarine to float over the underwater waves at rest.")]
@@ -44,6 +35,7 @@ namespace DeepSweeper.Player
 
         #region Properties
         public bool MovementAllowd { get; set; }
+        public MobilityConfig MobilitySettings { get; set; }
         #endregion
 
         private void Start() {
@@ -105,12 +97,12 @@ namespace DeepSweeper.Player
             if (!MovementAllowd) return;
 
             float turboPercent = controller.Turbo;
-            float speedMultiplier = turboPercent * (turboMultiplier - 1) + 1;
-            float speed = horizontalSpeed * speedMultiplier;
+            float speedMultiplier = turboPercent * (MobilitySettings.TurboMultiplier - 1) + 1;
+            float speed = MobilitySettings.HorizontalSpeed * speedMultiplier;
             Vector3 zDirection = directionUnit.transform.forward * vector.z;
             Vector3 xDirection = directionUnit.transform.right * vector.x;
             Vector3 direction = zDirection + xDirection;
-            Vector3 verticalVector = Vector3.up * vector.y * verticalSpeed;
+            Vector3 verticalVector = Vector3.up * vector.y * MobilitySettings.VerticalSpeed;
             Vector3 forceVector = direction * speed + verticalVector;
             Move(forceVector);
         }

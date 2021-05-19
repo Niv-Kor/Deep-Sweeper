@@ -68,7 +68,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
             glow.Apply(flag);
 
             //apply cooldown
-            if (!flag && !force) {
+            if (!flag) {
                 int cooldown = (specialCooldown == -1) ? DefaultCooldown : specialCooldown;
 
                 if (cooldown >= 0) {

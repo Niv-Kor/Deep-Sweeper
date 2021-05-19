@@ -124,7 +124,6 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
             CharacterPersona prevCommander = initialized ? selectedCommander.Character : CharacterPersona.None;
             bool duringPhase = LevelFlow.Instance.DuringPhase;
 
-
             foreach (var commander in commanders) {
                 bool selected = commanders.IndexOf(commander) == index;
 
