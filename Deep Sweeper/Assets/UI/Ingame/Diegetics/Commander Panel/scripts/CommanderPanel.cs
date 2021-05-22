@@ -1,4 +1,5 @@
 using DeepSweeper.Characters;
+using DeepSweeper.Player.Controls;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

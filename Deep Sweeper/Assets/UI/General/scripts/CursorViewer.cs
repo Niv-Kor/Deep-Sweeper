@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DeepSweeper.Player.Controls;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace DeepSweeper.UI
