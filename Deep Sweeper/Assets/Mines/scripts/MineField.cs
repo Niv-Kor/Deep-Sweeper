@@ -247,6 +247,8 @@ namespace DeepSweeper.Level.Mine
                     indicesPool.RemoveAt(poolIndex);
                     grid = Grids[gridIndex];
                     gridPos = grid.Position;
+
+                    print("over here forever");
                 }
                 while (grid.IndicationSystem.IsFatal || (grid.IndicationSystem.Value != 0 && !lowerStandard));
             }
@@ -381,6 +383,8 @@ namespace DeepSweeper.Level.Mine
                         generator.RerollChance();
                     }
                 }
+
+                print("over here forever 1");
             }
 
             //each grid should drop a coin with a value of at least 1

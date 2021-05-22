@@ -1,5 +1,4 @@
-﻿using DeepSweeper.CameraSet;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class WaterPhysics : Singleton<WaterPhysics>
@@ -30,11 +29,13 @@ public class WaterPhysics : Singleton<WaterPhysics>
     #endregion
 
     #region Events
-    public event UnityAction<WaveSettings> WavesChangeTrigger;
+    public event UnityAction<WaveSettings> WavesChangedEvent;
     #endregion
 
     #region Properties
-    public Terrain Terrain { get { return terrain; } }
+    public float IntensityPercentage => RangeMath.NumberOfRange(Intensity, intensityRange);
+    public float FogDistance => fogDistance;
+    public Terrain Terrain => terrain;
     public Vector3 Direction {
         get { return m_direction; }
         private set {
@@ -51,21 +52,13 @@ public class WaterPhysics : Singleton<WaterPhysics>
             InvokeChanges(Direction, value);
         }
     }
-
-    public float IntensityPercentage {
-        get { return RangeMath.NumberOfRange(Intensity, intensityRange); }
-    }
-
-    public float FogDistance {
-        get { return fogDistance; }
-    }
     #endregion
 
     protected override void Awake() {
         base.Awake();
 
         //concatenate gravity event
-        WavesChangeTrigger += OnWavesChange;
+        WavesChangedEvent += OnWavesChange;
 
         if (setRandom) {
             float dirX = Random.Range(-1f, 1f);
@@ -99,7 +92,7 @@ public class WaterPhysics : Singleton<WaterPhysics>
     /// <param name="intensity">The intensity of the waves</param>
     private void InvokeChanges(Vector3 dir, float intensity) {
         WaveSettings settings = CreateSettings(dir, intensity);
-        WavesChangeTrigger?.Invoke(settings);
+        WavesChangedEvent?.Invoke(settings);
     }
 
     /// <summary>

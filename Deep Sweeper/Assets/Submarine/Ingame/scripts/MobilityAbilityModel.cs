@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DeepSweeper.Player
 {
     [Serializable]
-    public struct MobilityConfig : IAbilityModel
+    public struct MobilityAbilityModel : IAbilityModel
     {
         [Tooltip("The speed of the submarine when moving on the plane.")]
         [SerializeField] public float HorizontalSpeed;
@@ -18,6 +18,9 @@ namespace DeepSweeper.Player
 
         [Tooltip("The Z angle of the submarine when moving sideways.")]
         [SerializeField] public float RollAngle;
+
+        [Tooltip("The speed at which the submarine rolls to the desired angle.")]
+        [SerializeField] public float RollSpeed;
 
         [Tooltip("The X angle of the submarine when moving forwards.")]
         [SerializeField] public float PitchAngle;

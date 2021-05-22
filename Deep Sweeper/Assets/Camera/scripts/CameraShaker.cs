@@ -250,13 +250,19 @@ namespace DeepSweeper.CameraSet
         /// creating a vibartion effect.
         /// </summary>
         /// <param name="intensity">The percentage of shake power [0:1]</param>
-        public void Vibrate(float intensity = 1) {
+        /// <param name="effectsIntesity">
+        /// The percentage of camera effects intensity [0:1].
+        /// If set to -1 (by default), its intensity is the same as the 'intensity' parameter.
+        /// </param>
+        public void Vibrate(float intensity = 1, float effectsIntesity = -1) {
             intensity = Mathf.Clamp(intensity, 0, 1);
             if (intensity == 0) return;
 
+            effectsIntesity = (effectsIntesity == -1) ? intensity : Mathf.Clamp(effectsIntesity, 0, 1);
+
             if (vibrationCoroutine != null) StopCoroutine(vibrationCoroutine);
             cameraCmp.fieldOfView = originFieldOfView;
-            ActivateFX(true, intensity);
+            ActivateFX(true, effectsIntesity);
             vibrationCoroutine = StartCoroutine(WaveVibrate(intensity));
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DeepSweeper.Player.ShootingSystem
 {
     [Serializable]
-    public struct WeaponAbility : IAbilityModel
+    public struct WeaponAbilityModel : IAbilityModel
     {
         [Tooltip("Primary operation weapon.")]
         [SerializeField] public GunType Primary;

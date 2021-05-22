@@ -26,7 +26,7 @@ namespace DeepSweeper.CameraSet
         public Grain Grain { get; private set; }
         #endregion
 
-        private void Start() {
+        private void Awake() {
             this.volume = GetComponent<PostProcessVolume>();
             this.startingWeight = volume.weight;
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace DeepSweeper.UI.Ingame.Sight
 {
-    public abstract class Crosshair : Puppeteer
+    [RequireComponent(typeof(Animator))]
+    public abstract class Crosshair : MonoBehaviour
     {
         #region Exposed Editor Parameters
         [Header("Settings")]
@@ -21,6 +22,7 @@ namespace DeepSweeper.UI.Ingame.Sight
         #endregion
 
         #region Class Members
+        private Puppeteer puppeteer;
         private bool m_isActive;
         #endregion
 
@@ -33,11 +35,11 @@ namespace DeepSweeper.UI.Ingame.Sight
                 if (value == m_isActive) return;
 
                 if (value) {
-                    Manipulate(IN_PARAM);
+                    puppeteer.Manipulate(IN_PARAM);
                     OnCrosshairIn();
                 }
                 else {
-                    Manipulate(OUT_PARAM);
+                    puppeteer.Manipulate(OUT_PARAM);
                     OnCrosshairOut();
                 }
 
@@ -47,12 +49,17 @@ namespace DeepSweeper.UI.Ingame.Sight
         }
         #endregion
 
+        protected virtual void Awake() {
+            Animator animator = GetComponent<Animator>();
+            this.puppeteer = new Puppeteer(animator);
+        }
+
         protected virtual void Start() {
-            Manipulate(SHOOTING_SPEED_PARAM, shootingSpeed);
+            puppeteer.Manipulate(SHOOTING_SPEED_PARAM, shootingSpeed);
         }
 
         protected virtual void OnValidate() {
-            try { Manipulate(SHOOTING_SPEED_PARAM, shootingSpeed); }
+            try { puppeteer.Manipulate(SHOOTING_SPEED_PARAM, shootingSpeed); }
             catch {}
         }
 
@@ -60,7 +67,7 @@ namespace DeepSweeper.UI.Ingame.Sight
         /// Lock the sight on a target.
         /// </summary>
         public void Lock() {
-            Manipulate(LOCK_PARAM, true);
+            puppeteer.Manipulate(LOCK_PARAM, true);
             IsLocked = true;
             OnCrosshairLock();
         }
@@ -71,7 +78,7 @@ namespace DeepSweeper.UI.Ingame.Sight
         public void Release() {
             if (!IsLocked) return;
 
-            Manipulate(LOCK_PARAM, false);
+            puppeteer.Manipulate(LOCK_PARAM, false);
             IsLocked = false;
             OnCrossharirRelease();
         }
@@ -80,7 +87,7 @@ namespace DeepSweeper.UI.Ingame.Sight
         /// Shoot the crosshair's weapon.
         /// </summary>
         public void Shoot() {
-            Manipulate(SHOOT_PARAM);
+            puppeteer.Manipulate(SHOOT_PARAM);
             OnCrossharirShoot();
         }
 

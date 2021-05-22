@@ -1,26 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GamedevUtil
 {
-    [RequireComponent(typeof(Animator))]
-    public class Puppeteer : MonoBehaviour
+    public class Puppeteer
     {
         #region Constants
-        private static readonly float TRIGGER_RESET_TIME = .5f;
+        private static readonly int TRIGGER_RESET_TIME = 200;
         #endregion
 
         #region Class Members
-        protected Animator animator;
-        protected IDictionary<string, bool> boolParams;
-        protected IDictionary<string, float> floatParams;
-        protected IDictionary<string, int> intParams;
+        private Animator animator;
+        private IDictionary<string, bool> boolParams;
+        private IDictionary<string, float> floatParams;
+        private IDictionary<string, int> intParams;
         #endregion
 
         #region Properties
-        protected List<string> Parameters {
+        public List<string> Parameters {
             get {
                 return (from state in animator.parameters
                         select state.name).ToList();
@@ -28,8 +27,8 @@ namespace GamedevUtil
         }
         #endregion
 
-        protected virtual void Awake() {
-            this.animator = GetComponent<Animator>();
+        public Puppeteer(Animator animator) {
+            this.animator = animator;
             this.boolParams = new Dictionary<string, bool>();
             this.floatParams = new Dictionary<string, float>();
             this.intParams = new Dictionary<string, int>();
@@ -40,7 +39,7 @@ namespace GamedevUtil
         /// </summary>
         /// <param name="param">The parameter's name</param>
         /// <param name="flag">The new parameter value</param>
-        protected virtual void Manipulate(string param, bool flag) {
+        public void Manipulate(string param, bool flag) {
             animator.SetBool(param, flag);
             boolParams[param] = flag;
         }
@@ -50,7 +49,7 @@ namespace GamedevUtil
         /// </summary>
         /// <param name="param">The parameter's name</param>
         /// <param name="value">The new parameter value</param>
-        protected virtual void Manipulate(string param, float value) {
+        public void Manipulate(string param, float value) {
             animator.SetFloat(param, value);
             floatParams[param] = value;
         }
@@ -60,7 +59,7 @@ namespace GamedevUtil
         /// </summary>
         /// <param name="param">The parameter's name</param>
         /// <param name="value">The new parameter value</param>
-        protected virtual void Manipulate(string param, int value) {
+        public void Manipulate(string param, int value) {
             animator.SetInteger(param, value);
             intParams[param] = value;
         }
@@ -69,19 +68,11 @@ namespace GamedevUtil
         /// Activate a trigger parameter.
         /// </summary>
         /// <param name="param">The new parameter value</param>
-        protected virtual void Manipulate(string param) {
+        public void Manipulate(string param) {
             animator.SetTrigger(param);
-            StartCoroutine(ResetTrigger(param, TRIGGER_RESET_TIME));
-        }
 
-        /// <summary>
-        /// Reset a trigger after a fixed amount of time.
-        /// </summary>
-        /// <param name="param">The name of the trigger parameter</param>
-        /// <param name="time">The amount of time (in seconds) after which the trigger will reset</param>
-        private IEnumerator ResetTrigger(string param, float time) {
-            yield return new WaitForSeconds(time);
-            animator.ResetTrigger(param);
+            void ResetTrigger() { animator.ResetTrigger(param); }
+            Task.Delay(TRIGGER_RESET_TIME).ContinueWith(x => ResetTrigger());
         }
     }
 }

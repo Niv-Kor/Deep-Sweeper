@@ -101,7 +101,7 @@ namespace DeepSweeper.Player.ShootingSystem
         public override Bullet Make() {
             Bullet bullet = Instantiate(bulletPrefab);
             bullet.transform.SetParent(cartridgeParent.transform);
-            bullet.transform.localPosition = Vector3.zero;
+            Firearm.Barrel.LocateBullet(bullet);
             bullet.InactiveEvent += delegate { Return(bullet); };
             bullet.HitEvent += OnBulletImpact;
             return bullet;

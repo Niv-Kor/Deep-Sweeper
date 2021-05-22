@@ -2,7 +2,7 @@
 
 namespace DeepSweeper.Player
 {
-    public class MobilityManager : CharacterAbilityManager<MobilityManager, MobilityConfig>
+    public class MobilityManager : CharacterAbilityManager<MobilityManager, MobilityAbilityModel>
     {
         #region Class Members
         private MobilityController submarine;
@@ -14,10 +14,10 @@ namespace DeepSweeper.Player
         }
 
         /// <inheritdoc/>
-        protected override void StripAbility(MobilityConfig ability) {}
+        protected override void StripAbility(MobilityAbilityModel ability) {}
 
         /// <inheritdoc/>
-        protected override void ApplyAbility(MobilityConfig ability) {
+        protected override void ApplyAbility(MobilityAbilityModel ability) {
             submarine.MobilitySettings = ability;
         }
     }

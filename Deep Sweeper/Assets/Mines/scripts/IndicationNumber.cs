@@ -95,7 +95,7 @@ namespace DeepSweeper.Level.Mine
         /// </summary>
         /// <param name="alpha">Target alpha value</param>
         private IEnumerator LerpAlpha(float alpha) {
-            float lerpedTime = 0;
+            float timer = 0;
             Color startFace = FaceColor;
             Color startOutline = OutlineColor;
             Color targetFace = FaceColor;
@@ -103,10 +103,10 @@ namespace DeepSweeper.Level.Mine
             targetFace.a = alpha;
             targetOutline.a = alpha;
 
-            while (lerpedTime < alphaLerpTime) {
-                lerpedTime += Time.deltaTime;
-                Color nextFace = Color.Lerp(startFace, targetFace, lerpedTime / alphaLerpTime);
-                Color nextOutline = Color.Lerp(startOutline, targetOutline, lerpedTime / alphaLerpTime);
+            while (timer < alphaLerpTime) {
+                timer += Time.deltaTime;
+                Color nextFace = Color.Lerp(startFace, targetFace, timer / alphaLerpTime);
+                Color nextOutline = Color.Lerp(startOutline, targetOutline, timer / alphaLerpTime);
                 FaceColor = nextFace;
                 OutlineColor = nextOutline;
                 yield return null;

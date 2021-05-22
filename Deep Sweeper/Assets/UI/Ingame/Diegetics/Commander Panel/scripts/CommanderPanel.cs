@@ -113,7 +113,12 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         /// </summary>
         /// <param name="index">Index of the commander to select</param>
         private void OnCommanderSelect(int index) {
-            if (!changeable || index >= commanders.Count || index < 0) return;
+            //changability check
+            bool canChange = true;
+            canChange &= changeable; //mutable
+            canChange &= index < commanders.Count && index >= 0; //within boundaries
+            canChange &= commanders.IndexOf(selectedCommander) != index || !initialized; //different commander
+            if (!canChange) return;
 
             //on cooldown
             if (commanders[index].OnCooldown) {

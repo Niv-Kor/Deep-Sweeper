@@ -15,6 +15,9 @@ namespace DeepSweeper.Player.ShootingSystem
 
         [Tooltip("The camera's shake instensity at the time of launch")]
         [SerializeField] [Range(0f, 1f)] protected float cameraShake;
+
+        [Tooltip("The intensity of the temporary camera effects at the time of launch.")]
+        [SerializeField] [Range(0f, 1f)] protected float cameraEffects;
         #endregion
 
         #region Class Members
@@ -111,8 +114,23 @@ namespace DeepSweeper.Player.ShootingSystem
         /// (only relevant when activating).
         /// </param>
         public virtual void Activate(bool flag, OperationType operation = OperationType.None) {
-            IsActive = flag;
-            if (IsActive) OperationType = operation;
+            if (flag) OperationType = operation;
+
+            //animate barrels
+            if (firearms != null && firearms.Count > 0) {
+                foreach (Firearm firearm in firearms) {
+                    Barrel barrel = firearm.Barrel;
+                    if (flag) {
+                        barrel.Open();
+                        barrel.FullyOpenEvent += delegate { IsActive = true; };
+                    }
+                    else {
+                        IsActive = false;
+                        barrel.Close();
+                    }
+                }
+            }
+            else IsActive = flag;
         }
 
         /// <summary>
@@ -210,7 +228,7 @@ namespace DeepSweeper.Player.ShootingSystem
         protected virtual void Recoil(float force) {
             Vector3 backwards = submarine.Forward * -1;
             submarineRB.AddForce(backwards * force);
-            camShaker.Vibrate(cameraShake);
+            camShaker.Vibrate(cameraShake, cameraEffects);
         }
 
         /// <summary>

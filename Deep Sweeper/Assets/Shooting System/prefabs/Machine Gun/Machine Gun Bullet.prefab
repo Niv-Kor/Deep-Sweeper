@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2520029440961004954}
   - component: {fileID: 2520029440961004957}
   - component: {fileID: 6747137078315451750}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Machine Gun Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4832,7 +4832,7 @@ GameObject:
   - component: {fileID: 8575113763373205139}
   - component: {fileID: 1572370989191653332}
   - component: {fileID: 680361079349819311}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Ricochet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

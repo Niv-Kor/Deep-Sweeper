@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class WeaponManager : CharacterAbilityManager<WeaponManager, WeaponAbility>
+    public class WeaponManager : CharacterAbilityManager<WeaponManager, WeaponAbilityModel>
     {
         #region Class Members
         private List<SubmarineGun> guns;
@@ -35,19 +35,19 @@ namespace DeepSweeper.Player.ShootingSystem
         /// </summary>
         /// <param name="ability">The ability to enable or disable the guns of which</param>
         /// <param name="flag">True to enable or false to disable</param>
-        private void EnableGuns(WeaponAbility ability, bool flag) {
+        private void EnableGuns(WeaponAbilityModel ability, bool flag) {
             bool sameWeapon = ability.Primary == ability.Secondary;
             EnableGun(ability.Primary, sameWeapon ? OperationType.Both : OperationType.Primary, flag);
             EnableGun(ability.Secondary, sameWeapon ? OperationType.Both : OperationType.Secondary, flag);
         }
 
         /// <inheritdoc/>
-        protected override void StripAbility(WeaponAbility ability) {
+        protected override void StripAbility(WeaponAbilityModel ability) {
             EnableGuns(ability, false);
         }
 
         /// <inheritdoc/>
-        protected override void ApplyAbility(WeaponAbility ability) {
+        protected override void ApplyAbility(WeaponAbilityModel ability) {
             EnableGuns(ability, true);
         }
     }

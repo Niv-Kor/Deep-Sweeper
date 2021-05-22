@@ -6,6 +6,8 @@ public class PlayerController : Singleton<PlayerController>
 {
     #region Class Members
     private PlayerControls controls;
+    private bool movingHorizontally;
+    private bool movingVertically;
     #endregion
 
     #region Events
@@ -15,6 +17,8 @@ public class PlayerController : Singleton<PlayerController>
     public event UnityAction SecondaryOperationStopEvent;
     public event UnityAction CursorDisplayEvent;
     public event UnityAction CursorDisplayHide;
+    public event UnityAction HorizontalMovementStopEvent;
+    public event UnityAction VerticalMovementStopEvent;
 
     /// <param type=typeof(int)>Commander's index</param>
     public event UnityAction<int> CommanderSelectionEvent;
@@ -53,10 +57,18 @@ public class PlayerController : Singleton<PlayerController>
         controls.Disable();
     }
 
+    /// <summary>
+    /// Bind keys' press, hold or stop events.
+    /// </summary>
     private void BindEvents() {
         //mobility
-        controls.Player.Horizontal.performed += delegate { StartCoroutine(InvokeHorizontalMovement()); };
-        controls.Player.Vertical.performed += delegate { StartCoroutine(InvokeVerticalMovement()); };
+        controls.Player.Horizontal.performed += delegate {
+            if (!movingHorizontally) StartCoroutine(InvokeHorizontalMovement());
+        };
+
+        controls.Player.Vertical.performed += delegate {
+            if (!movingVertically) StartCoroutine(InvokeVerticalMovement());
+        };
 
         //shooting system
         controls.Player.PrimaryOperation.started += delegate { PrimaryOperationStartEvent?.Invoke(); };
@@ -74,17 +86,35 @@ public class PlayerController : Singleton<PlayerController>
         controls.UI.CommanderSelection3.started += delegate { CommanderSelectionEvent?.Invoke(2); };
     }
 
+    /// <summary>
+    /// Contineously invoke horizontal movement events
+    /// as long as the player holds the movement keys.
+    /// </summary>
     private IEnumerator InvokeHorizontalMovement() {
+        movingHorizontally = true;
+
         while (Horizontal.magnitude > 0) {
             HorizontalMovementEvent?.Invoke(Horizontal);
             yield return null;
         }
+
+        HorizontalMovementStopEvent?.Invoke();
+        movingHorizontally = false;
     }
 
+    /// <summary>
+    /// Contineously invoke verical movement events
+    /// as long as the player holds the movement keys.
+    /// </summary>
     private IEnumerator InvokeVerticalMovement() {
+        movingVertically = true;
+
         while (Mathf.Abs(Vertical.y) > 0) {
             VerticalMovementEvent?.Invoke(Vertical.y);
             yield return null;
         }
+
+        VerticalMovementStopEvent?.Invoke();
+        movingVertically = false;
     }
 }

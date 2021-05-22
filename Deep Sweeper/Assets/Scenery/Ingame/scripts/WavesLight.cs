@@ -24,7 +24,7 @@ public class WavesLight : MonoBehaviour
         float globalIntens = waves.IntensityPercentage;
         float intensDiff = speedRange.y - speedRange.x;
         this.motionSpeed = globalIntens * intensDiff / 100f;
-        WaterPhysics.Instance.WavesChangeTrigger += OnWavesChange;
+        WaterPhysics.Instance.WavesChangedEvent += OnWavesChange;
         lightComponent.intensity = brightness;
     }
 
