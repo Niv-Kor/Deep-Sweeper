@@ -136,9 +136,9 @@ namespace DeepSweeper.Level.PhaseGate
         /// <returns></returns>
         private IEnumerator AnimateGateOpening() {
             yield return new WaitForSeconds(pauseBeforeCam);
-            submarine.IsMovable = false;
 
             void ActivateDolly() {
+                submarine.IsMovable = false;
                 camController.enabled = false;
                 StartCoroutine(MoveDolly());
                 CameraManager.Instance.Switch(cam);

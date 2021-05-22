@@ -13,7 +13,7 @@ namespace DeepSweeper.Level.PhaseGate
         /// <inheritdoc/>
         protected override void OnDeactivation(UnityAction callback = null) {
             DiegeticsManager.Instance.Activate(true, 0);
-            callback?.Invoke();
+            base.OnDeactivation(callback);
         }
     }
 }

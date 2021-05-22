@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DeepSweeper.CameraSet
 {
     [Serializable]
-    public struct CameraSetConfig
+    public class CameraSetConfig
     {
         [Tooltip("The camera's role and unique ID in the scene.")]
         [SerializeField] public CameraRole Role;

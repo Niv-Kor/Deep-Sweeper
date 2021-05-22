@@ -8225,6 +8225,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Submarine
       objectReference: {fileID: 0}
+    - target: {fileID: 2800396846847765909, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Height
+      value: 34.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800396846847765909, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Radius
+      value: 10.200529
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800396846847765909, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Center.y
+      value: -8.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800396846847765909, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -6
+      objectReference: {fileID: 0}
     - target: {fileID: 2872702466631702877, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
       propertyPath: openDelay
@@ -8312,6 +8332,5 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: 88e4f22c1d8951148bf656674dc2df1e,
         type: 2}
-    m_RemovedComponents:
-    - {fileID: 4280154305956108520, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}

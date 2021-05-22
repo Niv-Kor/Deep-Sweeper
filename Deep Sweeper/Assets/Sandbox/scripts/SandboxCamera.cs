@@ -61,8 +61,10 @@ namespace DeepSweeper.CameraSet
 
         /// <inheritdoc/>
         protected override void OnDeactivation(UnityAction callback = null) {
+            void BaseCallback() { base.OnDeactivation(callback); };
+
             StopAllCoroutines();
-            StartCoroutine(GrowView(false, camShrinkTime, callback));
+            StartCoroutine(GrowView(false, camShrinkTime, BaseCallback));
         }
     }
 }

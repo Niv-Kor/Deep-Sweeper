@@ -34,7 +34,7 @@ namespace DeepSweeper.CameraSet
         /// <param name="cam">The camera to register</param>
         /// <returns>The newly created camera configuration.</returns>
         private CameraSetConfig registerCamera(DynamicCamera cam) {
-            CameraSetConfig config;
+            CameraSetConfig config = new CameraSetConfig();
             config.Role = CameraRole.Undefined;
             config.Camera = cam;
             config.Rig = null;
@@ -97,7 +97,9 @@ namespace DeepSweeper.CameraSet
         /// </summary>
         /// <param name="role">The role of the camera into which to switch</param>
         public void Switch(CameraRole role) {
-            if (!Get(role, out CameraSetConfig reqConfig) || reqConfig.Camera is null) return;
+            bool listed = Get(role, out CameraSetConfig reqConfig);
+            bool camMissing = reqConfig.Camera is null;
+            if (!listed || camMissing) return;
 
             foreach (CameraSetConfig config in setsConfig) {
                 bool isNewCam = config.Role == role;

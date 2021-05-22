@@ -61,8 +61,9 @@ namespace DeepSweeper.CameraSet
 
         /// <summary>
         /// Activate when the camera component is deactivated.
+        /// Call base.OnDeactivation(callback) to invoke the mandatory callback function.
         /// </summary>
         /// <param name="callback">A callback function to activate as soon as the process is done</param>
-        protected virtual void OnDeactivation(UnityAction callback = null) {}
+        protected virtual void OnDeactivation(UnityAction callback = null) { callback?.Invoke(); }
     }
 }
