@@ -26,6 +26,7 @@ namespace DeepSweeper.Player.ShootingSystem
         #region Class Members
         private ParticleSystem m_particleSys;
         private ParticleSystem warheadParticles;
+        private TargetDetector detector;
         private Jukebox jukebox;
         private float? m_animationTime;
         #endregion
@@ -42,6 +43,7 @@ namespace DeepSweeper.Player.ShootingSystem
         public float Power => power;
         public float TimeToLive => timeToLive;
         public bool IsActive { get; private set; }
+        public LayerMask ImpactSurface => detector.ImpactSurface;
         private ParticleSystem ParticleSys {
             get {
                 m_particleSys ??= GetComponent<ParticleSystem>();
@@ -62,7 +64,7 @@ namespace DeepSweeper.Player.ShootingSystem
 
         private void Awake() {
             this.jukebox = GetComponent<Jukebox>();
-            TargetDetector detector = GetComponentInChildren<TargetDetector>();
+            this.detector = GetComponentInChildren<TargetDetector>();
             this.warheadParticles = detector?.GetComponent<ParticleSystem>();
         }
 

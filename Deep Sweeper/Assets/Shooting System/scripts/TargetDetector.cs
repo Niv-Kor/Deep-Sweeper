@@ -15,22 +15,22 @@ namespace DeepSweeper.Player.ShootingSystem
 
         #region Class Members
         private ParticleSystem partSystem;
-        private LayerMask damageableSurfaces;
         private List<ParticleCollisionEvent> collisionEvents;
         #endregion
 
         #region Properties
         public Bullet Bullet => bullet;
+        public LayerMask ImpactSurface { get; private set; }
         #endregion
 
-        private void Start() {
+        private void Awake() {
             this.partSystem = GetComponent<ParticleSystem>();
             this.collisionEvents = new List<ParticleCollisionEvent>();
-            this.damageableSurfaces = partSystem.collision.collidesWith;
+            this.ImpactSurface = partSystem.collision.collidesWith;
         }
 
         private void OnParticleCollision(GameObject obj) {
-            if (Layers.ContainedInMask(obj.layer, damageableSurfaces)) {
+            if (Layers.ContainedInMask(obj.layer, ImpactSurface)) {
                 int hits = ParticlePhysicsExtensions.GetCollisionEvents(partSystem, obj, collisionEvents);
 
                 if (hits > 0) {
