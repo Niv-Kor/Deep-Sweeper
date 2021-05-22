@@ -1,11 +1,58 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PlayerController : Singleton<PlayerController>
 {
+    private class SequentialClickDetector
+    {
+        #region Class Members
+        private int counter;
+        private int maxClickDelay;
+        #endregion
+
+        #region Events
+        public event UnityAction TargetSequenceEvent;
+        #endregion
+
+        #region Properties
+        public int CounterGoal { get; private set; }
+        #endregion
+
+        /// <param name="targetSequence">The target amount of clicks that will invoke an event</param>
+        /// <param name="maxClickDelay">The maximum time allowed between clicks (in seconds)</param>
+        public SequentialClickDetector(int targetSequence, float maxClickDelay) {
+            this.CounterGoal = targetSequence;
+            this.maxClickDelay = (int)(maxClickDelay * 1000);
+            this.counter = 0;
+        }
+
+        /// <summary>
+        /// Reset the counter back to 0.
+        /// </summary>
+        public void ResetCounter() { counter = 0; }
+
+        /// <summary>
+        /// Increase the counter by 1 and invoke the target event if needed.
+        /// </summary>
+        public void IncreaseCounter() {
+            if (++counter == CounterGoal) {
+                TargetSequenceEvent?.Invoke();
+                counter = 0;
+            }
+            else Task.Delay(maxClickDelay).ContinueWith(x => ResetCounter());
+        }
+    }
+
+    #region Exposed Editor Parameters
+    [Tooltip("The maximum time allowed between clicks that invoke multiple click events.")]
+    [SerializeField] private float timeBetweenSequenceClicks = .5f;
+    #endregion
+
     #region Class Members
     private PlayerControls controls;
+    private SequentialClickDetector[] dashDetectors;
     private bool movingHorizontally;
     private bool movingVertically;
     #endregion
@@ -19,6 +66,7 @@ public class PlayerController : Singleton<PlayerController>
     public event UnityAction CursorDisplayHide;
     public event UnityAction HorizontalMovementStopEvent;
     public event UnityAction VerticalMovementStopEvent;
+    public event UnityAction<Vector2> DashEvent;
 
     /// <param type=typeof(int)>Commander's index</param>
     public event UnityAction<int> CommanderSelectionEvent;
@@ -45,6 +93,11 @@ public class PlayerController : Singleton<PlayerController>
     protected override void Awake() {
         base.Awake();
         this.controls = new PlayerControls();
+
+        this.dashDetectors = new SequentialClickDetector[4];
+        for (int i = 0; i < dashDetectors.Length; i++)
+            dashDetectors[i] = new SequentialClickDetector(2, timeBetweenSequenceClicks);
+
         controls.Enable();
         BindEvents();
     }
@@ -70,6 +123,11 @@ public class PlayerController : Singleton<PlayerController>
             if (!movingVertically) StartCoroutine(InvokeVerticalMovement());
         };
 
+        dashDetectors[0].TargetSequenceEvent += delegate { DashEvent?.Invoke(Vector2.up); };
+        dashDetectors[1].TargetSequenceEvent += delegate { DashEvent?.Invoke(Vector2.right); };
+        dashDetectors[2].TargetSequenceEvent += delegate { DashEvent?.Invoke(Vector2.down); };
+        dashDetectors[3].TargetSequenceEvent += delegate { DashEvent?.Invoke(Vector2.left); };
+
         //shooting system
         controls.Player.PrimaryOperation.started += delegate { PrimaryOperationStartEvent?.Invoke(); };
         controls.Player.PrimaryOperation.canceled += delegate { PrimaryOperationStopEvent?.Invoke(); };
@@ -92,6 +150,7 @@ public class PlayerController : Singleton<PlayerController>
     /// </summary>
     private IEnumerator InvokeHorizontalMovement() {
         movingHorizontally = true;
+        DetectHorizontalDash();
 
         while (Horizontal.magnitude > 0) {
             HorizontalMovementEvent?.Invoke(Horizontal);
@@ -116,5 +175,16 @@ public class PlayerController : Singleton<PlayerController>
 
         VerticalMovementStopEvent?.Invoke();
         movingVertically = false;
+    }
+
+    /// <summary>
+    /// Detect a double click on one of the horizontal movement keys,
+    /// that indicates a dash towards that direction.
+    /// </summary>
+    private void DetectHorizontalDash() {
+        if (Horizontal.y > 0) dashDetectors[0].IncreaseCounter();
+        if (Horizontal.x > 0) dashDetectors[1].IncreaseCounter();
+        if (Horizontal.y < 0) dashDetectors[2].IncreaseCounter();
+        if (Horizontal.x < 0) dashDetectors[3].IncreaseCounter();
     }
 }

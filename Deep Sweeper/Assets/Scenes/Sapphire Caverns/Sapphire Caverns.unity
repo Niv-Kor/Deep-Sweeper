@@ -3005,6 +3005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 678f785d75d6bdc4aa183899d81b7e27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeBetweenSequenceClicks: 0.5
 --- !u!1001 &912688817
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8040,6 +8041,10 @@ PrefabInstance:
       propertyPath: volumeTrigger
       value: 
       objectReference: {fileID: 799261089}
+    - target: {fileID: 1903473878, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}
+      propertyPath: abilities.Array.data[1].Ability.DashMultiplier
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1124614784173000528, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}
       propertyPath: m_Enabled
@@ -8209,6 +8214,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656385977427607236, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: dashDecayTime
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2656385977427607246, guid: e63e7789a0760e043b5da38c58dd039f,
         type: 3}

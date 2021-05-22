@@ -9,6 +9,9 @@ namespace DeepSweeper.Player
         #region Exposed Editor Parameters
         [Tooltip("The maximum velocity magnitude at which the submarine can move.")]
         [SerializeField] private float maxVelocity = 10;
+
+        [Tooltip("The time it takes a fast dash movement to decay back to normal.")]
+        [SerializeField] private float dashDecayTime = 1;
         #endregion
 
         #region Constants
@@ -21,6 +24,8 @@ namespace DeepSweeper.Player
         private RigidbodyConstraints horEngineConstraints;
         private DirectionUnit directionUnit;
         private Coroutine freezeYCoroutine;
+        private Coroutine velClampRevertCoroutine;
+        private float velClamp;
         #endregion
 
         #region Properties
@@ -29,6 +34,7 @@ namespace DeepSweeper.Player
 
         protected override void Awake() {
             base.Awake();
+            this.velClamp = maxVelocity;
             this.verEngineConstraints = RigidbodyConstraints.FreezeRotation;
             this.horEngineConstraints = verEngineConstraints | RigidbodyConstraints.FreezePositionY;
         }
@@ -37,9 +43,12 @@ namespace DeepSweeper.Player
             this.directionUnit = DirectionUnit.Instance;
 
             //bind events
-            controller.HorizontalMovementEvent += MoveHorizontally;
-            controller.VerticalMovementEvent += MoveVertically;
+            controller.DashEvent += DashHorizontally;
+            controller.HorizontalMovementEvent += delegate (Vector2 vector) { MoveHorizontally(vector); };
+            controller.VerticalMovementEvent += delegate (float value) { MoveVertically(value); };
+            controller.HorizontalMovementStopEvent += delegate { velClamp = maxVelocity; };
             controller.VerticalMovementStopEvent += delegate {
+                velClamp = maxVelocity;
                 freezeYCoroutine = StartCoroutine(SmoothFreezeY());
             };
         }
@@ -51,13 +60,35 @@ namespace DeepSweeper.Player
         /// X slot represents a Z axis movement (backwards [-1:0) and forwards (0:1])
         /// and Y slot represents an X axis movement (left [-1:0) and right (0:1])
         /// </param>
-        private void MoveHorizontally(Vector2 vector) {
-            float speed = MobilitySettings.HorizontalSpeed;
+        /// <param name="speedMultiplier">A multiplier for the calculated speed</param>
+        private void MoveHorizontally(Vector2 vector, float speedMultiplier = 1) {
+            float speed = MobilitySettings.HorizontalSpeed * speedMultiplier;
             Vector3 zDirection = directionUnit.transform.forward * vector.y;
             Vector3 xDirection = directionUnit.transform.right * vector.x;
             Vector3 direction = zDirection + xDirection;
             Vector3 forceVector = direction * speed;
             Move(forceVector);
+        }
+
+        /// <summary>
+        /// Dash towards a horizontal direction.
+        /// </summary>
+        /// <param name="direction">
+        /// X > 0: right;
+        /// X < 0: left;
+        /// Y > 0: forward;
+        /// Y < 0: bottom
+        /// </param>
+        private void DashHorizontally(Vector2 direction) {
+            float multiplier = MobilitySettings.DashMultiplier;
+
+            if (multiplier > 1) {
+                velClamp = maxVelocity * multiplier;
+                MoveHorizontally(direction, multiplier);
+
+                if (velClampRevertCoroutine != null) StopCoroutine(velClampRevertCoroutine);
+                velClampRevertCoroutine = StartCoroutine(RevertVelocityClamp());
+            }
         }
 
         /// <summary>
@@ -67,12 +98,12 @@ namespace DeepSweeper.Player
         /// A positive (0:1] value when ascending
         /// or a negative [-1:0) when descending.
         /// </param>
-        private void MoveVertically(float value) {
+        /// <param name="speedMultiplier">A multiplier for the calculated speed</param>
+        private void MoveVertically(float value, float speedMultiplier = 1) {
             if (freezeYCoroutine != null) StopCoroutine(freezeYCoroutine);
             rigidBody.constraints = verEngineConstraints;
 
-
-            float speed = MobilitySettings.VerticalSpeed;
+            float speed = MobilitySettings.VerticalSpeed * speedMultiplier;
             Vector3 direction = Vector3.up * value;
             Vector3 forceVector = direction * speed;
             Move(forceVector);
@@ -127,12 +158,27 @@ namespace DeepSweeper.Player
             }
         }
 
+        /// <summary>
+        /// Revert the velocity clamp value back to the configured
+        /// max velocity value after a successful dash.
+        /// </summary>
+        private IEnumerator RevertVelocityClamp() {
+            float startClamp = velClamp;
+            float timer = 0;
+
+            while (timer <= dashDecayTime) {
+                timer += Time.deltaTime;
+                velClamp = Mathf.Lerp(startClamp, maxVelocity, timer / dashDecayTime);
+                yield return null;
+            }
+        }
+
         /// <inheritdoc/>
         protected override void Move(Vector3 vector) {
             rigidBody.AddRelativeForce(vector);
 
             //prevent the submarine's velocity from diverging
-            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxVelocity);
+            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, velClamp);
         }
     }
 }
