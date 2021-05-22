@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DeepSweeper.Player.Controls;
+using UnityEngine;
 
 namespace GamedevUtil.Player
 {

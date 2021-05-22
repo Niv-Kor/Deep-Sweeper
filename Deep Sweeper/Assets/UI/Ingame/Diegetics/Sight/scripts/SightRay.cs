@@ -2,6 +2,7 @@
 using DeepSweeper.CameraSet;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.Player;
+using DeepSweeper.Player.Controls;
 using DeepSweeper.Player.ShootingSystem;
 using System.Collections;
 using UnityEngine;
