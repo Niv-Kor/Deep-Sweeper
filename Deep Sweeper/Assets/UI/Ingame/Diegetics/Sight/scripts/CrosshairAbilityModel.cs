@@ -3,7 +3,7 @@ using DeepSweeper.Player.ShootingSystem;
 using System;
 using UnityEngine;
 
-namespace DeepSweeper.UI.Ingame.Sight
+namespace DeepSweeper.UI.Ingame.Diegetics.Sight
 {
     [Serializable]
     public struct CrosshairAbilityModel : IAbilityModel

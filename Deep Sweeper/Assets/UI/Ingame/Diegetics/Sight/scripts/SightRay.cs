@@ -1,5 +1,6 @@
 ﻿using Constants;
 using DeepSweeper.CameraSet;
+using DeepSweeper.Flow;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.Player;
 using DeepSweeper.Player.Controls;
@@ -8,9 +9,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DeepSweeper.UI.Ingame.Sight
+namespace DeepSweeper.UI.Ingame.Diegetics.Sight
 {
-    public class SightRay : Singleton<SightRay>
+    public class SightRay : Diegetic
     {
         #region Exposed Editor Parameters
         [Tooltip("Maximum raycast distance from the sight's center.")]
@@ -249,5 +250,20 @@ namespace DeepSweeper.UI.Ingame.Sight
                 selectedIndicator = null;
             }
         }
+
+        /// <inheritdoc/>
+        public override void ResetValue(Phase phase) {}
+
+        /// <inheritdoc/>
+        public override void OnPhaseStarts(Phase phase) {}
+
+        /// <inheritdoc/>
+        public override void OnPhasePauses(Phase phase) { Activate(false, 0); }
+
+        /// <inheritdoc/>
+        public override void OnPhaseResumes(Phase phase) { Activate(true, 0); }
+
+        /// <inheritdoc/>
+        public override void OnPhaseEnds(Phase phase, bool success) {}
     }
 }

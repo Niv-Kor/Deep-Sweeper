@@ -1,6 +1,6 @@
 ﻿using DeepSweeper.Player.ShootingSystem;
 
-namespace DeepSweeper.UI.Ingame.Sight
+namespace DeepSweeper.UI.Ingame.Diegetics.Sight
 {
     public class TorpedoLauncherCrosshair : Crosshair
     {

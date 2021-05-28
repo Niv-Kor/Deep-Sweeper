@@ -1,5 +1,7 @@
 using DeepSweeper.Characters;
+using DeepSweeper.Flow;
 using DeepSweeper.Player.Controls;
+using DeepSweeper.UI.Ingame;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,7 @@ using UnityEngine.Events;
 
 namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 {
-    public class CommanderPanel : Singleton<CommanderPanel>
+    public class CommanderPanel : Diegetic
     {
         #region Exposed Editor Parameter
         [Header("Prefabs")]
@@ -167,6 +169,26 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         public CharacterPersona SubscribeToCommanderChange(UnityAction<CharacterPersona, CharacterPersona> listener) {
             CommanderChangedEvent += listener;
             return commandersConfig[defaultCommenaderIndex].Character;
+        }
+
+        public override void ResetValue(Phase phase) {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnPhaseStarts(Phase phase) {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnPhasePauses(Phase phase) {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnPhaseResumes(Phase phase) {
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnPhaseEnds(Phase phase, bool success) {
+            throw new System.NotImplementedException();
         }
     }
 }

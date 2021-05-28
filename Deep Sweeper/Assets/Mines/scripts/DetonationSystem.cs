@@ -1,4 +1,5 @@
 ﻿using DeepSweeper.CameraSet;
+using DeepSweeper.Flow;
 using DeepSweeper.Player.ShootingSystem;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,7 +82,7 @@ namespace DeepSweeper.Level.Mine
                             mineGrid.DetonationSystem.TriggerHit(null, enableDetonationCallback, enableDrop);
 
                 //try winning the phase
-                LevelFlow.Instance.TryNextPhase();
+                LevelFlow.Instance.TryEndPhase();
             }
 
             if (enableDetonationCallback) DetonationEvent?.Invoke();

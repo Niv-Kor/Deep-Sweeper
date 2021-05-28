@@ -3,7 +3,9 @@ namespace DeepSweeper.Characters
     public enum CharacterPersona
     {
         None,
+        All,
         Alana,
-        Saul
+        Simon,
+        Adam
     }
 }

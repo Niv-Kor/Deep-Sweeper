@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class LifeSupply : PhaseSpatial<LifeSupply>
+public class LifeSupply : MonoBehaviour
 {
-    #region Exposed Editor Parameters
+    /*#region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The prefab of a a single life bit object.")]
     [SerializeField] private LifeBit lifeBitPrefab;
@@ -88,5 +88,5 @@ public class LifeSupply : PhaseSpatial<LifeSupply>
         }
 
         return lifeBits.Count > 0;
-    } 
+    } */
 }

@@ -1,4 +1,5 @@
 ﻿using Constants;
+using DeepSweeper.Flow;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -247,8 +248,6 @@ namespace DeepSweeper.Level.Mine
                     indicesPool.RemoveAt(poolIndex);
                     grid = Grids[gridIndex];
                     gridPos = grid.Position;
-
-                    print("over here forever");
                 }
                 while (grid.IndicationSystem.IsFatal || (grid.IndicationSystem.Value != 0 && !lowerStandard));
             }
@@ -365,6 +364,7 @@ namespace DeepSweeper.Level.Mine
         private void GenerateLootValues() {
             List<MineField> allFields = (from Phase phase in LevelFlow.Instance.Phases
                                          select phase.Field).ToList();
+
             int allMissionGrids = allFields.Sum(x => x.gridsAmount);
             float fieldGridsPercent = (float)gridsAmount / allMissionGrids;
             TotalReward = (int)(fieldGridsPercent * Contract.Instance.BasePayment);
@@ -383,8 +383,6 @@ namespace DeepSweeper.Level.Mine
                         generator.RerollChance();
                     }
                 }
-
-                print("over here forever 1");
             }
 
             //each grid should drop a coin with a value of at least 1

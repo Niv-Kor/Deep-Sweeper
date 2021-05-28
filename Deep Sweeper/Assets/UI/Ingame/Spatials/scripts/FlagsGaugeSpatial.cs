@@ -1,12 +1,13 @@
 ﻿using DeepSweeper.Flow;
 using DeepSweeper.Level.Mine;
+using DeepSweeper.UI.Ingame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
+public class FlagsGaugeSpatial : Spatial
 {
     [Serializable]
     protected struct CounterSettings
@@ -40,15 +41,13 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     private List<DeepSweeper.Level.Mine.MineGrid> CurrentGrids => LevelFlow.Instance.CurrentPhase.Field.Grids;
     #endregion
 
-    protected override void Start() {
+    private void Start() {
         this.flagsMngr = FlagsManager.Instance;
         this.detonationSystems = new List<DetonationSystem>();
 
         flagsMngr.FlagTakenEvent += OnFlagsStateChanged;
         flagsMngr.FlagReturnedEvent += OnFlagsStateChanged;
         flagsMngr.FlagsAmountUpdateEvent += delegate { OnFlagsStateChanged(true); };
-
-        base.Start();
     }
 
     /// <summary>
@@ -79,7 +78,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
         int size = sizeDefined ? fontSizes[len] : defaultSize;
         textCmp.fontSize = size;
 
-        base.SetText(textCmp, text, textCmp.text != text);
+        //base.SetText(textCmp, text, textCmp.text != text);
     }
 
     /// <see cref="SetCounter(int, string)"/>
@@ -160,7 +159,7 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
     /// </summary>
     /// <param name="flag">True to display or false to hide</param>
     public void Display(bool flag) {
-        Enabled = flag;
+        Activate(false);
 
         if (flag) flagsMngr.FlagsAmountUpdateEvent += OnDisplay;
         else {
@@ -172,4 +171,19 @@ public class FlagsGaugeSpatial : PhaseSpatial<FlagsGaugeSpatial>
             detonationSystems.Clear();
         }
     }
+
+    /// <inheritdoc/>
+    public override void ResetValue(Phase phase) {}
+
+    /// <inheritdoc/>
+    public override void OnPhaseStarts(Phase phase) {}
+
+    /// <inheritdoc/>
+    public override void OnPhasePauses(Phase phase) {}
+
+    /// <inheritdoc/>
+    public override void OnPhaseResumes(Phase phase) {}
+
+    /// <inheritdoc/>
+    public override void OnPhaseEnds(Phase phase, bool success) {}
 }

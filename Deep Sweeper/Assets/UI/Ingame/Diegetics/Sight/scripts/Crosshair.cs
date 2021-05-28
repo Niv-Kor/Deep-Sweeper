@@ -2,7 +2,7 @@ using DeepSweeper.Player.ShootingSystem;
 using GamedevUtil;
 using UnityEngine;
 
-namespace DeepSweeper.UI.Ingame.Sight
+namespace DeepSweeper.UI.Ingame.Diegetics.Sight
 {
     [RequireComponent(typeof(Animator))]
     public abstract class Crosshair : MonoBehaviour

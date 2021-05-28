@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace DeepSweeper.UI.Ingame.Minimap
+namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
 {
     public class IndicationMinimapIcon : MinimapIcon
     {

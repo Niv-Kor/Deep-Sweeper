@@ -1,4 +1,5 @@
 using DeepSweeper.Gameplay.UI.Diegetics.Commander;
+using DeepSweeper.UI.Ingame;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +18,8 @@ namespace DeepSweeper.Characters
         #endregion
 
         protected virtual void Start() {
-            var firstCommander = CommanderPanel.Instance.SubscribeToCommanderChange(OnChangeCommander);
+            CommanderPanel commander = DiegeticsManager.Instance.Get(typeof(CommanderPanel)) as CommanderPanel;
+            var firstCommander = commander.SubscribeToCommanderChange(OnChangeCommander);
             OnChangeCommander(CharacterPersona.None, firstCommander);
         }
 

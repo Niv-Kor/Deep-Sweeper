@@ -1,4 +1,5 @@
 ﻿using DeepSweeper.CameraSet;
+using DeepSweeper.UI.Ingame;
 using UnityEngine.Events;
 
 namespace DeepSweeper.Level.PhaseGate

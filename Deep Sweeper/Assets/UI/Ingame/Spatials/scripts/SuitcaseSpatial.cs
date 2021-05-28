@@ -2,9 +2,9 @@
 using TMPro;
 using UnityEngine;
 
-public class SuitcaseSpatial : PhaseSpatial<SuitcaseSpatial>
+public class SuitcaseSpatial// : Spatial<SuitcaseSpatial>
 {
-    #region Exposed Editor Parameters
+    /*#region Exposed Editor Parameters
     [Header("Prefabs")]
     [Tooltip("The textual payment component.")]
     [SerializeField] private TextMeshProUGUI textCmp;
@@ -102,5 +102,5 @@ public class SuitcaseSpatial : PhaseSpatial<SuitcaseSpatial>
             initialized = true;
             yield return null;
         }
-    }
+    }*/
 }

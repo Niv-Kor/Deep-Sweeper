@@ -18,9 +18,7 @@ namespace DeepSweeper.Flow
 
         protected override void Awake() {
             base.Awake();
-            LevelFlow.Instance.PhaseUpdatedEvent += delegate (PhaseConfig pahseConfig, PhaseDifficultyConfig diffConfig, int index) {
-                CollectFieldInfo();
-            };
+            LevelFlow.Instance.PhaseUpdatedEvent += delegate { CollectFieldInfo(); };
         }
 
         /// <summary>

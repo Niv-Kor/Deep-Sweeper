@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DeepSweeper.Flow;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LootManager : Singleton<LootManager>

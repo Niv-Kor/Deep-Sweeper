@@ -2,7 +2,7 @@
 using DeepSweeper.Characters;
 using DeepSweeper.Player.ShootingSystem;
 
-namespace DeepSweeper.UI.Ingame.Sight
+namespace DeepSweeper.UI.Ingame.Diegetics.Sight
 {
     public class CrosshairManager : CharacterAbilityManager<CrosshairManager, CrosshairAbilityModel>
     {

@@ -653,6 +653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 20
+  dashDecayTime: 1
 --- !u!114 &508468166
 MonoBehaviour:
   m_ObjectHideFlags: 0

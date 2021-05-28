@@ -1,4 +1,5 @@
-﻿using DeepSweeper.Player;
+﻿using DeepSweeper.Flow;
+using DeepSweeper.Player;
 
 namespace DeepSweeper.Level.Mine
 {

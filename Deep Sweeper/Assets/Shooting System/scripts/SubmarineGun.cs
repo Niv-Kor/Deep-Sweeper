@@ -1,6 +1,7 @@
 ﻿using DeepSweeper.CameraSet;
 using DeepSweeper.Level.Mine;
-using DeepSweeper.UI.Ingame.Sight;
+using DeepSweeper.UI.Ingame;
+using DeepSweeper.UI.Ingame.Diegetics.Sight;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,16 +61,18 @@ namespace DeepSweeper.Player.ShootingSystem
         /// Bind the trigger events based on the gun's type and mechanism.
         /// </summary>
         private void BindTriggerEventes() {
+            SightRay sight = DiegeticsManager.Instance.Get(typeof(SightRay)) as SightRay;
+
             switch (Mechanism) {
                 case GunMechanism.SemiAutomatic:
-                    SightRay.Instance.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
+                    sight.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
                         if (IsActive && !persistent && IsOperation(OperationType.Primary)) {
                             OnGunTriggerStart(targetType, target);
                             OnGunTriggerStop();
                         }
                     };
 
-                    SightRay.Instance.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
+                    sight.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
                         if (IsActive && !persistent && IsOperation(OperationType.Secondary)) {
                             OnGunTriggerStart(targetType, target);
                             OnGunTriggerStop();
@@ -79,19 +82,19 @@ namespace DeepSweeper.Player.ShootingSystem
                     break;
 
                 case GunMechanism.Automatic:
-                    SightRay.Instance.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
+                    sight.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
                         if (IsActive && IsOperation(OperationType.Primary)) OnGunTriggerStart(targetType, target);
                     };
 
-                    SightRay.Instance.PrimaryStopEvent += delegate {
+                    sight.PrimaryStopEvent += delegate {
                         if (IsActive && IsOperation(OperationType.Primary)) OnGunTriggerStop();
                     };
 
-                    SightRay.Instance.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
+                    sight.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
                         if (IsActive && IsOperation(OperationType.Secondary)) OnGunTriggerStart(targetType, target);
                     };
 
-                    SightRay.Instance.SecondaryStopEvent += delegate {
+                    sight.SecondaryStopEvent += delegate {
                         if (IsActive && IsOperation(OperationType.Secondary)) OnGunTriggerStop();
                     };
 

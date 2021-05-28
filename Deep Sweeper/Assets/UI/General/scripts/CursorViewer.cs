@@ -36,7 +36,6 @@ namespace DeepSweeper.UI
         #endregion
 
         private void Start() {
-            this.Lock = false;
             this.IsDisplayed = displayOnStart;
 
             //bind events
