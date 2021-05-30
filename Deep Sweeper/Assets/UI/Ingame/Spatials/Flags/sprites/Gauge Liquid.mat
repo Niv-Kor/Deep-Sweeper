@@ -4,9 +4,10 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Bottle04_01
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Gauge Liquid
   m_Shader: {fileID: 4800000, guid: b67edfeb0dfde3444872b2e55d955461, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -31,25 +32,26 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BubbleDistortion: 0.038
-    - _BubbleIntensity: 0.11
+    - _BubbleDistortion: 0
+    - _BubbleIntensity: 0
     - _Float0: 0.05
     - _Float1: 0.05
     - _Float2: 0.13
-    - _GrowUp: 0.197
-    - _NoiseDistortion: 0
-    - _NoiseIntensity: 0
+    - _GrowUp: 0.777
+    - _NoiseDistortion: 0.471
+    - _NoiseIntensity: -0.35
     - __dirty: 1
     m_Colors:
-    - _Back: {r: 0.07, g: 0.6, b: 0.02, a: 7.96}
-    - _BackColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BottomColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Bubble: {r: 3, g: 3, b: -0.1, a: -0.44}
+    - _Back: {r: 0.03, g: 1, b: 0.015, a: 5}
+    - _BackColor: {r: 1, g: 0.42718446, b: 0, a: 1}
+    - _BottomColor: {r: 1, g: 0.40360594, b: 0, a: 1}
+    - _Bubble: {r: 3, g: 3, b: -0.5, a: -0.3}
     - _Color0: {r: 0.017409168, g: 0.032897353, b: 0.33823532, a: 0}
     - _Color1: {r: 0, g: 1, b: 0.006896496, a: 0}
     - _Front: {r: 0, g: -1, b: 0.015, a: 3}
-    - _FrontHeightSpeedAmplitudeWave: {r: 0, g: 2.77, b: 0.02, a: 4.59}
-    - _Noise: {r: 1, g: 3, b: -0.1, a: -0.1}
+    - _FrontHeightSpeedAmplitudeWave: {r: 0, g: -1, b: 0.01, a: 4}
+    - _Noise: {r: 3, g: 3, b: -0.1, a: -0.1}
     - _NoiseSpeedXSpeedYIntensity: {r: 0, g: 0, b: 0, a: 0}
-    - _TopColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TopColor: {r: 1, g: 0.5880499, b: 0.033018887, a: 1}
     - _Vector0: {r: 5, g: 5, b: 1, a: 1}
+  m_BuildTextureStacks: []

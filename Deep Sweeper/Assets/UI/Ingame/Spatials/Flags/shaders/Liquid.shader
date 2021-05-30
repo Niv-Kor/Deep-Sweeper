@@ -1,4 +1,4 @@
-Shader "taecg/UI/Bottle"
+Shader "FlagsGauge/Liquid"
 {
 	Properties
 	{
