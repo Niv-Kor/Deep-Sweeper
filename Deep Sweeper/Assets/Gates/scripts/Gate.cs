@@ -145,8 +145,14 @@ namespace DeepSweeper.Level.PhaseGate
                 CameraManager.Instance.Switch(cam);
             }
 
-            LoadingProcess process = new LoadingProcess();
+            void RotateEmblem() {
+                Vector3 towardsCamera = Vector3.Normalize(cam.transform.position - emblem.position);
+                emblem.rotation = Quaternion.LookRotation(towardsCamera, Vector3.up);
+            }
+
+            LoadingProcess process = new LoadingProcess(false);
             process.Enroll(ActivateDolly);
+            process.Enroll(RotateEmblem);
 
             void FullyTransparent() {
                 StartCoroutine(OnFullyTransparentScreen());
@@ -173,7 +179,7 @@ namespace DeepSweeper.Level.PhaseGate
                 CameraManager.Instance.Switch(CameraRole.Main);
             }
 
-            LoadingProcess process = new LoadingProcess();
+            LoadingProcess process = new LoadingProcess(false);
             process.Enroll(EnableCamera);
 
             void FullyTransparent() {

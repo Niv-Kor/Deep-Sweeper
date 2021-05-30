@@ -22,7 +22,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
 
         [Header("Placement")]
         [Tooltip("The position of first thumbnail in line from the left.")]
-        [SerializeField] private Vector3 firstPosition;
+        [SerializeField] private Vector2 firstPosition;
 
         [Tooltip("The space between each two neighbour thumbnails.")]
         [SerializeField] private float space;
@@ -42,6 +42,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         private List<Thumbnail> commanders;
         private Thumbnail selectedCommander;
         private int defaultCommenaderIndex;
+        private float thumbnailRadius;
         private bool initialized;
         private bool changeable;
         #endregion
@@ -55,6 +56,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         protected override void Awake() {
             base.Awake();
             this.commanders = new List<Thumbnail>();
+            this.thumbnailRadius = thumbnailPrefab.GetComponent<RectTransform>().sizeDelta.x;
         }
 
         protected override void Start() {
@@ -95,10 +97,10 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                 //instantiate thumbnail
                 Thumbnail instance = Instantiate(thumbnailPrefab);
                 int thumbnailIndex = i - noneChar;
-                Vector3 position = firstPosition + Vector3.right * unitWidth * thumbnailIndex;
+                Vector2 position = firstPosition + Vector2.right * unitWidth * thumbnailIndex;
                 instance.transform.SetParent(transform);
                 instance.transform.localPosition = position;
-                instance.transform.localScale = Vector3.one;
+                instance.transform.localScale = Vector2.one;
                 instance.SetCommander(config, defaultCooldown);
                 commanders.Add(instance);
             }

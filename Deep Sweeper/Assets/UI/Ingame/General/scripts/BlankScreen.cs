@@ -66,7 +66,7 @@ public class BlankScreen : Singleton<BlankScreen>
             FullyTransparentEvent -= fullyTransparentFunc;
         };
 
-        if (process == null) process = new LoadingProcess();
+        if (process == null) process = new LoadingProcess(false);
         FullyTransparentEvent += fullyTransparentFunc;
         StartCoroutine(LerpToBlack(oneWayTime, pauseTime, process));
     }
@@ -97,22 +97,16 @@ public class BlankScreen : Singleton<BlankScreen>
             StartCoroutine(LerpToTransparent(oneWayTime, LOADER_FINISH_DELAY_PAUSE));
         }
 
-        switch (process.StageCount) {
-            case 0:
-                ContinueLerp();
-                break;
-
-            case 1:
+        if (process.StageCount == 0) ContinueLerp();
+        else {
+            if (process.UsingLoader) {
+                loader.Load(process, pauseTime);
+                loader.LoaderFinishEvent += delegate { ContinueLerp(); };
+            }
+            else {
                 process.ExecuteStage();
                 ContinueLerp();
-                break;
-
-            default:
-                loader.Load(process, pauseTime);
-                loader.LoaderFinishEvent += delegate {
-                    ContinueLerp();
-                };
-                break;
+            }
         }
     }
 

@@ -15,14 +15,15 @@ public class LoadingProcess
     #endregion
 
     #region Properties
-    public int StageCount { get { return stages.Count; } } 
-    public string StageTitle {
-        get => (stages.Count > 0) ? stages.Peek().Title : null;
-    }
+    public int StageCount => stages.Count;
+    public bool UsingLoader { get; private set; }
+    public string StageTitle => (stages.Count > 0) ? stages.Peek().Title : null;
     #endregion
 
-    public LoadingProcess() {
+    /// <param name="enableLoader">True to enable a loader bar while completing the process</param>
+    public LoadingProcess(bool enableLoader) {
         this.stages = new Queue<LoadingStage>();
+        this.UsingLoader = enableLoader;
     }
 
     /// <summary>

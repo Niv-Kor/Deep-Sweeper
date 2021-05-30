@@ -33,5 +33,14 @@ namespace DeepSweeper.Player
             this.cam = CameraManager.Instance.GetCamera(CameraRole.Main).transform;
             this.rig = CameraManager.Instance.GetRig(CameraRole.Main).transform;
         }
+
+        /// <summary>
+        /// Set an object's rotation towards the player.
+        /// </summary>
+        /// <param name="transform">The object of which to set the rotation</param>
+        public void LootAtPlayer(Transform transform) {
+            Vector3 towardsPlayer = Vector3.Normalize(Position - transform.position);
+            transform.rotation = Quaternion.LookRotation(towardsPlayer, Vector3.up);
+        }
     }
 }
