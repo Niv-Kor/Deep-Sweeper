@@ -61,7 +61,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// Bind the trigger events based on the gun's type and mechanism.
         /// </summary>
         private void BindTriggerEventes() {
-            SightRay sight = DiegeticsManager.Instance.Get(typeof(SightRay)) as SightRay;
+            SightRayDiegetic sight = DiegeticsManager.Instance.Get(typeof(SightRayDiegetic)) as SightRayDiegetic;
 
             switch (Mechanism) {
                 case GunMechanism.SemiAutomatic:

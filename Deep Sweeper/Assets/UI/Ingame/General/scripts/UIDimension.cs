@@ -29,6 +29,9 @@ namespace DeepSweeper.UI.Ingame
 
         protected virtual void Awake() {
             this.canvas = GetComponent<CanvasGroup>();
+        }
+
+        protected virtual void Start() {
             Activate(EnableOnAwake, 0);
         }
 

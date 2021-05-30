@@ -18,7 +18,7 @@ namespace DeepSweeper.Characters
         #endregion
 
         protected virtual void Start() {
-            CommanderPanel commander = DiegeticsManager.Instance.Get(typeof(CommanderPanel)) as CommanderPanel;
+            CommanderDiegetic commander = DiegeticsManager.Instance.Get(typeof(CommanderDiegetic)) as CommanderDiegetic;
             var firstCommander = commander.SubscribeToCommanderChange(OnChangeCommander);
             OnChangeCommander(CharacterPersona.None, firstCommander);
         }

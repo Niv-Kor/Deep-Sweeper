@@ -8,7 +8,7 @@ namespace DeepSweeper.Flow
         #region Events
         public event UnityAction<bool> FlagTakenEvent;
         public event UnityAction<bool> FlagReturnedEvent;
-        public event UnityAction FlagsAmountUpdateEvent;
+        public event UnityAction<int> FlagsAmountUpdateEvent;
         #endregion
 
         #region Properties
@@ -35,7 +35,7 @@ namespace DeepSweeper.Flow
         /// </summary>
         public void ResetGauge() {
             AvailableFlags = MaxFlags;
-            FlagsAmountUpdateEvent?.Invoke();
+            FlagsAmountUpdateEvent?.Invoke(MaxFlags);
         }
 
         /// <summary>

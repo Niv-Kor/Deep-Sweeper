@@ -62,10 +62,10 @@ namespace DeepSweeper.Level.Mine
             //calculate the fatality chance every time a change occurs to one of the neighbours
             foreach (MineGrid neighbour in Grid.Section) {
                 if (neighbour == null) continue;
-                neighbour.DetonationSystem.DetonationEvent += CalcFatalityChance;
-                flagsMngr.FlagsAmountUpdateEvent += CalcFatalityChance;
-                flagsMngr.FlagReturnedEvent += delegate (bool _) { CalcFatalityChance(); };
-                flagsMngr.FlagTakenEvent += delegate (bool _) { CalcFatalityChance(); };
+                neighbour.DetonationSystem.DetonationEvent += delegate { CalcFatalityChance(); };
+                flagsMngr.FlagsAmountUpdateEvent += delegate { CalcFatalityChance(); };
+                flagsMngr.FlagReturnedEvent += delegate { CalcFatalityChance(); };
+                flagsMngr.FlagTakenEvent += delegate { CalcFatalityChance(); };
             }
 
             CalcFatalityChance();
