@@ -57,7 +57,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
                     if (rotationSpeed == 0) rect.rotation = rotQuat;
                     else {
                         //check if final rotation has been changed
-                        bool changed = !VectorSensitivity.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
+                        bool changed = !VectorUtils.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
                         if (changed) {
                             startingRot = transform.rotation;
                             targetRot = rot;

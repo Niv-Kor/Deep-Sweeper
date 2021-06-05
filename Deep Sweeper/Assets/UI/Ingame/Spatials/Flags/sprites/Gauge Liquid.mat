@@ -39,7 +39,7 @@ Material:
     - _Float2: 0.13
     - _GrowUp: 0.777
     - _NoiseDistortion: 0.471
-    - _NoiseIntensity: -0.35
+    - _NoiseIntensity: -3
     - __dirty: 1
     m_Colors:
     - _Back: {r: 0.03, g: 1, b: 0.015, a: 5}
