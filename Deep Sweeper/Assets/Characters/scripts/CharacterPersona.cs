@@ -6,6 +6,7 @@ namespace DeepSweeper.Characters
         All,
         Alana,
         Simon,
-        Adam
+        Adam,
+        Fox
     }
 }
