@@ -9,6 +9,10 @@ namespace DeepSweeper.CameraSet
         private CameraController controller;
         #endregion
 
+        #region Properties
+        public bool Locked { get; private set; }
+        #endregion
+
         private void Awake() {
             this.controller = GetComponent<CameraController>();
         }
@@ -16,16 +20,27 @@ namespace DeepSweeper.CameraSet
         /// <summary>
         /// Pause the rig's cursor movement.
         /// </summary>
-        public void Pause() {
+        /// <param name="lockState">
+        /// True to lock the rig's pause state
+        /// until it's explicitly released
+        /// </param>
+        public void Pause(bool lockState = false) {
+            if (Locked && !lockState) return;
+
             controller.enabled = false;
+            Locked = lockState;
         }
 
         /// <summary>
         /// Resume the rig's cursor movement.
         /// </summary>
-        public void Resume() {
+        /// <param name="releaseState">True to release the rig's state</param>
+        public void Resume(bool releaseState = false) {
+            if (Locked && !releaseState) return;
+
             controller.enabled = true;
             controller.ActiveMotor.Initialize();
+            Locked = !releaseState;
         }
     }
 }

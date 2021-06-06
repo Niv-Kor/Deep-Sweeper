@@ -27,10 +27,14 @@ namespace DeepSweeper.Player.Controls
         public event UnityAction CursorDisplayHide;
         public event UnityAction HorizontalMovementStopEvent;
         public event UnityAction VerticalMovementStopEvent;
+        public event UnityAction CommanderSelectionStartEvent;
+        public event UnityAction CommanderSelectionEndEvent;
+
+        /// <param type=typeof(Vector2)>Dash direcion</param>
         public event UnityAction<Vector2> DashEvent;
 
-        /// <param type=typeof(int)>Commander's index</param>
-        public event UnityAction<int> CommanderSelectionEvent;
+        /// <param type=typeof(Vector2)>Mouse delta</param>
+        public event UnityAction<Vector2> MouseMoveEvent;
 
         /// <param type=typeof(float)>
         /// A positive (0:1] value when ascending
@@ -63,13 +67,9 @@ namespace DeepSweeper.Player.Controls
             BindEvents();
         }
 
-        private void OnEnable() {
-            controls.Enable();
-        }
+        private void OnEnable() { controls.Enable(); }
 
-        private void OnDisable() {
-            controls.Disable();
-        }
+        private void OnDisable() { controls.Disable(); }
 
         /// <summary>
         /// Bind keys' press, hold or stop events.
@@ -98,11 +98,11 @@ namespace DeepSweeper.Player.Controls
             //cursor operations
             controls.UI.CursorDisplay.started += delegate { CursorDisplayEvent?.Invoke(); };
             controls.UI.CursorHide.started += delegate { CursorDisplayHide?.Invoke(); };
+            controls.Player.Look.performed += delegate { MouseMoveEvent?.Invoke(MouseDelta); };
 
             //commander system
-            controls.UI.CommanderSelection1.started += delegate { CommanderSelectionEvent?.Invoke(0); };
-            controls.UI.CommanderSelection2.started += delegate { CommanderSelectionEvent?.Invoke(1); };
-            controls.UI.CommanderSelection3.started += delegate { CommanderSelectionEvent?.Invoke(2); };
+            controls.UI.CommanderSelection.started += delegate { CommanderSelectionStartEvent?.Invoke(); };
+            controls.UI.CommanderSelection.canceled += delegate { CommanderSelectionEndEvent?.Invoke(); };
         }
 
         /// <summary>

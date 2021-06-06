@@ -61,11 +61,13 @@ namespace DeepSweeper.UI.Ingame.Spatials.Flags
         private void OnReturnFlag(bool success) { OnFlagChange(success, 1); }
 
         /// <inheritdoc/>
-        protected override void Activate(bool flag, float time = -1, UnityAction callback = null) {
-            base.Activate(flag, time, callback);
+        protected override bool Activate(bool flag, float time = -1, UnityAction callback = null) {
+            bool success = base.Activate(flag, time, callback);
+            if (!success) return false;
 
             float barActivationTime = (time > 0) ? time : defaultFadeTime;
             gauge.Show(flag, barActivationTime);
+            return true;
         }
 
         /// <inheritdoc/>

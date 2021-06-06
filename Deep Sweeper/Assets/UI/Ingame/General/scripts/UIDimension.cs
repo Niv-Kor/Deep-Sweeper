@@ -36,19 +36,19 @@ namespace DeepSweeper.UI.Ingame
         }
 
         /// <summary>
-        /// Fade the UI component in or out.
+        /// Switch the UI component on or off.
         /// </summary>
-        /// <param name="fadeIn">True to fade the component in, or false to fade it out</param>
+        /// <param name="switchIn">True to switch the component on, or false to switch it off</param>
         /// <param name="time">
-        /// The time it will take the fading animation to complete.
+        /// The time it will take the animation to complete.
         /// Enter -1 to use the default configured time.
         /// </param>
-        /// <param name="callback">A callback function to activate after fading in complete</param>
-        protected virtual IEnumerator Fade(bool fadeIn, float time, UnityAction callback) {
+        /// <param name="callback">A callback function to activate after the animation is complete</param>
+        protected virtual IEnumerator Switch(bool switchIn, float time, UnityAction callback) {
             time = Mathf.Max(0, (time == -1) ? defaultFadeTime : time);
 
             float fromVal = canvas.alpha;
-            float toVal = fadeIn ? 1 : 0;
+            float toVal = switchIn ? 1 : 0;
             float timer = 0;
 
             while (timer <= time) {
@@ -69,11 +69,13 @@ namespace DeepSweeper.UI.Ingame
         /// Enter -1 to use the default configured time.
         /// </param>
         /// <param name="callback">A callback function to activate after animation in complete</param>
-        protected virtual void Activate(bool flag, float time = -1, UnityAction callback = null) {
-            if (Enabled == flag) return;
+        /// <returns>True if the activation is successful.</returns>
+        protected virtual bool Activate(bool flag, float time = -1, UnityAction callback = null) {
+            if (Enabled == flag) return false;
 
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(Fade(flag, time, callback));
+            fadeCoroutine = StartCoroutine(Switch(flag, time, callback));
+            return true;
         }
 
         /// <summary>

@@ -71,7 +71,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
             this.initialized = true;
 
             //bind events
-            PlayerController.Instance.CommanderSelectionEvent += OnCommanderSelect;
+            //PlayerController.Instance.CommanderSelectionEvent += OnCommanderSelect;
         }
 
         private void OnValidate() {

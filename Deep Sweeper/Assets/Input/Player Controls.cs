@@ -204,25 +204,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Commander Selection 1"",
+                    ""name"": ""Commander Selection"",
                     ""type"": ""Button"",
-                    ""id"": ""9076a193-3ca6-42fa-ba63-c846fe61342e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Commander Selection 2"",
-                    ""type"": ""Button"",
-                    ""id"": ""b3a605f6-c559-4920-ab77-5b684431ed15"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Commander Selection 3"",
-                    ""type"": ""Button"",
-                    ""id"": ""521cf9f5-9dcf-4862-9b90-c644aa67f8cc"",
+                    ""id"": ""8358c66e-c45e-4339-8680-60dc0f8b59b0"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -253,34 +237,23 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""668f6ab6-bd4c-4a94-8231-4f508cd0ca93"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""id"": ""22ac6c16-a079-49d2-a95e-f03f8be974ca"",
+                    ""path"": ""<Mouse>/middleButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Commander Selection 1"",
+                    ""action"": ""Commander Selection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bd192c69-7284-4c52-a428-cb0cbf228465"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""id"": ""ee36bfed-af4d-40c5-b4be-6f19140a3af0"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Commander Selection 2"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""488c534a-ec07-4942-b74b-ac64b8e931e5"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Commander Selection 3"",
+                    ""action"": ""Commander Selection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -300,9 +273,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_CursorDisplay = m_UI.FindAction("Cursor Display", throwIfNotFound: true);
         m_UI_CursorHide = m_UI.FindAction("Cursor Hide", throwIfNotFound: true);
-        m_UI_CommanderSelection1 = m_UI.FindAction("Commander Selection 1", throwIfNotFound: true);
-        m_UI_CommanderSelection2 = m_UI.FindAction("Commander Selection 2", throwIfNotFound: true);
-        m_UI_CommanderSelection3 = m_UI.FindAction("Commander Selection 3", throwIfNotFound: true);
+        m_UI_CommanderSelection = m_UI.FindAction("Commander Selection", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -419,18 +390,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_CursorDisplay;
     private readonly InputAction m_UI_CursorHide;
-    private readonly InputAction m_UI_CommanderSelection1;
-    private readonly InputAction m_UI_CommanderSelection2;
-    private readonly InputAction m_UI_CommanderSelection3;
+    private readonly InputAction m_UI_CommanderSelection;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @CursorDisplay => m_Wrapper.m_UI_CursorDisplay;
         public InputAction @CursorHide => m_Wrapper.m_UI_CursorHide;
-        public InputAction @CommanderSelection1 => m_Wrapper.m_UI_CommanderSelection1;
-        public InputAction @CommanderSelection2 => m_Wrapper.m_UI_CommanderSelection2;
-        public InputAction @CommanderSelection3 => m_Wrapper.m_UI_CommanderSelection3;
+        public InputAction @CommanderSelection => m_Wrapper.m_UI_CommanderSelection;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -446,15 +413,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @CursorHide.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorHide;
                 @CursorHide.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorHide;
                 @CursorHide.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorHide;
-                @CommanderSelection1.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection1;
-                @CommanderSelection1.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection1;
-                @CommanderSelection1.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection1;
-                @CommanderSelection2.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection2;
-                @CommanderSelection2.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection2;
-                @CommanderSelection2.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection2;
-                @CommanderSelection3.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection3;
-                @CommanderSelection3.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection3;
-                @CommanderSelection3.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection3;
+                @CommanderSelection.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection;
+                @CommanderSelection.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection;
+                @CommanderSelection.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCommanderSelection;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -465,15 +426,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @CursorHide.started += instance.OnCursorHide;
                 @CursorHide.performed += instance.OnCursorHide;
                 @CursorHide.canceled += instance.OnCursorHide;
-                @CommanderSelection1.started += instance.OnCommanderSelection1;
-                @CommanderSelection1.performed += instance.OnCommanderSelection1;
-                @CommanderSelection1.canceled += instance.OnCommanderSelection1;
-                @CommanderSelection2.started += instance.OnCommanderSelection2;
-                @CommanderSelection2.performed += instance.OnCommanderSelection2;
-                @CommanderSelection2.canceled += instance.OnCommanderSelection2;
-                @CommanderSelection3.started += instance.OnCommanderSelection3;
-                @CommanderSelection3.performed += instance.OnCommanderSelection3;
-                @CommanderSelection3.canceled += instance.OnCommanderSelection3;
+                @CommanderSelection.started += instance.OnCommanderSelection;
+                @CommanderSelection.performed += instance.OnCommanderSelection;
+                @CommanderSelection.canceled += instance.OnCommanderSelection;
             }
         }
     }
@@ -490,8 +445,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnCursorDisplay(InputAction.CallbackContext context);
         void OnCursorHide(InputAction.CallbackContext context);
-        void OnCommanderSelection1(InputAction.CallbackContext context);
-        void OnCommanderSelection2(InputAction.CallbackContext context);
-        void OnCommanderSelection3(InputAction.CallbackContext context);
+        void OnCommanderSelection(InputAction.CallbackContext context);
     }
 }
