@@ -12,7 +12,9 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         #region Exposed Editor Parameters
         [SerializeField] private RawImage spriteCmp;
         [SerializeField] private SpriteOrientation preferredOrientation;
-        [SerializeField] private List<SpriteConfiguration> spritesConfig;
+        [SerializeField] private List<SpriteConfiguration> spritesConfig; ///REMOVE
+        [SerializeField] private List<SegmentInstructions> instructions;
+        [SerializeField] private List<Image> sectoredImages;
         #endregion
 
         #region Constants
@@ -27,6 +29,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         #endregion
 
         #region Properties
+        public RadialToolkit.Segment Segment { get; private set;}
         public CharacterPersona Character {
             get => m_character;
             set {
@@ -44,10 +47,14 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         public bool Selected {
             get => m_selected;
             set {
-                if (m_selected != value) {
-                    m_selected = value;
-                    puppeteer.Manipulate(HOVERED_PARAM, value);
-                    if (value) puppeteer.Manipulate(ARROW_PARAM);
+                if (m_selected == value) return;
+
+                m_selected = value;
+                puppeteer.Manipulate(HOVERED_PARAM, value);
+
+                if (value) {
+                    print(gameObject + " arrow");
+                    puppeteer.Manipulate(ARROW_PARAM);
                 }
             }
         }
@@ -71,6 +78,35 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
 
             if (!IsOrientationCompatible(config.Orientation))
                 spriteCmp.transform.Rotate(0, 180, 0);
+        }
+
+        private bool TryGetInstructions(RadialToolkit.Segment segment, out SegmentInstructions instruction) {
+            if (instructions.FindIndex(x => x.Segment == segment) != -1) {
+                instruction = instructions.Find(x => x.Segment == segment);
+                return true;
+            }
+            else {
+                instruction = default;
+                return false;
+            }
+        }
+
+        public void Build(RadialToolkit.Segment segment) {
+            bool available = TryGetInstructions(segment, out SegmentInstructions instructions);
+            if (!available) return;
+
+            RadialToolkit.RadialDivision division = RadialToolkit.Originate(segment);
+            int divisionValue = division.AsAmount();
+            Segment = segment;
+
+            //customize each image confined by the sector
+            foreach (Image image in sectoredImages) {
+                image.fillOrigin = (int) instructions.FillOrigin;
+                image.fillAmount = 1f / divisionValue;
+                image.fillClockwise = instructions.Clockwise;
+                Vector3 eulerRot = Vector3.forward * instructions.Roll;
+                image.rectTransform.localRotation = Quaternion.Euler(eulerRot);
+            }
         }
     }
 }

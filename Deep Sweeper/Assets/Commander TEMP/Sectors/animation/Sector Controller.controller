@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Selected
-  m_Speed: 1
+  m_Speed: 0.02
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6818467074425331102}
@@ -193,9 +193,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -6069857957159654168}
     m_Position: {x: 370, y: 100, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -2880754612364260536}
-    m_Position: {x: 405, y: 165, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -275,9 +272,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25000006
-  m_TransitionOffset: 0.0061061443
-  m_ExitTime: 0.7561061
+  m_TransitionDuration: 0.3394246
+  m_TransitionOffset: 0.006106142
+  m_ExitTime: 0.756106
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

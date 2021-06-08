@@ -1,6 +1,5 @@
 using DeepSweeper.Characters;
 using DeepSweeper.Flow;
-using DeepSweeper.Player.Controls;
 using DeepSweeper.UI.Ingame;
 using System.Collections;
 using System.Collections.Generic;

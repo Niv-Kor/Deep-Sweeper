@@ -19,8 +19,9 @@ namespace DeepSweeper.UI.Ingame
 
         #region Class Members
         protected CanvasGroup canvas;
-        private Coroutine fadeCoroutine;
         protected bool m_enabled;
+        private Coroutine fadeCoroutine;
+        private bool initialized;
         #endregion
 
         #region Properties
@@ -32,7 +33,7 @@ namespace DeepSweeper.UI.Ingame
         }
 
         protected virtual void Start() {
-            Activate(EnableOnAwake, 0);
+            this.initialized = Activate(EnableOnAwake, 0);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace DeepSweeper.UI.Ingame
         /// <param name="callback">A callback function to activate after animation in complete</param>
         /// <returns>True if the activation is successful.</returns>
         protected virtual bool Activate(bool flag, float time = -1, UnityAction callback = null) {
-            if (Enabled == flag) return false;
+            if (Enabled == flag && initialized) return false;
 
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
             fadeCoroutine = StartCoroutine(Switch(flag, time, callback));

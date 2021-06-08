@@ -12,29 +12,21 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
     public class CommanderSpatial : Spatial
     {
         #region Expsoed Editor Parameters
-        [SerializeField] private List<SpriteConfiguration> commanders;
-
-        [SerializeField] private float sensitivity = 1;
-
         [SerializeField] private List<CharacterPersona> Characters;
-
-        [SerializeField] private SectorManager sector0_120;
-
-        [SerializeField] private SectorManager sector120_240;
-
-        [SerializeField] private SectorManager sector240_360;
         #endregion
 
         #region Constants
         private static readonly int DEFAULT_COMMANDER_INDEX = 0;
+        private static readonly float CHANGE_COOLDOWN = .1f;
         #endregion
 
         #region Class Members
         private SectorialDivisor sectorialDivisor;
-        private SectorManager currentSector;
         private SectorManager lastSelected;
         private PlayerController controls;
+        private Coroutine cooldownCoroutine;
         private Coroutine fadeCoroutine;
+        private bool changeable;
         #endregion
 
         #region Events
@@ -47,6 +39,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
             base.Awake();
             this.controls = PlayerController.Instance;
             this.sectorialDivisor = GetComponentInChildren<SectorialDivisor>();
+            this.changeable = true;
         }
 
         protected override void Start() {
@@ -86,33 +79,30 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         /// <param name="delta">The movement vector of the mouse during the last frame</param>
         private void OnMouseMovement(Vector2 delta) {
-            float x = delta.x;
-            float y = delta.y;
+            print("by default " + delta);
 
-            if (x > sensitivity && y >= 0) SelectSector(sector0_120);
-            else if (y < -sensitivity) SelectSector(sector120_240);
-            else if (x < -sensitivity && y >= 0) SelectSector(sector240_360);
-        }
+            if (delta.x > 50) {
+                int t = 4;
+            }
 
-        /// <summary>
-        /// Select a character section.
-        /// </summary>
-        /// <param name="sector">The sector to select</param>
-        private void SelectSector(SectorManager sector) {
-            if (currentSector != null) currentSector.Selected = false;
-            sector.Selected = true;
-            currentSector = sector;
+            if (changeable && sectorialDivisor.NavigateToSector(delta)) {
+                print("in");
+                changeable = false;
+                if (cooldownCoroutine != null) StopCoroutine(cooldownCoroutine);
+                cooldownCoroutine = StartCoroutine(RunChangeCooldown());
+            }
         }
 
         /// <summary>
         /// Select the character with the highlighter sector.
         /// </summary>
         private void SelectCharacter() {
-            if (currentSector is null) return;
+            SectorManager current = sectorialDivisor.CurrentSector;
+            if (current is null) return;
 
             var prevChar = (lastSelected is null) ? CharacterPersona.None : lastSelected.Character;
-            var nextChar = currentSector.Character;
-            lastSelected = currentSector;
+            var nextChar = current.Character;
+            lastSelected = current;
 
             CommanderChangedEvent?.Invoke(prevChar, nextChar);
         }
@@ -124,7 +114,12 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <returns>The default first commander on level startup.</returns>
         public CharacterPersona SubscribeToCommanderChange(UnityAction<CharacterPersona, CharacterPersona> listener) {
             CommanderChangedEvent += listener;
-            return commanders[DEFAULT_COMMANDER_INDEX].Character;
+            return Characters[DEFAULT_COMMANDER_INDEX];
+        }
+
+        private IEnumerator RunChangeCooldown() {
+            yield return new WaitForSeconds(CHANGE_COOLDOWN);
+            changeable = true;
         }
 
         /// <inheritdoc/>
