@@ -8,7 +8,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
     public struct ThumbnailModel
     {
         [Tooltip("The character of this commander.")]
-        public CharacterPersona Character;
+        public Persona Character;
 
         [Tooltip("The sprite of the commander.")]
         public Texture Sprite;

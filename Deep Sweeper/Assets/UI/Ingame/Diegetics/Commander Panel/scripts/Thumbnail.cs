@@ -21,7 +21,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         #endregion
 
         #region Properties
-        public CharacterPersona Character { get; private set; }
+        public Persona Character { get; private set; }
         public bool IsSelected { get; private set; }
         public int DefaultCooldown { get; private set; }
         public bool OnCooldown => cooldownTimer.CooldownActive;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public static class VectorUtils
 {
@@ -69,5 +70,63 @@ public static class VectorUtils
         float roll = Random.Range(zLimFinal.x, zLimFinal.y);
         Vector3 euler = new Vector3(pitch, yaw, roll);
         return Quaternion.Euler(euler);
+    }
+
+    public static Vector3Int StrongNormalize(this Vector3 vector) {
+        int x = (vector.x > 0) ? 1 : (vector.x < 0) ? -1 : 0;
+        int y = (vector.y > 0) ? 1 : (vector.y < 0) ? -1 : 0;
+        int z = (vector.z > 0) ? 1 : (vector.z < 0) ? -1 : 0;
+        return new Vector3Int(x, y, z);
+    }
+
+    public static Vector2Int StrongNormalize(this Vector2 vector) {
+        return (Vector2Int) ((Vector3) vector).StrongNormalize();
+    }
+
+    public static bool SameSign(this Vector3 v1, Vector3 v2) {
+        bool x = (v1.x == 0 && v2.x == 0) || (v1.x != 0) && Mathf.Sign(v1.x) == Mathf.Sign(v2.x);
+        bool y = (v1.y == 0 && v2.y == 0) || (v1.y != 0) && Mathf.Sign(v1.y) == Mathf.Sign(v2.y);
+        bool z = (v1.z == 0 && v2.z == 0) || (v1.z != 0) && Mathf.Sign(v1.z) == Mathf.Sign(v2.z);
+        return x & y & z;
+    }
+
+    public static bool SameSign(this Vector2 v1, Vector2 v2) {
+        return ((Vector3) v1).SameSign(v2);
+    }
+
+    public static bool Greater(this Vector3 v1, Vector3 v2) {
+        return v1.Greater(v2, out bool[] _);
+    }
+
+    public static bool Greater(this Vector3 v1, Vector3 v2, out bool[] detailedTest) {
+        detailedTest = new bool[3] {
+            v1.x / v2.x >= 1,
+            v1.y / v2.y >= 1,
+            v1.z / v2.z >= 1
+        };
+
+        bool x = v2.x == 0 || detailedTest[0];
+        bool y = v2.y == 0 || detailedTest[1];
+        bool z = v2.z == 0 || detailedTest[2];
+        return x & y & z;
+    }
+
+    public static bool Greater(this Vector2 v1, Vector2 v2) {
+        return ((Vector3) v1).Greater(v2);
+    }
+
+    public static bool Greater(this Vector2 v1, Vector2 v2, out bool[] detailedTest) {
+        return ((Vector3)v1).Greater(v2, out detailedTest);
+    }
+
+    public static Vector3 Abs(this Vector3 vector) {
+        float x = Mathf.Abs(vector.x);
+        float y = Mathf.Abs(vector.y);
+        float z = Mathf.Abs(vector.z);
+        return new Vector3(x, y, z);
+    }
+
+    public static Vector2 Abs(this Vector2 vector) {
+        return ((Vector3) vector).Abs();
     }
 }

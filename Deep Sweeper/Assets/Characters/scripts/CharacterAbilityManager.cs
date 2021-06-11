@@ -21,7 +21,7 @@ namespace DeepSweeper.Characters
         protected virtual void Start() {
             var commander = SpatialsManager.Instance.Get(typeof(CommanderSpatial)) as CommanderSpatial;
             var firstCommander = commander.SubscribeToCommanderChange(OnChangeCommander);
-            OnChangeCommander(CharacterPersona.None, firstCommander);
+            OnChangeCommander(Persona.None, firstCommander);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace DeepSweeper.Characters
         /// </summary>
         /// <param name="prev">Old commander character</param>
         /// <param name="next">New commander character</param>
-        protected virtual void OnChangeCommander(CharacterPersona prev, CharacterPersona next) {
+        protected virtual void OnChangeCommander(Persona prev, Persona next) {
             if (next == prev) return;
 
             bool newAvailable = GetAbilityConfig(next, out CharacterAbilityConfig<A> newConfig);
@@ -54,7 +54,7 @@ namespace DeepSweeper.Characters
         /// True if the ability configuration is available.
         /// If false, the ability returned is the default struct value.
         /// </returns>
-        protected bool GetAbilityConfig(CharacterPersona character, out CharacterAbilityConfig<A> config) {
+        protected bool GetAbilityConfig(Persona character, out CharacterAbilityConfig<A> config) {
             if (abilities is null) {
                 config = default;
                 return false;

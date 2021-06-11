@@ -1,6 +1,6 @@
 namespace DeepSweeper.Characters
 {
-    public enum CharacterPersona
+    public enum Persona
     {
         None,
         All,

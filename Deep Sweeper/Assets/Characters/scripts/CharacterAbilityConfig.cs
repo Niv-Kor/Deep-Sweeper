@@ -7,7 +7,7 @@ namespace DeepSweeper.Characters
     public struct CharacterAbilityConfig<T>
     {
         [Tooltip("The character that possesses the ability.")]
-        [SerializeField] public CharacterPersona Character;
+        [SerializeField] public Persona Character;
 
         [Tooltip("Special character's ability.")]
         [SerializeField] public T Ability;

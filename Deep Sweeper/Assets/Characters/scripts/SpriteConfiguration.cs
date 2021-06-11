@@ -7,7 +7,7 @@ namespace DeepSweeper.Characters
     public struct SpriteConfiguration
     {
         [Tooltip("The character to which this sprite relates.")]
-        [SerializeField] public CharacterPersona Character;
+        [SerializeField] public Persona Character;
 
         [Tooltip("The character's sprite.")]
         [SerializeField] public Texture Sprite;

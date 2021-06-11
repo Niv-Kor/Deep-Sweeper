@@ -49,7 +49,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         #region Events
         /// <param type=typeof(CharacterPersona)>The changed character</param>
         /// <param type=typeof(CharacterPersona)>The new character</param>
-        public event UnityAction<CharacterPersona, CharacterPersona> CommanderChangedEvent;
+        public event UnityAction<Persona, Persona> CommanderChangedEvent;
         #endregion
 
         protected override void Awake() {
@@ -88,7 +88,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                 var config = commandersConfig[i];
 
                 //no character selected
-                if (config.Character == CharacterPersona.None) {
+                if (config.Character == Persona.None) {
                     noneChar++;
                     continue;
                 }
@@ -132,7 +132,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
                 return;
             }
 
-            CharacterPersona prevCommander = initialized ? selectedCommander.Character : CharacterPersona.None;
+            Persona prevCommander = initialized ? selectedCommander.Character : Persona.None;
             bool duringPhase = LevelFlow.Instance.DuringPhase;
 
             foreach (var commander in commanders) {
@@ -156,7 +156,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         /// <param name="character">The commander's character</param>
         /// <param name="index">The index of the commander if there are multiple results (from left)</param>
         /// <returns>The specified commander.</returns>
-        public Thumbnail GetCommander(CharacterPersona character, int index = 0) {
+        public Thumbnail GetCommander(Persona character, int index = 0) {
             List<Thumbnail> list = (from commander in commanders
                                              where commander.Character == character
                                              select commander).ToList();
@@ -169,7 +169,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         /// </summary>
         /// <param name="listener">The listener to activate when a commander changes</param>
         /// <returns>The default first commander on level startup.</returns>
-        public CharacterPersona SubscribeToCommanderChange(UnityAction<CharacterPersona, CharacterPersona> listener) {
+        public Persona SubscribeToCommanderChange(UnityAction<Persona, Persona> listener) {
             CommanderChangedEvent += listener;
             return commandersConfig[defaultCommenaderIndex].Character;
         }

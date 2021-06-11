@@ -211,7 +211,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sight
                 HitDistance = Mathf.Infinity;
                 DeselectMines();
                 DeselectIndicators();
-                CrosshairManager.Instance.ActiveCrosshair.Release();
+                CrosshairManager.Instance.ActiveCrosshair?.Release();
             }
         }
 

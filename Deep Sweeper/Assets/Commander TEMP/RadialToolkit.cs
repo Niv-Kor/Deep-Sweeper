@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace DeepSweeper.UI.Ingame.Spatials.Commander
 {
@@ -15,6 +16,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
 
         public enum Segment
         {
+            Sector0_0,
             Sector0_180,
             Sector180_360,
             Sector0_120,
@@ -53,7 +55,6 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
                 case Segment.Sector180_270:
                 case Segment.Sector270_360: return RadialDivision.Quadruple;
                 default: return RadialDivision.None;
-
             }
         }
 
@@ -81,6 +82,21 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
             }
 
             return list;
+        }
+
+        public static Vector2 AsCoordinates(this Segment segment) {
+            switch (segment) {
+                case Segment.Sector0_180: return Vector2.right;
+                case Segment.Sector180_360: return Vector2.left;
+                case Segment.Sector0_120: return Vector2.right * .9f + Vector2.up * .5f;
+                case Segment.Sector120_240: return Vector2.down;
+                case Segment.Sector240_360: return Vector2.left * .9f + Vector2.up * .5f;
+                case Segment.Sector0_90: return Vector2.right + Vector2.up;
+                case Segment.Sector90_180: return Vector2.right + Vector2.down;
+                case Segment.Sector180_270: return Vector2.left + Vector2.down;
+                case Segment.Sector270_360: return Vector2.left + Vector2.up;
+                default: return Vector2.zero;
+            }
         }
     }
 }

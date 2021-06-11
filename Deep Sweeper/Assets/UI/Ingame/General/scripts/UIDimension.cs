@@ -24,6 +24,11 @@ namespace DeepSweeper.UI.Ingame
         private bool initialized;
         #endregion
 
+        #region Events
+        /// <param type=typeof(bool)>True if this component gets activated or false if it gets deactivated</param>
+        public event UnityAction<bool> ActivatedEvent;
+        #endregion
+
         #region Properties
         public bool Enabled => canvas.alpha > 0;
         #endregion
@@ -39,17 +44,17 @@ namespace DeepSweeper.UI.Ingame
         /// <summary>
         /// Switch the UI component on or off.
         /// </summary>
-        /// <param name="switchIn">True to switch the component on, or false to switch it off</param>
+        /// <param name="switchOn">True to switch the component on, or false to switch it off</param>
         /// <param name="time">
         /// The time it will take the animation to complete.
         /// Enter -1 to use the default configured time.
         /// </param>
         /// <param name="callback">A callback function to activate after the animation is complete</param>
-        protected virtual IEnumerator Switch(bool switchIn, float time, UnityAction callback) {
+        protected virtual IEnumerator Switch(bool switchOn, float time, UnityAction callback) {
             time = Mathf.Max(0, (time == -1) ? defaultFadeTime : time);
 
             float fromVal = canvas.alpha;
-            float toVal = switchIn ? 1 : 0;
+            float toVal = switchOn ? 1 : 0;
             float timer = 0;
 
             while (timer <= time) {
@@ -58,6 +63,7 @@ namespace DeepSweeper.UI.Ingame
                 yield return null;
             }
 
+            ActivatedEvent?.Invoke(switchOn);
             callback?.Invoke();
         }
 

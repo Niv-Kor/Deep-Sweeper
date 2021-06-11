@@ -1,12 +1,10 @@
 using DeepSweeper.Characters;
-using GamedevUtil;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace DeepSweeper.UI.Ingame.Spatials.Commander
 {
-    [RequireComponent(typeof(Animator))]
     public class SectorManager : MonoBehaviour
     {
         #region Exposed Editor Parameters
@@ -17,52 +15,30 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         [SerializeField] private List<Image> sectoredImages;
         #endregion
 
-        #region Constants
-        private static readonly string HOVERED_PARAM = "hovered";
-        private static readonly string ARROW_PARAM = "arrow";
-        #endregion
-
         #region Class Members
-        private Puppeteer puppeteer;
-        private CharacterPersona m_character;
+        private SectorHighlighter highlighter;
+        private SelectionArrow arrow;
         private bool m_selected;
         #endregion
 
         #region Properties
         public RadialToolkit.Segment Segment { get; private set;}
-        public CharacterPersona Character {
-            get => m_character;
-            set {
-                if (m_character == value) return;
-
-                SpriteConfiguration config = spritesConfig.Find(x => x.Character == value);
-
-                if (value == config.Character) {
-                    m_character = value;
-                    SetCharacter(config);
-                }
-            }
-        }
-
+        public Persona Character { get; set; }
         public bool Selected {
             get => m_selected;
             set {
-                if (m_selected == value) return;
-
-                m_selected = value;
-                puppeteer.Manipulate(HOVERED_PARAM, value);
-
-                if (value) {
-                    print(gameObject + " arrow");
-                    puppeteer.Manipulate(ARROW_PARAM);
+                if (m_selected != value) {
+                    highlighter.Highlight(value);
+                    if (value) arrow.Launch();
+                    m_selected = value;
                 }
             }
         }
         #endregion
 
         private void Awake() {
-            Animator animator = GetComponent<Animator>();
-            this.puppeteer = new Puppeteer(animator);
+            this.highlighter = GetComponent<SectorHighlighter>();
+            this.arrow = GetComponentInChildren<SelectionArrow>();
         }
 
         private bool IsOrientationCompatible(SpriteOrientation orientation) {
@@ -97,6 +73,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
 
             RadialToolkit.RadialDivision division = RadialToolkit.Originate(segment);
             int divisionValue = division.AsAmount();
+            arrow.Set(segment);
             Segment = segment;
 
             //customize each image confined by the sector

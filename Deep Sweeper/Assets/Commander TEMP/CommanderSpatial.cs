@@ -12,32 +12,44 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
     public class CommanderSpatial : Spatial
     {
         #region Expsoed Editor Parameters
-        [SerializeField] private List<CharacterPersona> Characters;
+        [SerializeField] private List<Persona> Characters;
         #endregion
 
         #region Constants
-        private static readonly int DEFAULT_COMMANDER_INDEX = 0;
         private static readonly float CHANGE_COOLDOWN = .1f;
         #endregion
 
         #region Class Members
         private SectorialDivisor sectorialDivisor;
-        private SectorManager lastSelected;
         private PlayerController controls;
         private Coroutine cooldownCoroutine;
         private Coroutine fadeCoroutine;
+        private Delimeter delimeter;
+        private Persona lastSelected;
         private bool changeable;
         #endregion
 
         #region Events
         /// <param type=typeof(CharacterPersona)>The changed character</param>
         /// <param type=typeof(CharacterPersona)>The new character</param>
-        public event UnityAction<CharacterPersona, CharacterPersona> CommanderChangedEvent;
+        public event UnityAction<Persona, Persona> CommanderChangedEvent;
+        #endregion
+
+        #region Properties
+        private int DefaultCommanderIndex => 0;
+        private Persona DefaultCommander {
+            get {
+                int defIndex = DefaultCommanderIndex;
+                bool exists = defIndex >= 0;
+                return exists ? Characters[defIndex] : Persona.None;
+            }
+        }
         #endregion
 
         protected override void Awake() {
             base.Awake();
             this.controls = PlayerController.Instance;
+            this.delimeter = GetComponentInChildren<Delimeter>();
             this.sectorialDivisor = GetComponentInChildren<SectorialDivisor>();
             this.changeable = true;
         }
@@ -47,6 +59,8 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
             
             transform.localScale = Vector3.zero;
             sectorialDivisor.PopulateCharacters(Characters);
+            delimeter.Build(Characters.Count);
+            SelectCharacter(DefaultCommander);
 
             //bind events
             controls.CommanderSelectionStartEvent += OnSelectionKeyDown;
@@ -79,18 +93,11 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         /// <param name="delta">The movement vector of the mouse during the last frame</param>
         private void OnMouseMovement(Vector2 delta) {
-            print("by default " + delta);
+            if (!changeable || !sectorialDivisor.NavigateToSector(delta)) return;
 
-            if (delta.x > 50) {
-                int t = 4;
-            }
-
-            if (changeable && sectorialDivisor.NavigateToSector(delta)) {
-                print("in");
-                changeable = false;
-                if (cooldownCoroutine != null) StopCoroutine(cooldownCoroutine);
-                cooldownCoroutine = StartCoroutine(RunChangeCooldown());
-            }
+            changeable = false;
+            if (cooldownCoroutine != null) StopCoroutine(cooldownCoroutine);
+            cooldownCoroutine = StartCoroutine(RunChangeCooldown());
         }
 
         /// <summary>
@@ -98,12 +105,15 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         private void SelectCharacter() {
             SectorManager current = sectorialDivisor.CurrentSector;
-            if (current is null) return;
+            if (current != null) SelectCharacter(current.Character);
+        }
 
-            var prevChar = (lastSelected is null) ? CharacterPersona.None : lastSelected.Character;
-            var nextChar = current.Character;
-            lastSelected = current;
+        private void SelectCharacter(Persona character) {
+            sectorialDivisor.SelectSector(character);
 
+            Persona prevChar = (lastSelected != Persona.None) ? lastSelected : DefaultCommander;
+            Persona nextChar = character;
+            lastSelected = nextChar;
             CommanderChangedEvent?.Invoke(prevChar, nextChar);
         }
 
@@ -112,9 +122,9 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         /// <param name="listener">The listener to activate when a commander changes</param>
         /// <returns>The default first commander on level startup.</returns>
-        public CharacterPersona SubscribeToCommanderChange(UnityAction<CharacterPersona, CharacterPersona> listener) {
+        public Persona SubscribeToCommanderChange(UnityAction<Persona, Persona> listener) {
             CommanderChangedEvent += listener;
-            return Characters[DEFAULT_COMMANDER_INDEX];
+            return DefaultCommander;
         }
 
         private IEnumerator RunChangeCooldown() {
@@ -125,7 +135,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <inheritdoc/>
         protected override IEnumerator Switch(bool switchIn, float time, UnityAction callback) {
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(base.Switch(switchIn, time, null));
+            fadeCoroutine = StartCoroutine(base.Switch(switchIn, time, callback));
 
             time = Mathf.Max(0, (time == -1) ? defaultFadeTime : time);
             Vector3 from = transform.localScale;
@@ -137,8 +147,6 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
                 transform.localScale = Vector3.Lerp(from, to, timer / time);
                 yield return null;
             }
-
-            callback?.Invoke();
         }
 
         /// <inheritdoc/>
