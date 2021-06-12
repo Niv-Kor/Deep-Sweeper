@@ -95,8 +95,8 @@ namespace DeepSweeper.Level.Mine
             if (initialGridPos != null) OpenInitially(initialGridPos);
             else initialGridPos = OpenInitially();
 
-            DisableRealMineLoots();
-            GenerateLootValues();
+            //DisableRealMineLoots();
+            //GenerateLootValues();
             CarpetBounce();
         }
 

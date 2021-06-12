@@ -93,7 +93,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <param name="sector">The sector to select</param>
         /// <returns>True if the sector has been successfully selected.</returns>
         private bool SelectSector(SectorManager sector) {
-            if (sector is null || sector == CurrentSector) return false;
+            if (sector is null) return false;
 
             if (sector.IsAvailable) {
                 sector.Selected = true;

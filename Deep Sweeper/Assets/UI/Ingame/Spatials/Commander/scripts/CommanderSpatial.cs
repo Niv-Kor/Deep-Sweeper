@@ -141,7 +141,8 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <param name="character">The character to select</param>
         /// <returns>True if a character has been successfully selected.</returns>
         private bool SelectCharacter(Persona character) {
-            if (!sectorialDivisor.SelectSector(character)) return false;
+            if (sectorialDivisor.CurrentSector?.Character != character)
+                sectorialDivisor.SelectSector(character);
 
             Persona prevChar = lastSelectedCharacter;
             Persona nextChar = character;

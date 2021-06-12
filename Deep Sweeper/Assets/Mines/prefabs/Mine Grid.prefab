@@ -35110,7 +35110,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 20, z: 0}
   scale: 40
   autoDrop: 0
-  dropChance: 1
+  dropChance: 0
   inScaleTime: 0.5
   outScaleTime: 0.07
 --- !u!114 &2330017901662154873

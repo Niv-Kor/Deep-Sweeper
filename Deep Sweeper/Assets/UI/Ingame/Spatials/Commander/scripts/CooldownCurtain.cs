@@ -172,6 +172,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         public void Cancel() {
             StopAllCoroutines();
+            countdownTimer.text = string.Empty;
             TimeLeft = 0;
             Percentage = 0;
         }

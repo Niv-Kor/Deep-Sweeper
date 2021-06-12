@@ -195,7 +195,9 @@ public abstract class LootGeneratorObject : MonoBehaviour
     /// Reroll the chance of the generator to drop an item.
     /// This method rerolls the 'WillDrop' property's value based on the item's drop chance.
     /// </summary>
-    public void RerollChance() { Chance = Chance; }
+    public void RerollChance() {
+        if (dropChance > 0) Chance = Chance;
+    }
 
     /// <summary>
     /// Drop and expose the item.
