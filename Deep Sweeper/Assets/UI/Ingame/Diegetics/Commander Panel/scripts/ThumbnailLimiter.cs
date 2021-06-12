@@ -10,7 +10,7 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         [Tooltip("The scale from which the forbidden sign start animation.")]
         [SerializeField] private float startScale = .5f;
 
-        [Tooltip("The time it takes to complete the forbidden sign animation (in seconds).")]
+        [Tooltip("The time it takes to complete the forbidden sign animation [s].")]
         [SerializeField] private float animationTime = 1;
 
         [Header("Settings")]

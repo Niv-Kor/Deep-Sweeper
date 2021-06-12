@@ -16,20 +16,20 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
         [SerializeField] private GameObject wavesParent;
 
         [Header("Scan Settings")]
-        [Tooltip("The time it takes to complete a single scan (in seconds).")]
+        [Tooltip("The time it takes to complete a single scan [s].")]
         [SerializeField] private float scanTime;
 
-        [Tooltip("Delay time in between two scans (in seconds).")]
+        [Tooltip("Delay time in between two scans [s].")]
         [SerializeField] private float scansDelay;
 
-        [Tooltip("The time it takes the signals to fade after their appearance (in seconds).")]
+        [Tooltip("The time it takes the signals to fade after their appearance [s].")]
         [SerializeField] private float signalFadeTime;
 
         [Header("Wave Settings")]
         [Tooltip("The amount of waves in a single scan.")]
         [SerializeField] private int wavesAmount;
 
-        [Tooltip("The time it takes the next wave to appear within a single scan (in seconds).")]
+        [Tooltip("The time it takes the next wave to appear within a single scan [s].")]
         [SerializeField] private float wavesDelay;
         #endregion
 

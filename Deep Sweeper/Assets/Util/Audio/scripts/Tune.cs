@@ -18,7 +18,7 @@ public class Tune
     [Tooltip("The pitch value of the sound (1 is natural).")]
     [SerializeField] private float pitch = 1;
 
-    [Tooltip("A delay to add before the sound plays (in seconds).")]
+    [Tooltip("A delay to add before the sound plays [s].")]
     [SerializeField] private float delay = 0;
 
     [Tooltip("The cooldown time within which the tune cannot be played twice.")]

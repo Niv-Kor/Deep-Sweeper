@@ -17,13 +17,13 @@ namespace DeepSweeper.Menu
         [Tooltip("The time it takes the background to completely blur after this screen is up.")]
         [SerializeField] private float blurBackgroundTime;
 
-        [Tooltip("The time to wait before the region info appears when the screen is on (in seconds).")]
+        [Tooltip("The time to wait before the region info appears when the screen is on [s].")]
         [SerializeField] private float regionInfoDelay = 0;
 
-        [Tooltip("The time it takes the region info to fade into the screen (in seconds).")]
+        [Tooltip("The time it takes the region info to fade into the screen [s].")]
         [SerializeField] private float regionInfoFadeInTime = 1;
 
-        [Tooltip("The time it takes the region info to fade out of the screen (in seconds).")]
+        [Tooltip("The time it takes the region info to fade out of the screen [s].")]
         [SerializeField] private float regionInfoFadeOutTime = 1;
         #endregion
 

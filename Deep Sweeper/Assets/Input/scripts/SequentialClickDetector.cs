@@ -19,7 +19,7 @@ namespace DeepSweeper.Player.Controls
         #endregion
 
         /// <param name="targetSequence">The target amount of clicks that will invoke an event</param>
-        /// <param name="maxClickDelay">The maximum time allowed between clicks (in seconds)</param>
+        /// <param name="maxClickDelay">The maximum time allowed between clicks [s]</param>
         public SequentialClickDetector(int targetSequence, float maxClickDelay) {
             this.CounterGoal = targetSequence;
             this.maxClickDelay = (int)(maxClickDelay * 1000);

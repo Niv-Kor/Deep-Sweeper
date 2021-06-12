@@ -54,7 +54,7 @@ namespace DeepSweeper.Player
         }
 
         /// <summary>
-        /// Move the submarine horizontally (across the X and Z axes).
+        /// Move the submarine horizontally (across the X and Z axis).
         /// </summary>
         /// <param name="vector">
         /// X slot represents a Z axis movement (backwards [-1:0) and forwards (0:1])

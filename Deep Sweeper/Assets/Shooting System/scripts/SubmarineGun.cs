@@ -231,7 +231,7 @@ namespace DeepSweeper.Player.ShootingSystem
         protected virtual void Recoil(float force) {
             Vector3 backwards = submarine.Forward * -1;
             submarineRB.AddForce(backwards * force);
-            camShaker.Vibrate(cameraShake, cameraEffects);
+            camShaker.Vibrate(cameraShake);
         }
 
         /// <summary>

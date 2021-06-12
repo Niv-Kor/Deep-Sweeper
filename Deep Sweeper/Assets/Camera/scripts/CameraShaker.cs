@@ -50,27 +50,28 @@ namespace DeepSweeper.CameraSet
         }
 
         #region Exposed Editor Parameters
-        [Header("Wave Physics")]
+        [Header("Intensity")]
         [Tooltip("The minimum possible distance that the camera will move while shaking.\n"
-               + "The actual value is determined according to the intensity of the shake.")]
+            + "The actual value is determined according to the intensity of the shake.")]
         [SerializeField] private Vector3 minIntensity;
 
         [Tooltip("The maximum possible distance that the camera will move while shaking.\n"
-               + "The actual value is determined according to the intensity of the shake.")]
+                + "The actual value is determined according to the intensity of the shake.")]
         [SerializeField] private Vector3 maxIntensity;
 
-        [Tooltip("Minimum and maximum distance, by which the relative shake insenity is calculated.\n"
-               + "Maximum intensity takes place from the minumim distance, and minimum intensity takes"
-               + "place from the maximum distance.")]
+        [Tooltip("Minimum and maximum distance, by which the relative shake insensity is calculated.\n"
+                + "Maximum intensity takes place at the minimum distance, and minimum intensity takes"
+                + "place at the maximum distance.")]
         [SerializeField] private Vector2Int distanceRange;
 
-        [Tooltip("The frequency of the camera's shake.")]
+        [Header("Physics")]
+        [Tooltip("The frequency of the camera's wave shake.")]
         [SerializeField] private float frequency = 1;
 
         [Tooltip("A parameter that determines how fast will the shake energy decay.")]
         [SerializeField] private float entropy = .5f;
 
-        [Tooltip("The minimal exponential wave multiplier at which the shake stops.")]
+        [Tooltip("The minimal exponential wave multiplier at which the shake stops entirely.")]
         [SerializeField] private float minimalDecay = .1f;
 
         [Header("FX")]

@@ -19,7 +19,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Flags
         [SerializeField] private Image rightVacuumSprite;
 
         [Header("Timing")]
-        [Tooltip("The time it takes to drain or fill the bar gauge (in seconds).")]
+        [Tooltip("The time it takes to drain or fill the bar gauge [s].")]
         [SerializeField] private float drainTime = .2f;
         #endregion
 
@@ -78,7 +78,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Flags
         /// Fade the bar sprite in or out.
         /// </summary>
         /// <param name="flag">True to fade in or false to fade out</param>
-        /// <param name="time">The time it takes to finish the process (in seconds)</param>
+        /// <param name="time">The time it takes to finish the process [s]</param>
         private IEnumerator FadeBar(bool flag, float time) {
             Material barMat = barSprite.material;
             float from = barMat.GetFloat(MATERIAL_ALPHA_PROPERTY);
@@ -98,7 +98,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Flags
         /// Show or hide the bar.
         /// </summary>
         /// <param name="flag">True to show or false to hide</param>
-        /// <param name="time">The time it takes to animation to finish (in seconds)</param>
+        /// <param name="time">The time it takes to animation to finish [s]</param>
         public void Show(bool flag, float time = 0) {
             if (showBarCoroutine != null) StopCoroutine(showBarCoroutine);
             showBarCoroutine = StartCoroutine(FadeBar(flag, time));

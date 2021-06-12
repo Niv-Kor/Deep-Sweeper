@@ -12,7 +12,7 @@ namespace DeepSweeper.Player.ShootingSystem
         [SerializeField] private Bullet bulletPrefab;
 
         [Header("Timing")]
-        [Tooltip("The time it takes to load the cannon between bullets (in seconds).")]
+        [Tooltip("The time it takes to load the cannon between bullets [s].")]
         [SerializeField] private float loadingTime;
         #endregion
 

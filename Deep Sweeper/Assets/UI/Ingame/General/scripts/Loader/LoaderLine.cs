@@ -10,7 +10,7 @@ public class LoaderLine : MonoBehaviour
     [Tooltip("The line that extends")]
     [SerializeField] private RawImage loadLine;
 
-    [Tooltip("The minimum time it would take the loader to fully load (in seconds).")]
+    [Tooltip("The minimum time it would take the loader to fully load [s].")]
     [SerializeField] private float minLoadTime = 1;
     #endregion
 

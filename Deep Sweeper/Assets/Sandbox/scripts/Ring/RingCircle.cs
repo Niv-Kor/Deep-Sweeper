@@ -19,7 +19,7 @@ namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
         [Tooltip("The scale of the circle's expansion (only when selected).")]
         [SerializeField] private float expansionScale = 1;
 
-        [Tooltip("The time it takes the ring to collapse back to its original scale (in seconds).")]
+        [Tooltip("The time it takes the ring to collapse back to its original scale [s].")]
         [SerializeField] private float collapseTime = 1;
         #endregion
 

@@ -36,7 +36,7 @@ namespace DeepSweeper.Menu.UI.Campaign.Sandbox.Ring
         [Tooltip("A list of the ring's states color configurations.")]
         [SerializeField] private List<RingStateColor> colorConfig;
 
-        [Tooltip("The time it takes the color of the particles to change (in seconds).")]
+        [Tooltip("The time it takes the color of the particles to change [s].")]
         [SerializeField] private float colorLerpTime;
         #endregion
 

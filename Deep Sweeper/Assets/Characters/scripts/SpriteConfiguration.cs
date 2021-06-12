@@ -12,9 +12,6 @@ namespace DeepSweeper.Characters
         [Tooltip("The character's sprite.")]
         [SerializeField] public Texture Sprite;
 
-        [Tooltip("The orientation of the sprite (direction towards which its body tends).")]
-        [SerializeField] public SpriteOrientation Orientation;
-
         [Tooltip("The offset needed to be applied on the sprite in the designated container.")]
         [SerializeField] public Vector2 Offset;
     }

@@ -11,7 +11,7 @@ namespace DeepSweeper.UI.Ingame
     public abstract class UIDimensionManager<T, DIM> : Singleton<T> where T : MonoBehaviour where DIM : UIDimension
     {
         #region Exposed Editor Parameters
-        [Tooltip("The default time it takes to fade this entire UI dimension in or out (in seconds).")]
+        [Tooltip("The default time it takes to fade this entire UI dimension in or out [s].")]
         [SerializeField] protected float defaultFadeTime;
         #endregion
 

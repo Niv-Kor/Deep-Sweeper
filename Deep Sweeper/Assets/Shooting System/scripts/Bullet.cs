@@ -14,7 +14,7 @@ namespace DeepSweeper.Player.ShootingSystem
         [SerializeField] [Range(0f, 1f)] protected float power;
 
         [Header("Active Time")]
-        [Tooltip("The overall time the bullet can fly in the air before it's automatically destroyed (in seconds).\n"
+        [Tooltip("The overall time the bullet can fly in the air before it's automatically destroyed [s].\n"
                + "0 if it should stay active indefinitely.")]
         [SerializeField] private float timeToLive = 5;
         #endregion
@@ -79,7 +79,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <summary>
         /// Countdown until the bullet is no longer considered active.
         /// </summary>
-        /// <param name="time">The time of cooldown (in seconds)</param>
+        /// <param name="time">The time of cooldown [s]</param>
         private IEnumerator CountdownActivity(float time) {
             yield return new WaitForSeconds(time);
             Stop();

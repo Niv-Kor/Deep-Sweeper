@@ -21,7 +21,7 @@ namespace DeepSweeper.Player.ShootingSystem
         [SerializeField] protected Vector3 barrelHole;
 
         [Tooltip("The time it takes to invoke the 'FullyOpen' event after the barrel open, "
-               + "so that the gun can be activated (in seconds).")]
+               + "so that the gun can be activated [s].")]
         [SerializeField] protected float openDelay;
         #endregion
 
@@ -100,7 +100,7 @@ namespace DeepSweeper.Player.ShootingSystem
         }
 
         /// <summary>
-        /// Wait for a fixed delay time (in seconds) and then invoke the 'FullyOpen' event.
+        /// Wait for a fixed delay time [s] and then invoke the 'FullyOpen' event.
         /// </summary>
         protected virtual IEnumerator InvokeFullyOpenState() {
             yield return new WaitForSeconds(openDelay);

@@ -10,10 +10,10 @@ namespace DeepSweeper.Level.Mine
     {
         #region Exposed Editor Parameters
         [Header("Timing")]
-        [Tooltip("The time it takes to set the color of the sensors (in seconds).")]
+        [Tooltip("The time it takes to set the color of the sensors [s].")]
         [SerializeField] private float colorSetTime = .5f;
 
-        [Tooltip("The time in between each two bright pulses (in seconds).")]
+        [Tooltip("The time in between each two bright pulses [s].")]
         [SerializeField] private float pulseDuration = 1;
         #endregion
 

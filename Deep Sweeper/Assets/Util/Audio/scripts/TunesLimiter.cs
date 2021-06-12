@@ -29,7 +29,7 @@ public class TunesLimiter : Singleton<TunesLimiter>
         /// </summary>
         /// <param name="delta">
         /// Amount of time to subtract from the cooldown's
-        /// remaining time (in seconds)
+        /// remaining time [s]
         /// </param>
         public void UpdateTime(float delta) { RemainTime -= delta; }
     }

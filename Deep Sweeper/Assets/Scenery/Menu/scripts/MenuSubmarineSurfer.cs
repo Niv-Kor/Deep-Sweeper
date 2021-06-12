@@ -47,7 +47,7 @@ public class MenuSubmarineSurfer : MonoBehaviour
 
     /// <summary>
     /// Generate a random direction vector that involves
-    /// the submarine's base x and z axes values.
+    /// the submarine's base X and Z axis values.
     /// </summary>
     /// <returns>A randomly selected right and forward direction vector.</returns>
     private Vector3 GenerateSurfVector() {

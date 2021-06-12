@@ -732,7 +732,7 @@ namespace com.ootii.Cameras
                     mTarget.FadeDistance = lNewFadeDistance;
                 }
 
-                float lNewFadeSpeed = EditorGUILayout.FloatField(new GUIContent("Fade Speed", "Time (in seconds) to fade the anchor in and out."), mTarget.FadeSpeed);
+                float lNewFadeSpeed = EditorGUILayout.FloatField(new GUIContent("Fade Speed", "Time [s] to fade the anchor in and out."), mTarget.FadeSpeed);
                 if (lNewFadeSpeed != mTarget.FadeSpeed)
                 {
                     mIsDirty = true;

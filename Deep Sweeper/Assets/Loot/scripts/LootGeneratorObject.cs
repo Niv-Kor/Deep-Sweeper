@@ -55,10 +55,10 @@ public abstract class LootGeneratorObject : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] protected float dropChance = 1;
 
     [Header("Timing")]
-    [Tooltip("The time it takes the loot to scale up when popped (in seconds).")]
+    [Tooltip("The time it takes the loot to scale up when popped [s].")]
     [SerializeField] protected float inScaleTime = 0;
 
-    [Tooltip("The time it takes the loot to scale up when disposed (in seconds).")]
+    [Tooltip("The time it takes the loot to scale up when disposed [s].")]
     [SerializeField] protected float outScaleTime = 0;
     #endregion
 

@@ -1004,7 +1004,7 @@ namespace com.ootii.Cameras
         /// Causes the camera to shake for the specified duration
         /// </summary>
         /// <param name="rRange">Distance the shake will apply</param>
-        /// <param name="rDuration">Time (in seconds) to shake</param>
+        /// <param name="rDuration">Time [s] to shake</param>
         public void Shake(float rRange, float rDuration)
         {
             mShakeElapsed = 0f;
@@ -1021,7 +1021,7 @@ namespace com.ootii.Cameras
         /// <param name="rRange">Distance the shake will apply</param>
         /// <param name="rStrengthX">Multiplier to the x-movement of the shake</param>
         /// <param name="rStrengthY">Multiplier to the y-movement of the shake</param>
-        /// <param name="rDuration">Time (in seconds) to shake</param>
+        /// <param name="rDuration">Time [s] to shake</param>
         public void Shake(float rRange, float rStrengthX, float rStrengthY, float rDuration)
         {
             mShakeElapsed = 0f;

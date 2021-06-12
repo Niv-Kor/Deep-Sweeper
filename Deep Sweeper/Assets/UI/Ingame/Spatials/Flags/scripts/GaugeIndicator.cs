@@ -12,7 +12,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Flags
         [SerializeField] private float pumpPercent = 1.1f;
 
         [Header("Timing")]
-        [Tooltip("The time it takes the flag icon to pump once (in seconds).")]
+        [Tooltip("The time it takes the flag icon to pump once [s].")]
         [SerializeField] private float pumpTime = .5f;
         #endregion
 

@@ -27,12 +27,12 @@ namespace DeepSweeper.Gameplay.UI.Diegetics.Commander
         [SerializeField] private float space;
 
         [Header("Timing")]
-        [Tooltip("The time the user has to wait before changin a commander (in seconds).\n"
+        [Tooltip("The time the user has to wait before changin a commander [s].\n"
                + "This parameter is critical for preventing bugs that might occur when the"
                + "player changes a commander too recently.")]
         [SerializeField] private float mandatoryCooldown = .1f;
 
-        [Tooltip("The default cooldown time between each two commanders (in seconds).")]
+        [Tooltip("The default cooldown time between each two commanders [s].")]
         [SerializeField] private int defaultCooldown;
         #endregion
 

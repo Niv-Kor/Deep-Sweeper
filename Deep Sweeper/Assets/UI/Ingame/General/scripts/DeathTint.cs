@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class DeathTint : Singleton<DeathTint>
 {
     #region Exposed Editor Parameters
-    [Tooltip("The amount of time (in seconds) it takes to tint in and out.")]
+    [Tooltip("The amount of time [s] it takes to tint in and out.")]
     [SerializeField] private float flashTime;
 
     [Tooltip("The maximum alpha value of the tint color.")]
