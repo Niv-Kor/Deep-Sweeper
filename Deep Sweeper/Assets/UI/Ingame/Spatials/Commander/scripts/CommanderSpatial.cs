@@ -40,6 +40,10 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <param type=typeof(CharacterPersona)>The changed character</param>
         /// <param type=typeof(CharacterPersona)>The new character</param>
         public event UnityAction<Persona, Persona> CommanderChangedEvent;
+
+        /// <param type=typeof(Persona)>The dead commander</param>
+        /// <param type=typeof(List<Persona>)>A list of alive alternative commanders</param>
+        public event UnityAction<Persona, List<Persona>> CommanderDeadEvent;
         #endregion
 
         #region Properties
@@ -161,17 +165,31 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         /// <param name="character">The character to kill or ressurect</param>
         /// <param name="flag">True to kill the character or false to ressurect it</param>
+        /// <seealso cref="CommanderDeadEvent"/>
         public void AnnounceDeath(Persona character, bool flag) {
             SectorManager sector = sectorialDivisor.GetSector(character);
+            bool success = sector != null && (flag ? sector.Kill() : sector.Resurrect());
 
-            if (flag) sector?.Kill();
-            else sector?.Resurrect();
+            if (success) {
+                //construct a list of all remaining commanders
+                List<Persona> alive = new List<Persona>();
+
+                foreach (Persona commander in Characters) {
+                    SectorManager commanderSector = sectorialDivisor.GetSector(commander);
+
+                    if (commanderSector != null && !commanderSector.IsDead)
+                        alive.Add(commander);
+                }
+
+                CommanderDeadEvent?.Invoke(character, alive);
+            }
         }
 
         /// <summary>
         /// Subscribe to a commander change event.
         /// </summary>
         /// <param name="listener">The listener to activate when a commander changes</param>
+        /// <seealso cref="CommanderChangedEvent"/>
         /// <returns>The default first commander on level startup.</returns>
         public Persona SubscribeToCommanderChange(UnityAction<Persona, Persona> listener) {
             CommanderChangedEvent += listener;

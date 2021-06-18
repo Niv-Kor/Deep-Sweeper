@@ -1,54 +1,12 @@
-﻿using System.Collections;
+﻿using DeepSweeper.CameraSet.PostProcessing;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 namespace DeepSweeper.CameraSet
 {
     public class CameraShaker : MonoBehaviour
     {
-        private class EffectFloatParameter
-        {
-            #region Class Members
-            private FloatParameter parameter;
-            #endregion
-
-            #region Properties
-            public float OriginValue { get; private set; }
-            public float TargetValue { get; set; }
-            #endregion
-
-            /// <param name="parameter">The effect's parameter reference</param>
-            public EffectFloatParameter(FloatParameter parameter) {
-                if (parameter == null) return;
-
-                this.parameter = parameter;
-                this.OriginValue = parameter.value;
-                this.TargetValue = OriginValue;
-            }
-
-            /// <summary>
-            /// Lerp the value of the parameter.
-            /// </summary>
-            /// <param name="positive">
-            /// True to lerp positively towards the maximum range value,
-            /// or false to lerp towards the minimum range value.
-            /// </param>
-            /// <param name="time">The time it takes the lerp to finish</param>
-            public IEnumerator Lerp(bool positive, float time) {
-                if (parameter == null) yield break;
-
-                float source = parameter.value;
-                float target = positive ? TargetValue : OriginValue;
-                float timer = 0;
-
-                while (timer <= time) {
-                    timer += Time.deltaTime;
-                    parameter.value = Mathf.Lerp(source, target, timer / time);
-                    yield return null;
-                }
-            }
-        }
-
         #region Exposed Editor Parameters
         [Header("Intensity")]
         [Tooltip("The minimum possible distance that the camera will move while shaking.\n"
@@ -75,43 +33,14 @@ namespace DeepSweeper.CameraSet
         [SerializeField] private float minimalDecay = .1f;
 
         [Header("FX")]
+        [SerializeField] private List<EffectInstructions> FX;
+
         [SerializeField] private float FXDecayTime = 1;
-
-        [Header("Chromatic Aberration")]
-        [Tooltip("True to enable post processing's 'Chromatic Aberration' effect manipulation.")]
-        [SerializeField] private bool useChromaticAberration;
-
-        [Tooltip("Overall intensity of the 'Chromatic Aberration' effect.")]
-        [SerializeField] private float chromaticIntensity;
-
-        [Header("Ambient Occlusion")]
-        [Tooltip("True to enable post processing's 'Ambient Occlusion' effect manipulation.")]
-        [SerializeField] private bool useAmbientOcclusion;
-
-        [Tooltip("Overall intensity of the 'Ambient Occlusion' effect.")]
-        [SerializeField] private float ambientIntensity;
-
-        [Header("Bloom")]
-        [Tooltip("True to enable post processing's 'Bloom' effect manipulation.")]
-        [SerializeField] private bool useBloom;
-
-        [Tooltip("Overall intensity of the 'Bloom' effect.")]
-        [SerializeField] private float bloomIntensity;
-
-        [Header("Depth of Field")]
-        [Tooltip("True to enable post processing's 'Depth of Field' effect manipulation.")]
-        [SerializeField] private bool useDepthOfField;
-
-        [Tooltip("The size of the len's aperture.")]
-        [SerializeField] private float aperture;
         #endregion
 
         #region Class Members
         private Camera cameraCmp;
-        private EffectFloatParameter ambientOcclusion;
-        private EffectFloatParameter chromaticAberration;
-        private EffectFloatParameter depthOfField;
-        private EffectFloatParameter bloom;
+        private VisualEffectsSheet visualFX;
         private Coroutine shakeCoroutine;
         private Coroutine vibrationCoroutine;
         private Vector3 originPos;
@@ -125,11 +54,7 @@ namespace DeepSweeper.CameraSet
         }
 
         private void Start() {
-            PostProcessingManager postProcessMngr = CameraManager.Instance.GetPostProcessManager(CameraRole.Main);
-            this.ambientOcclusion = new EffectFloatParameter(postProcessMngr.AmbientOcclusion?.intensity);
-            this.chromaticAberration = new EffectFloatParameter(postProcessMngr.ChromaticAberration?.intensity);
-            this.depthOfField = new EffectFloatParameter(postProcessMngr.DepthOfField?.aperture);
-            this.bloom = new EffectFloatParameter(postProcessMngr.Bloom?.intensity);
+            this.visualFX = VisualEffectsSheet.Create(CameraRole.Main, FX);
         }
 
         /// <summary>
@@ -201,18 +126,9 @@ namespace DeepSweeper.CameraSet
         /// <param name="flag">True to activate or false to deactivate</param>
         /// <param name="intensity">The percentage of effect intensity [0:1]</param>
         private void ActivateFX(bool flag, float intensity = 1) {
-            //set target values
-            if (flag) {
-                ambientOcclusion.TargetValue = RangeMath.PercentOfRange(intensity, ambientOcclusion.OriginValue, ambientIntensity);
-                chromaticAberration.TargetValue = RangeMath.PercentOfRange(intensity, chromaticAberration.OriginValue, chromaticIntensity);
-                depthOfField.TargetValue = RangeMath.PercentOfRange(intensity, depthOfField.OriginValue, aperture);
-                bloom.TargetValue = RangeMath.PercentOfRange(intensity, bloom.OriginValue, bloomIntensity);
-            }
-
-            if (useAmbientOcclusion) StartCoroutine(ambientOcclusion.Lerp(flag, FXDecayTime));
-            if (useChromaticAberration) StartCoroutine(chromaticAberration.Lerp(flag, FXDecayTime));
-            if (useBloom) StartCoroutine(bloom.Lerp(flag, FXDecayTime));
-            if (useDepthOfField) StartCoroutine(depthOfField.Lerp(flag, FXDecayTime));
+            float percentage = flag ? intensity : 0;
+            float? time = flag ? (float?) null : FXDecayTime;
+            VisualEffectsAnimator.Instance.Animate(visualFX, time, percentage);
         }
 
         /// <summary>

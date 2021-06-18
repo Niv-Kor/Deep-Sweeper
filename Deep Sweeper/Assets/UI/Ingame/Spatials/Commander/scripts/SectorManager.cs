@@ -98,22 +98,30 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// Kill the character in this sector.
         /// This sector will no longer be available for selection.
         /// </summary>
-        public void Kill() {
+        /// <returns>True if the commander can die successfully.</returns>
+        public bool Kill() {
             if (!IsDead) {
                 IsDead = true;
                 highlighter.Kill();
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
         /// Resurrect the character in this sector.
         /// This sector will once again be available for selection.
         /// </summary>
-        public void Resurrect() {
+        /// <returns>True if the commander can ressurect successfully.</returns>
+        public bool Resurrect() {
             if (IsDead) {
                 IsDead = false;
                 highlighter.Resurrect();
+                return true;
             }
+
+            return false;
         }
     }
 }

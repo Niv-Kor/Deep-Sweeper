@@ -76,14 +76,16 @@ public class RaceCircle : MonoBehaviour
     private void OnValidate() {
         maxGlow = Mathf.Max(minGlow, maxGlow);
 
-        //assert all races are well configures
-        foreach (TribalRace race in Enum.GetValues(typeof(TribalRace))) {
-            if (spritesConfig.FindIndex(x => x.Race == Race) == -1) {
-                spritesConfig.Add(new RaceSprite {
-                    Race = race,
-                    Plain = null,
-                    Glow = null
-                });
+        //assert all races are well configured
+        if (Application.isPlaying) {
+            foreach (TribalRace race in Enum.GetValues(typeof(TribalRace))) {
+                if (spritesConfig.FindIndex(x => x.Race == Race) == -1) {
+                    spritesConfig.Add(new RaceSprite {
+                        Race = race,
+                        Plain = null,
+                        Glow = null
+                    });
+                }
             }
         }
     }
