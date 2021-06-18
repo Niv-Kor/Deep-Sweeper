@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DeepSweeper.Characters
+﻿namespace DeepSweeper.Characters
 {
     public interface IAbilityModel {}
 }
