@@ -1,7 +1,7 @@
 using DeepSweeper.CameraSet;
 using DeepSweeper.Characters;
 using DeepSweeper.Flow;
-using DeepSweeper.Player.Controls;
+using DeepSweeper.Player.Input;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +32,6 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         private Coroutine cooldownCoroutine;
         private Coroutine fadeCoroutine;
         private Delimeter delimeter;
-        private Persona lastSelectedCharacter;
         private bool changeable;
         #endregion
 
@@ -40,14 +39,11 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// <param type=typeof(CharacterPersona)>The changed character</param>
         /// <param type=typeof(CharacterPersona)>The new character</param>
         public event UnityAction<Persona, Persona> CommanderChangedEvent;
-
-        /// <param type=typeof(Persona)>The dead commander</param>
-        /// <param type=typeof(List<Persona>)>A list of alive alternative commanders</param>
-        public event UnityAction<Persona, List<Persona>> CommanderDeadEvent;
         #endregion
 
         #region Properties
         private int DefaultCommanderIndex => 0;
+        public Persona CurrentCommander { get; private set; }
         private Persona DefaultCommander {
             get {
                 int defIndex = DefaultCommanderIndex;
@@ -148,14 +144,22 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
             if (sectorialDivisor.CurrentSector?.Character != character)
                 sectorialDivisor.SelectSector(character);
 
-            Persona prevChar = lastSelectedCharacter;
+            Persona prevChar = CurrentCommander;
             Persona nextChar = character;
             if (LevelFlow.Instance.DuringPhase) lastSelectedSector?.Cooldown.Begin();
 
-            lastSelectedCharacter = nextChar;
-            lastSelectedSector = sectorialDivisor.GetSector(lastSelectedCharacter);
+            CurrentCommander = nextChar;
+            lastSelectedSector = sectorialDivisor.GetSector(CurrentCommander);
             CommanderChangedEvent?.Invoke(prevChar, nextChar);
             return true;
+        }
+
+        /// <summary>
+        /// Announce the death of the current commander.
+        /// </summary>
+        /// <see cref="AnnounceDeath(Persona, bool)"/>
+        public List<Persona> AnnounceDeath() {
+            return AnnounceDeath(CurrentCommander, true);
         }
 
         /// <summary>
@@ -165,24 +169,22 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
         /// </summary>
         /// <param name="character">The character to kill or ressurect</param>
         /// <param name="flag">True to kill the character or false to ressurect it</param>
-        /// <seealso cref="CommanderDeadEvent"/>
-        public void AnnounceDeath(Persona character, bool flag) {
+        /// <returns>A list of alive alternative commanders.</returns>
+        public List<Persona> AnnounceDeath(Persona character, bool flag) {
             SectorManager sector = sectorialDivisor.GetSector(character);
             bool success = sector != null && (flag ? sector.Kill() : sector.Resurrect());
+            List<Persona> alive = new List<Persona>();
 
             if (success) {
-                //construct a list of all remaining commanders
-                List<Persona> alive = new List<Persona>();
-
                 foreach (Persona commander in Characters) {
                     SectorManager commanderSector = sectorialDivisor.GetSector(commander);
 
                     if (commanderSector != null && !commanderSector.IsDead)
                         alive.Add(commander);
                 }
-
-                CommanderDeadEvent?.Invoke(character, alive);
             }
+
+            return alive;
         }
 
         /// <summary>
@@ -229,9 +231,7 @@ namespace DeepSweeper.UI.Ingame.Spatials.Commander
             if (!success) return false;
 
             CameraRig rig = CameraManager.Instance.GetRig(CameraRole.Main);
-            if (flag) rig.Pause(true);
-            else rig.Resume(true);
-
+            rig.Enable(!flag, true);
             return true;
         }
 

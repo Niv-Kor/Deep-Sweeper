@@ -3,7 +3,7 @@ using DeepSweeper.CameraSet;
 using DeepSweeper.Flow;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.Player;
-using DeepSweeper.Player.Controls;
+using DeepSweeper.Player.Input;
 using DeepSweeper.Player.ShootingSystem;
 using System.Collections;
 using UnityEngine;
@@ -105,14 +105,6 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sight
         private void CancelPrimaryOperationHold() {
             PrimaryStopEvent?.Invoke();
             StopCoroutine(primaryOperationHoldCoroutine);
-
-            /*//release target
-            if (TargetType == SightTargetType.Mine) {
-                DeselectMines();
-                DeselectIndicators();
-                Crosshair.Instance.Release();
-            }*/
-
             controller.PrimaryOperationStopEvent -= CancelPrimaryOperationHold;
         }
 
@@ -144,14 +136,6 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sight
         private void CancelSecondaryOperationHold() {
             SecondaryStopEvent?.Invoke();
             StopCoroutine(secondaryOperationHoldCoroutine);
-
-            /*//release target
-            if (TargetType == SightTargetType.Mine) {
-                DeselectMines();
-                DeselectIndicators();
-                Crosshair.Instance.Release();
-            }
-*/
             controller.SecondaryOperationStopEvent -= CancelSecondaryOperationHold;
         }
 

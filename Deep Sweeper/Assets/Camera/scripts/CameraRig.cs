@@ -1,46 +1,35 @@
 using com.ootii.Cameras;
+using DeepSweeper.Player.Input;
 using UnityEngine;
 
 namespace DeepSweeper.CameraSet
 {
-    public class CameraRig : MonoBehaviour
+    public class CameraRig : MonoBehaviour, ILockedInput
     {
         #region Class Members
+        private InputLocker inputLocker;
         private CameraController controller;
-        #endregion
-
-        #region Properties
-        public bool Locked { get; private set; }
         #endregion
 
         private void Awake() {
             this.controller = GetComponent<CameraController>();
+            this.inputLocker = new InputLocker(OnEnableInput, OnDisableInput);
         }
 
-        /// <summary>
-        /// Pause the rig's cursor movement.
-        /// </summary>
-        /// <param name="lockState">
-        /// True to lock the rig's pause state
-        /// until it's explicitly released
-        /// </param>
-        public void Pause(bool lockState = false) {
-            if (Locked && !lockState) return;
-
-            controller.enabled = false;
-            Locked = lockState;
-        }
-
-        /// <summary>
-        /// Resume the rig's cursor movement.
-        /// </summary>
-        /// <param name="releaseState">True to release the rig's state</param>
-        public void Resume(bool releaseState = false) {
-            if (Locked && !releaseState) return;
-
+        /// <inheritdoc/>
+        public void OnEnableInput() {
             controller.enabled = true;
             controller.ActiveMotor.Initialize();
-            Locked = !releaseState;
+        }
+
+        /// <inheritdoc/>
+        public void OnDisableInput() {
+            controller.enabled = false;
+        }
+
+        /// <inheritdoc/>
+        public void Enable(bool flag, bool force = false) {
+            inputLocker.Enable(flag, force);
         }
     }
 }

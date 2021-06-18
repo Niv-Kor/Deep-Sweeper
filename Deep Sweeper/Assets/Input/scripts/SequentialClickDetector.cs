@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine.Events;
 
-namespace DeepSweeper.Player.Controls
+namespace DeepSweeper.Player.Input
 {
     public class SequentialClickDetector
     {

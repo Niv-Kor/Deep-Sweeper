@@ -26,6 +26,7 @@ namespace DeepSweeper.Player.ShootingSystem
         protected SubmarineOrientation submarine;
         protected List<Firearm> firearms;
         protected CameraShaker camShaker;
+        private WeaponManager mngr;
         #endregion
 
         #region Properties
@@ -54,6 +55,7 @@ namespace DeepSweeper.Player.ShootingSystem
             this.camShaker = CameraManager.Instance.GetCamera(CameraRole.Main).GetComponent<CameraShaker>();
             this.submarineRB = Submarine.Instance.GetComponent<Rigidbody>();
             this.submarine = Submarine.Instance.Orientation;
+            this.mngr = WeaponManager.Instance;
             BindTriggerEventes();
         }
 
@@ -66,14 +68,16 @@ namespace DeepSweeper.Player.ShootingSystem
             switch (Mechanism) {
                 case GunMechanism.SemiAutomatic:
                     sight.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
-                        if (IsActive && !persistent && IsOperation(OperationType.Primary)) {
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (!persistent && IsOperation(OperationType.Primary)) {
                             OnGunTriggerStart(targetType, target);
                             OnGunTriggerStop();
                         }
                     };
 
                     sight.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
-                        if (IsActive && !persistent && IsOperation(OperationType.Secondary)) {
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (!persistent && IsOperation(OperationType.Secondary)) {
                             OnGunTriggerStart(targetType, target);
                             OnGunTriggerStop();
                         }
@@ -83,19 +87,23 @@ namespace DeepSweeper.Player.ShootingSystem
 
                 case GunMechanism.Automatic:
                     sight.PrimaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
-                        if (IsActive && IsOperation(OperationType.Primary)) OnGunTriggerStart(targetType, target);
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (IsOperation(OperationType.Primary)) OnGunTriggerStart(targetType, target);
                     };
 
                     sight.PrimaryStopEvent += delegate {
-                        if (IsActive && IsOperation(OperationType.Primary)) OnGunTriggerStop();
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (IsOperation(OperationType.Primary)) OnGunTriggerStop();
                     };
 
                     sight.SecondaryTriggerEvent += delegate (SightTargetType targetType, TargetInfo target, bool persistent) {
-                        if (IsActive && IsOperation(OperationType.Secondary)) OnGunTriggerStart(targetType, target);
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (IsOperation(OperationType.Secondary)) OnGunTriggerStart(targetType, target);
                     };
 
                     sight.SecondaryStopEvent += delegate {
-                        if (IsActive && IsOperation(OperationType.Secondary)) OnGunTriggerStop();
+                        if (!mngr.InputEnabled || !IsActive) return;
+                        if (IsOperation(OperationType.Secondary)) OnGunTriggerStop();
                     };
 
                     break;

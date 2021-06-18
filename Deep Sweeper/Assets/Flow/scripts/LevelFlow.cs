@@ -1,8 +1,12 @@
 ﻿using DeepSweeper.CameraSet;
+using DeepSweeper.Characters;
 using DeepSweeper.Flow;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.Level.PhaseGate;
 using DeepSweeper.Player;
+using DeepSweeper.UI.Ingame;
+using DeepSweeper.UI.Ingame.Promt;
+using DeepSweeper.UI.Ingame.Spatials.Commander;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -183,10 +187,12 @@ namespace DeepSweeper.Flow
 
             DuringPhase = false;
             IsPaused = false;
-            CurrentPhase.Conclude();
             PhaseEndEvent?.Invoke(CurrentPhase, success);
 
-            if (success) PrepareNextPhase();
+            if (success) {
+                CurrentPhase.Conclude();
+                PrepareNextPhase();
+            }
             else {
                 //lose
             }
@@ -252,7 +258,15 @@ namespace DeepSweeper.Flow
         /// <summary>
         /// Lose the level.
         /// </summary>
-        public void Lose() { EndPhase(false); }
+        public void Lose() {
+            CommanderSpatial commander = SpatialsManager.Instance.Get(typeof(CommanderSpatial)) as CommanderSpatial;
+            List<Persona> aliveCommanders = commander.AnnounceDeath();
+            EndPhase(false);
+
+            if (aliveCommanders.Count > 0) {
+                IngameWindowManager.Instance.Pop(PromtType.LosingWindow);
+            }
+        }
         /*
             //retreat to the entrance gate and start over
             if (LifeSupply.Instance.LifeDown()) {

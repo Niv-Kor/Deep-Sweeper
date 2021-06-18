@@ -1,4 +1,4 @@
-﻿using DeepSweeper.Player.Controls;
+﻿using DeepSweeper.Player.Input;
 using UnityEngine;
 
 namespace GamedevUtil.Player

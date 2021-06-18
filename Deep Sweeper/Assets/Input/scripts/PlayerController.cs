@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DeepSweeper.Player.Controls
+namespace DeepSweeper.Player.Input
 {
     public class PlayerController : Singleton<PlayerController>
     {

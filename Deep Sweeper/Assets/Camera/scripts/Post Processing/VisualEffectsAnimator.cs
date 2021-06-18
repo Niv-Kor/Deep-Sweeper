@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,12 +7,12 @@ namespace DeepSweeper.CameraSet.PostProcessing
     public class VisualEffectsAnimator : Singleton<VisualEffectsAnimator>
     {
         #region Class Members
-        private IDictionary<VisualEffectsSheet, Coroutine> coroutines;
+        private IDictionary<VisualEffectsSheet, List<Coroutine>> coroutines;
         #endregion
 
         protected override void Awake() {
             base.Awake();
-            this.coroutines = new Dictionary<VisualEffectsSheet, Coroutine>();
+            this.coroutines = new Dictionary<VisualEffectsSheet, List<Coroutine>>();
         }
 
         /// <summary>
@@ -35,7 +36,14 @@ namespace DeepSweeper.CameraSet.PostProcessing
         /// </param>
         public void Animate(VisualEffectsSheet sheet, float? time = null, float percent = 1) {
             Stop(sheet);
-            coroutines[sheet] = StartCoroutine(sheet.Execute(time, percent));
+
+            //start coroutines
+            List<IEnumerator> enumerationList = sheet.GetExecutionCoroutines(time, percent);
+            List<Coroutine> coroutineList = new List<Coroutine>();
+            foreach (IEnumerator enumeration in enumerationList)
+                coroutineList.Add(StartCoroutine(enumeration));
+
+            coroutines[sheet] = coroutineList;
         }
 
         /// <summary>
@@ -44,8 +52,18 @@ namespace DeepSweeper.CameraSet.PostProcessing
         /// <param name="sheet">The sheet to check</param>
         /// <returns>True if the specified sheet is now animating.</returns>
         public bool IsAnimating(VisualEffectsSheet sheet) {
-            bool exists = coroutines.TryGetValue(sheet, out Coroutine coroutine);
-            return exists && coroutine != null;
+            bool exists = coroutines.TryGetValue(sheet, out List<Coroutine> coroutineList);
+            bool allFinished = true;
+
+            //find an unfinished coroutine
+            for (int i = 0; i < coroutineList.Count; i++) {
+                if (coroutineList[i] != null) {
+                    allFinished = false;
+                    break;
+                }
+            }
+
+            return exists && !allFinished;
         }
 
         /// <summary>
@@ -54,8 +72,13 @@ namespace DeepSweeper.CameraSet.PostProcessing
         /// </summary>
         /// <param name="sheet">The sheet whose animation to stop</param>
         public void Stop(VisualEffectsSheet sheet) {
-            bool exists = coroutines.TryGetValue(sheet, out Coroutine coroutine);
-            if (exists) StopCoroutine(coroutine);
+            bool exists = coroutines.TryGetValue(sheet, out List<Coroutine> coroutineList);
+
+            //stop all running coroutines.
+            if (exists) {
+                foreach (Coroutine coroutine in coroutineList)
+                    if (coroutine != null) StopCoroutine(coroutine);
+            }
         }
     }
 }

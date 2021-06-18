@@ -1,16 +1,24 @@
 using DeepSweeper.Characters;
+using DeepSweeper.Player.Input;
 using System.Collections.Generic;
 
 namespace DeepSweeper.Player.ShootingSystem
 {
-    public class WeaponManager : CharacterAbilityManager<WeaponManager, WeaponAbilityModel>
+    public class WeaponManager : CharacterAbilityManager<WeaponManager, WeaponAbilityModel>, ILockedInput
     {
         #region Class Members
         private List<SubmarineGun> guns;
+        private InputLocker inputLocker;
+        #endregion
+
+        #region Properties
+        public bool InputEnabled { get; private set; }
         #endregion
 
         protected override void Awake() {
             base.Awake();
+            this.InputEnabled = true;
+            this.inputLocker = new InputLocker(OnEnableInput, OnDisableInput);
 
             var gunsArr = GetComponentsInChildren<SubmarineGun>();
             guns = new List<SubmarineGun>(gunsArr);
@@ -49,6 +57,17 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <inheritdoc/>
         protected override void ApplyAbility(WeaponAbilityModel ability) {
             EnableGuns(ability, true);
+        }
+
+        /// <inheritdoc/>
+        public void OnEnableInput() { InputEnabled = true; }
+
+        /// <inheritdoc/>
+        public void OnDisableInput() { InputEnabled = false; }
+
+        /// <inheritdoc/>
+        public void Enable(bool flag, bool force = false) {
+            inputLocker.Enable(flag, force);
         }
     }
 }

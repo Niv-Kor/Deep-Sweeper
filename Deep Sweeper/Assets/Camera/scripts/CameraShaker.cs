@@ -33,8 +33,10 @@ namespace DeepSweeper.CameraSet
         [SerializeField] private float minimalDecay = .1f;
 
         [Header("FX")]
-        [SerializeField] private List<EffectInstructions> FX;
+        [Tooltip("A list of effect instructions to apply on shake.")]
+        [SerializeField] private List<EffectInstructions> FXInstructions;
 
+        [Tooltip("The time it takes the effects to decay [s].")]
         [SerializeField] private float FXDecayTime = 1;
         #endregion
 
@@ -54,7 +56,7 @@ namespace DeepSweeper.CameraSet
         }
 
         private void Start() {
-            this.visualFX = VisualEffectsSheet.Create(CameraRole.Main, FX);
+            this.visualFX = VisualEffectsSheet.Create(CameraRole.Main, FXInstructions);
         }
 
         /// <summary>

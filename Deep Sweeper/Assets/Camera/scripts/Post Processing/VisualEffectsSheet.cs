@@ -64,7 +64,7 @@ namespace DeepSweeper.CameraSet.PostProcessing
                         MemberInfo memberInfo = filterType.GetMember(instruction.Effect)[0];
                         FieldInfo fieldInfo = (FieldInfo)memberInfo;
                         FloatParameter parameter = (FloatParameter)fieldInfo.GetValue(filter);
-                        DynamicEffectValue effect = DynamicEffectValue.Create(parameter, 0, instruction.Value);
+                        DynamicEffectValue effect = DynamicEffectValue.Create(parameter, instruction.LerpTime, instruction.Value);
 
                         if (effect != null) {
                             maxValues.Add(effect, instruction.Value);
@@ -107,7 +107,8 @@ namespace DeepSweeper.CameraSet.PostProcessing
         /// where 0 means the effects' original float value (from when the sheet was created),
         /// and 1 means the effects' configured target float value (from the given instructions).
         /// </param>
-        public IEnumerator Execute(float? time = null, float percent = 1) {
+        public List<IEnumerator> GetExecutionCoroutines(float? time = null, float percent = 1) {
+            List<IEnumerator> list = new List<IEnumerator>();
             percent = Mathf.Clamp(percent, 0f, 1f);
 
             foreach (DynamicEffectValue effect in effects) {
@@ -115,9 +116,11 @@ namespace DeepSweeper.CameraSet.PostProcessing
                     Vector2 valuesRange = new Vector2(effect.OriginValue, maxValue);
                     float tempValue = RangeMath.PercentOfRange(percent, valuesRange);
                     effect.TargetValue = tempValue;
-                    yield return effect.Lerp(time);
+                    list.Add(effect.Lerp(time));
                 }
             }
+
+            return list;
         }
     }
 }
