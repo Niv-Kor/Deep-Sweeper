@@ -1,8 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public static class VectorUtils
 {
+    #region Constants
+    private static readonly float DEFAULT_MIN_ROTATION = -360;
+    private static readonly float DEFAULT_MAX_ROTATION = 360;
+    private static readonly Vector2 DEFAULT_PITCH_RANGE = new Vector2(DEFAULT_MIN_ROTATION, DEFAULT_MAX_ROTATION);
+    private static readonly Vector2 DEFAULT_YAW_RANGE = new Vector2(DEFAULT_MIN_ROTATION, DEFAULT_MAX_ROTATION);
+    private static readonly Vector2 DEFAULT_ROLL_RANGE = new Vector2(DEFAULT_MIN_ROTATION, DEFAULT_MAX_ROTATION);
+    #endregion
+
     /// <summary>
     /// Check if a vector has already reached a certain percentage of the distance it should make.
     /// </summary>
@@ -11,7 +18,7 @@ public static class VectorUtils
     /// <param name="distance">The total distance that's needed to be done</param>
     /// <param name="tolerance">A percentage of the total distance</param>
     /// <returns>True if the vector has already reached the specified percent of the distance.</returns>
-    public static bool EffectivelyReached(Vector3 pos, Vector3 destPos, float distance, float tolerance) {
+    public static bool EffectivelyReached(this Vector3 pos, Vector3 destPos, float distance, float tolerance) {
         return EffectivelyReached(pos, destPos, tolerance * distance / 100);
     }
 
@@ -22,7 +29,7 @@ public static class VectorUtils
     /// <param name="destPos">The position that the vector should finally reach</param>
     /// <param name="toleranceUnits">A distance between the two vectors that can be ignored</param>
     /// <returns>True if the vector has already reached the specified percent of the distance.</returns>
-    public static bool EffectivelyReached(Vector3 pos, Vector3 destPos, float toleranceUnits) {
+    public static bool EffectivelyReached(this Vector3 pos, Vector3 destPos, float toleranceUnits) {
         float dist = Vector3.Distance(pos, destPos);
         return dist <= toleranceUnits;
     }
@@ -35,7 +42,7 @@ public static class VectorUtils
     /// <param name="min">Minimum vactor values</param>
     /// <param name="max">Maximum vector values</param>
     /// <returns>The given vector with clamped values.</returns>
-    public static Vector2 Clamp(Vector2 vector, Vector2 min, Vector2 max) {
+    public static Vector2 Clamp(this Vector2 vector, Vector2 min, Vector2 max) {
         float x = Mathf.Clamp(vector.x, min.x, max.x);
         float y = Mathf.Clamp(vector.y, min.y, max.y);
         return new Vector2(x, y);
@@ -49,7 +56,7 @@ public static class VectorUtils
     /// <param name="min">Minimum vactor values</param>
     /// <param name="max">Maximum vector values</param>
     /// <returns>The given vector with clamped values.</returns>
-    public static Vector3 Clamp(Vector3 vector, Vector3 min, Vector3 max) {
+    public static Vector3 Clamp(this Vector3 vector, Vector3 min, Vector3 max) {
         float x = Mathf.Clamp(vector.x, min.x, max.x);
         float y = Mathf.Clamp(vector.y, min.y, max.y);
         float z = Mathf.Clamp(vector.z, min.z, max.z);
@@ -61,9 +68,9 @@ public static class VectorUtils
     /// </summary>
     /// <returns>A random rotation quaternion.</returns>
     public static Quaternion GenerateRotation(Vector2? xLim = null, Vector2? yLim = null, Vector2? zLim = null) {
-        Vector2 xLimFinal = xLim ?? new Vector2(0, 360);
-        Vector2 yLimFinal = yLim ?? new Vector2(0, 360);
-        Vector2 zLimFinal = zLim ?? new Vector2(0, 360);
+        Vector2 xLimFinal = xLim ?? DEFAULT_PITCH_RANGE;
+        Vector2 yLimFinal = yLim ?? DEFAULT_YAW_RANGE;
+        Vector2 zLimFinal = zLim ?? DEFAULT_ROLL_RANGE;
 
         float pitch = Random.Range(xLimFinal.x, xLimFinal.y);
         float yaw = Random.Range(yLimFinal.x, yLimFinal.y);

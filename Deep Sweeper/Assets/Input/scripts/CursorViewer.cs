@@ -36,7 +36,7 @@ namespace DeepSweeper.UI
         protected override void Awake() {
             base.Awake();
             this.IsDisplayed = displayOnStart;
-            this.inputLocker = new InputLocker(OnEnableInput, OnDisableInput);
+            this.inputLocker = new InputLocker(this);
             Enable(false, true);
 
             //bind events

@@ -13,11 +13,10 @@ namespace DeepSweeper.Player.Input
         public bool Locked { get; private set; } = false;
         #endregion
 
-        /// <param name="enableAction">A method that enables the input</param>
-        /// <param name="disableAction">A method that disables the input</param>
-        public InputLocker(UnityAction enableAction, UnityAction disableAction) {
-            this.enableFunc = enableAction;
-            this.disableFunc = disableAction;
+        /// <param name="lockedInput">The input object</param>
+        public InputLocker(ILockedInput lockedInput) {
+            this.enableFunc = lockedInput.OnEnableInput;
+            this.disableFunc = lockedInput.OnDisableInput;
         }
 
         /// <summary>

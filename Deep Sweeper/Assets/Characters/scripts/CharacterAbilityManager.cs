@@ -71,6 +71,13 @@ namespace DeepSweeper.Characters
         }
 
         /// <summary>
+        /// Strip the current applied ability.
+        /// </summary>
+        public virtual void StripCurrentAbility() {
+            StripAbility(CurrentConfig.Ability);
+        }
+
+        /// <summary>
         /// Unlink the previous abilites.
         /// </summary>
         /// <param name="abilities">The changed ability</param>

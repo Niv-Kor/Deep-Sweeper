@@ -4,6 +4,7 @@ using DeepSweeper.Flow;
 using DeepSweeper.Level.Mine;
 using DeepSweeper.Level.PhaseGate;
 using DeepSweeper.Player;
+using DeepSweeper.Player.ShootingSystem;
 using DeepSweeper.UI.Ingame;
 using DeepSweeper.UI.Ingame.Promt;
 using DeepSweeper.UI.Ingame.Spatials.Commander;
@@ -130,7 +131,7 @@ namespace DeepSweeper.Flow
                 PhaseConfig phase = phases[i];
                 Vector3 areaCenter = phase.Confine.Offset + phase.Confine.Size / 2;
                 Gizmos.DrawWireCube(areaCenter, phase.Confine.Size);
-                Handles.Label(areaCenter, phase.MapName + " (" + (i + 1) + ")");
+                Handles.Label(areaCenter, phase.MapName + $"({i + 1})");
             }
         }
 
@@ -145,7 +146,7 @@ namespace DeepSweeper.Flow
 
                 //instantiate
                 Transform fieldObj = Instantiate(mineFieldPrefab).transform;
-                fieldObj.name = FIELD_NAME + " (" + i + ")";
+                fieldObj.name = FIELD_NAME + $"({i})";
                 fieldObj.position = Vector3.zero;
                 fieldObj.rotation = Quaternion.identity;
                 fieldObj.SetParent(fieldsParent);
@@ -261,6 +262,7 @@ namespace DeepSweeper.Flow
         public void Lose() {
             CommanderSpatial commander = SpatialsManager.Instance.Get(typeof(CommanderSpatial)) as CommanderSpatial;
             List<Persona> aliveCommanders = commander.AnnounceDeath();
+            WeaponManager.Instance.StripCurrentAbility();
             EndPhase(false);
 
             if (aliveCommanders.Count > 0) {

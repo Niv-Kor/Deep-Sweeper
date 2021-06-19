@@ -13,7 +13,7 @@ namespace DeepSweeper.CameraSet
 
         private void Awake() {
             this.controller = GetComponent<CameraController>();
-            this.inputLocker = new InputLocker(OnEnableInput, OnDisableInput);
+            this.inputLocker = new InputLocker(this);
         }
 
         /// <inheritdoc/>

@@ -81,7 +81,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
         public override void ResetValue(Phase phase) {}
 
         /// <inheritdoc/>
-        public override void OnPhaseStarts(Phase phase) {}
+        public override void OnPhaseStarts(Phase phase) { Activate(true); }
 
         /// <inheritdoc/>
         public override void OnPhasePauses(Phase phase) { Activate(false, 0); }
@@ -90,6 +90,6 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
         public override void OnPhaseResumes(Phase phase) { Activate(true, 0); }
 
         /// <inheritdoc/>
-        public override void OnPhaseEnds(Phase phase, bool success) {}
+        public override void OnPhaseEnds(Phase phase, bool success) { Activate(false); }
     }
 }

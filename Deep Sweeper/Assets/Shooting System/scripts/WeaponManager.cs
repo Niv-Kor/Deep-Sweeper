@@ -18,7 +18,7 @@ namespace DeepSweeper.Player.ShootingSystem
         protected override void Awake() {
             base.Awake();
             this.InputEnabled = true;
-            this.inputLocker = new InputLocker(OnEnableInput, OnDisableInput);
+            this.inputLocker = new InputLocker(this);
 
             var gunsArr = GetComponentsInChildren<SubmarineGun>();
             guns = new List<SubmarineGun>(gunsArr);

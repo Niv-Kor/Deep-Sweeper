@@ -12,8 +12,11 @@ namespace DeepSweeper.UI.Ingame.Promt
     {
         #region Exposed Editor Parameters
         [Header("Timing")]
-        [Tooltip("The time it takes the losing window to pop.")]
-        [SerializeField] private float popTime;
+        [Tooltip("The time it takes the window to start popping after the call [s].")]
+        [SerializeField] private float popDelay = 0;
+
+        [Tooltip("The time it takes the losing window to pop [s].")]
+        [SerializeField] private float popTime = .5f;
         #endregion
 
         #region Class Members
@@ -46,6 +49,9 @@ namespace DeepSweeper.UI.Ingame.Promt
         /// <param name="fadeIn">True to fade the window in or false to fade it out</param>
         /// <param name="time">The time it takes the animation to complete [s]</param>
         protected virtual IEnumerator Fade(bool fadeIn, float time) {
+            //delay
+            if (popDelay > 0) yield return new WaitForSeconds(popDelay);
+
             float from = canvas.alpha;
             float to = fadeIn ? 1 : 0;
             float timer = 0;
@@ -63,6 +69,9 @@ namespace DeepSweeper.UI.Ingame.Promt
         /// <param name="up">True to scale the window up or false to scale it down</param>
         /// <param name="time">The time it takes the animation to complete [s]</param>
         protected virtual IEnumerator Scale(bool up, float time) {
+            //delay
+            if (popDelay > 0) yield return new WaitForSeconds(popDelay);
+
             Vector3 from = transform.localScale;
             Vector3 to = up ? Vector3.one : Vector3.zero;
             float timer = 0;
@@ -84,7 +93,7 @@ namespace DeepSweeper.UI.Ingame.Promt
 
             //enable or disable player input
             CursorViewer.Instance.Enable(flag, true);
-            Submarine.Instance.Controller.IsMovable = !flag;
+            //Submarine.Instance.Controller.IsMovable = !flag;
             CameraRig rig = CameraManager.Instance.GetRig(CameraRole.Main);
             WeaponManager.Instance.Enable(!flag, true);
             rig.Enable(!flag, true);
