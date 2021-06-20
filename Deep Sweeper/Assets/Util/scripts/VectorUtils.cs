@@ -13,7 +13,6 @@ public static class VectorUtils
     /// <summary>
     /// Check if a vector has already reached a certain percentage of the distance it should make.
     /// </summary>
-    /// <param name="pos">The current position of the vector</param>
     /// <param name="destPos">The position that the vector should finally reach</param>
     /// <param name="distance">The total distance that's needed to be done</param>
     /// <param name="tolerance">A percentage of the total distance</param>
@@ -25,7 +24,6 @@ public static class VectorUtils
     /// <summary>
     /// Check if a vector has already reached a certain percentage of the distance it should make.
     /// </summary>
-    /// <param name="pos">The current position of the vector</param>
     /// <param name="destPos">The position that the vector should finally reach</param>
     /// <param name="toleranceUnits">A distance between the two vectors that can be ignored</param>
     /// <returns>True if the vector has already reached the specified percent of the distance.</returns>
@@ -38,7 +36,6 @@ public static class VectorUtils
     /// Clamp a vector's coordinates.
     /// Each axis is only compared against itself in the min/max vectors.
     /// </summary>
-    /// <param name="vector">The vector to clamp</param>
     /// <param name="min">Minimum vactor values</param>
     /// <param name="max">Maximum vector values</param>
     /// <returns>The given vector with clamped values.</returns>
@@ -52,7 +49,6 @@ public static class VectorUtils
     /// Clamp a vector's coordinates.
     /// Each axis is only compared against itself in the min/max vectors.
     /// </summary>
-    /// <param name="vector">The vector to clamp</param>
     /// <param name="min">Minimum vactor values</param>
     /// <param name="max">Maximum vector values</param>
     /// <returns>The given vector with clamped values.</returns>
@@ -66,6 +62,9 @@ public static class VectorUtils
     /// <summary>
     /// Generate a random rotation.
     /// </summary>
+    /// <param name="xLim">A pitch range to randomly select from</param>
+    /// <param name="xLim">A yaw range to randomly select from</param>
+    /// <param name="xLim">A roll range to randomly select from</param>
     /// <returns>A random rotation quaternion.</returns>
     public static Quaternion GenerateRotation(Vector2? xLim = null, Vector2? yLim = null, Vector2? zLim = null) {
         Vector2 xLimFinal = xLim ?? DEFAULT_PITCH_RANGE;
@@ -79,6 +78,11 @@ public static class VectorUtils
         return Quaternion.Euler(euler);
     }
 
+    /// <summary>
+    /// Convert each of the vector's positive values to 1
+    /// and negative values to -1.
+    /// </summary>
+    /// <returns>A 3D vector that consists of values from the set {0, 1, -1}.</returns>
     public static Vector3Int StrongNormalize(this Vector3 vector) {
         int x = (vector.x > 0) ? 1 : (vector.x < 0) ? -1 : 0;
         int y = (vector.y > 0) ? 1 : (vector.y < 0) ? -1 : 0;
@@ -86,10 +90,18 @@ public static class VectorUtils
         return new Vector3Int(x, y, z);
     }
 
+    /// <see cref="StrongNormalize(Vector3)"/>
+    /// <returns>A 2D vector that consists of values from the set {0, 1, -1}.</returns>
     public static Vector2Int StrongNormalize(this Vector2 vector) {
         return (Vector2Int) ((Vector3) vector).StrongNormalize();
     }
 
+    /// <summary>
+    /// Check if all of the vector's signs match the signs of another vector.
+    /// Each axis is checked against its equivalent.
+    /// </summary>
+    /// <param name="v2">The vector against which to check</param>
+    /// <returns>True if all signs match.</returns>
     public static bool SameSign(this Vector3 v1, Vector3 v2) {
         bool x = (v1.x == 0 && v2.x == 0) || (v1.x != 0) && Mathf.Sign(v1.x) == Mathf.Sign(v2.x);
         bool y = (v1.y == 0 && v2.y == 0) || (v1.y != 0) && Mathf.Sign(v1.y) == Mathf.Sign(v2.y);
@@ -97,14 +109,28 @@ public static class VectorUtils
         return x & y & z;
     }
 
+    /// <see cref="SameSign(Vector3, Vector3)"/>
     public static bool SameSign(this Vector2 v1, Vector2 v2) {
         return ((Vector3) v1).SameSign(v2);
     }
 
-    public static bool Greater(this Vector3 v1, Vector3 v2) {
-        return v1.Greater(v2, out bool[] _);
-    }
-
+    /// <summary>
+    /// Check if all of the vector's values are greater than the other's,
+    /// while 'greater' means they must be obtainable by duplicating
+    /// the subject values by a positive number.
+    /// </summary>
+    /// <example>
+    /// 9 is greater than 3;
+    /// -9 is greater than -3;
+    /// (8, -2, 0) is greater than (7.8, -1, 0);
+    /// (23, 4, -24) is NOT greater than (8, -2, -40)
+    /// </example>
+    /// <param name="v2">The subject vector against which to check</param>
+    /// <param name="detailedTest">
+    /// An array of flags that indicate which axis is actually greater than the other,
+    /// according to the definition of 'greater'.
+    /// </param>
+    /// <returns>True if the vector is greater than the subject vector.</returns>
     public static bool Greater(this Vector3 v1, Vector3 v2, out bool[] detailedTest) {
         detailedTest = new bool[3] {
             v1.x / v2.x >= 1,
@@ -118,14 +144,27 @@ public static class VectorUtils
         return x & y & z;
     }
 
+    /// <see cref="Greater(Vector3, Vector3, out bool[])"/>
+    public static bool Greater(this Vector3 v1, Vector3 v2) {
+        return v1.Greater(v2, out bool[] _);
+    }
+
+    /// <see cref="Greater(Vector3, Vector3, out bool[])"/>
     public static bool Greater(this Vector2 v1, Vector2 v2) {
         return ((Vector3) v1).Greater(v2);
     }
 
+    /// <see cref="Greater(Vector3, Vector3, out bool[])"/>
     public static bool Greater(this Vector2 v1, Vector2 v2, out bool[] detailedTest) {
         return ((Vector3)v1).Greater(v2, out detailedTest);
     }
 
+    /// <summary>
+    /// Convert the vector to an absolute version of itself,
+    /// where every axis converts to a positive value,
+    /// if it's not already positive or 0.
+    /// </summary>
+    /// <returns>A vector with all values as absolute values.</returns>
     public static Vector3 Abs(this Vector3 vector) {
         float x = Mathf.Abs(vector.x);
         float y = Mathf.Abs(vector.y);
@@ -133,6 +172,7 @@ public static class VectorUtils
         return new Vector3(x, y, z);
     }
 
+    /// <see cref="Abs(Vector3)"/>
     public static Vector2 Abs(this Vector2 vector) {
         return ((Vector3) vector).Abs();
     }
