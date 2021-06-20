@@ -1845,6 +1845,71 @@ PrefabInstance:
       propertyPath: m_Name
       value: Losing Window
       objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[2].Value
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Value
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Value
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Value
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Effect
+      value: contrast
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Filter
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Effect
+      value: contrast
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Filter
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Effect
+      value: contrast
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Filter
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].LerpTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].LerpTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8535360398951409070, guid: 93bb657dc65fbb848a2fe8e8a842a16e,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].LerpTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93bb657dc65fbb848a2fe8e8a842a16e, type: 3}
 --- !u!224 &5996666456430090661 stripped

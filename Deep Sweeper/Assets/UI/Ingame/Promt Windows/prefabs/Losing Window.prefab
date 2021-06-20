@@ -214,12 +214,24 @@ MonoBehaviour:
     LerpTime: 2
   - Filter: 5
     Effect: saturation
-    Value: -100
+    Value: -50
     LerpTime: 2
   - Filter: 5
     Effect: contrast
     Value: 100
     LerpTime: 2
+  - Filter: 6
+    Effect: aperture
+    Value: 0.1
+    LerpTime: 10
+  - Filter: 9
+    Effect: intensity
+    Value: 40
+    LerpTime: 7
+  - Filter: 2
+    Effect: intensity
+    Value: 4
+    LerpTime: 5
 --- !u!1001 &318948018833094079
 PrefabInstance:
   m_ObjectHideFlags: 0

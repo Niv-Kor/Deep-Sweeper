@@ -493,7 +493,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 215667659}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -7747,6 +7747,76 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: c3f9675592ee40548b4238cb755f10a0,
         type: 3}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[2].Value
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Value
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Value
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Value
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Effect
+      value: aperture
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].Filter
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Effect
+      value: intensity
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].Filter
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Effect
+      value: intensity
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].Filter
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[4].LerpTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[5].LerpTime
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
+        type: 3}
+      propertyPath: FXInstruction.Array.data[6].LerpTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5351911047801909624, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: m_RootOrder
@@ -8169,6 +8239,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Submarine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: rollRange.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: rollRange.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: forceRange.x
+      value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: pitchRange.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: recoverySpeed
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 8592290156000329362, guid: e63e7789a0760e043b5da38c58dd039f,
+        type: 3}
+      propertyPath: distanceRange.y
+      value: 350
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e63e7789a0760e043b5da38c58dd039f, type: 3}

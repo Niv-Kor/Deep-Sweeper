@@ -32,9 +32,6 @@ namespace DeepSweeper.Level.Mine
         [Header("Timing")]
         [Tooltip("The time it takes the object to start recovering from the recoil [s].")]
         [SerializeField] private float recoveryDelay;
-
-        [Tooltip("The time it takes the object to recover from the recoil [s].")]
-        [SerializeField] private float recoveryTime;
         #endregion
 
         #region Constants
@@ -73,27 +70,12 @@ namespace DeepSweeper.Level.Mine
 
         /// <summary>
         /// Wait for a certain amount of time before
-        /// recovering the rigidbody's stability.
+        /// recovering the rigidbody's stability (without restoring the original rotation).
         /// </summary>
         /// <param name="delay">The time it takes the recovery to start [s]</param>
-        /// <param name="delay">The time it takes the recovery complete [s]</param>
-        private IEnumerator Recover(float delay, float time) {
+        private IEnumerator RecoverAfter(float delay) {
             yield return new WaitForSeconds(delay);
-            rigidBody.constraints = originConstraints;
-            rigidBody.angularDrag = originAngularDrag;
-
-            Vector3 targetEulerRot = originRotation.eulerAngles;
-            Vector3 currentRot;
-            float timer = 0;
-
-            do {
-                currentRot = transform.rotation.eulerAngles;
-                timer += Time.deltaTime;
-                float step = timer / time;
-                transform.rotation = Quaternion.Lerp(transform.rotation, originRotation, step);
-                yield return null;
-            }
-            while (currentRot.EffectivelyReached(targetEulerRot, .1f));
+            Recover(false);
         }
 
         /// <summary>
@@ -110,13 +92,30 @@ namespace DeepSweeper.Level.Mine
             Vector3 vector = direction * force;
             Quaternion torque = VectorUtils.GenerateRotation(pitchRange, yawRange, rollRange);
 
+            //cache original values before recovery
+            originRotation = transform.rotation;
+            originConstraints = rigidBody.constraints;
+            originAngularDrag = rigidBody.angularDrag;
+
             //apply force
             rigidBody.constraints = RigidbodyConstraints.None;
             rigidBody.angularDrag = PUSHABLE_ANGULAR_DRAG;
             rigidBody.AddRelativeForce(vector);
             rigidBody.AddTorque(torque.eulerAngles * force);
 
-            StartCoroutine(Recover(recoveryDelay, recoveryTime));
+            //recover
+            StartCoroutine(RecoverAfter(recoveryDelay));
+        }
+
+        /// <summary>
+        /// Immediately restore all influenced physics parameters
+        /// back to their original values.
+        /// </summary>
+        /// <param name="recoverRotation">True to also restore the rotation of the object</param>
+        public void Recover(bool recoverRotation = true) {
+            rigidBody.constraints = originConstraints;
+            rigidBody.angularDrag = originAngularDrag;
+            if (recoverRotation) transform.rotation = originRotation;
         }
     }
 }
