@@ -23,8 +23,8 @@ public class BlankScreen : Singleton<BlankScreen>
 
     #region Class Members
     private RawImage image;
-    private Color transparent;
     private Loader loader;
+    private Color transparent;
     #endregion
 
     #region Events
