@@ -1,3 +1,4 @@
+using DeepSweeper.Level;
 using GamedevUtil;
 using UnityEngine;
 
@@ -13,11 +14,6 @@ namespace DeepSweeper.Player.ShootingSystem
 
         #region Constants
         private static readonly int INITIAL_HITS = 10;
-        private static readonly string HITS_PARENT_NAME = "Hits";
-        #endregion
-
-        #region Class Members
-        private Transform hitsParent;
         #endregion
 
         #region Properties
@@ -26,11 +22,6 @@ namespace DeepSweeper.Player.ShootingSystem
 
         protected override void Awake() {
             base.Awake();
-
-            //create barrel
-            this.hitsParent = new GameObject(HITS_PARENT_NAME).transform;
-            hitsParent.SetParent(transform);
-            hitsParent.localPosition = Vector3.zero;
         }
 
         private void Start() {
@@ -52,8 +43,7 @@ namespace DeepSweeper.Player.ShootingSystem
         /// <inheritdoc/>
         public override BulletHit Make() {
             BulletHit hit = Instantiate(bulletHitPrefab);
-            hit.transform.SetParent(hitsParent);
-            hit.transform.localPosition = Vector3.zero;
+            FXManager.Instance.Adopt(hit.transform);
             hit.FadeEvent += delegate { Return(hit); };
             return hit;
         }
