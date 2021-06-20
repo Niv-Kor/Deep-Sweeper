@@ -4,22 +4,23 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     #region Class Members
-    private static T m_instance;
+    private static T m_instance = null;
     #endregion
 
     #region Properties
     public static T Instance {
         get {
             if (m_instance == null) {
-                try { m_instance = FindObjectOfType<T>(); }
-                catch (NullReferenceException) { return null; }
+                m_instance = FindObjectOfType<T>();
+                return m_instance;
             }
+
             return m_instance;
         }
     }
     #endregion
 
     protected virtual void Awake() {
-        if (m_instance != null && m_instance != this) Destroy(this);
+        if (Instance != this) Destroy(this);
     }
 }
