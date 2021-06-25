@@ -18,7 +18,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
 
         #region Class Members
         protected RectTransform rect;
-        protected Transform camTransform;
+        protected Transform playerTransform;
         #endregion
 
         #region Properties
@@ -29,7 +29,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
         #endregion
 
         protected virtual void Start() {
-            this.camTransform = CameraManager.Instance.GetRig(CameraRole.Main).transform;
+            this.playerTransform = CameraManager.Instance.GetCamera(CameraRole.Main).transform;
             this.rect = GetComponent<RectTransform>();
             StartCoroutine(Rotate());
         }
@@ -39,7 +39,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
         /// </summary>
         /// <returns>The next direction of the sonar.</returns>
         protected virtual float CalcAngle() {
-            return camTransform.eulerAngles.y;
+            return playerTransform.eulerAngles.y - 30;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sonar
                     if (rotationSpeed == 0) rect.rotation = rotQuat;
                     else {
                         //check if final rotation has been changed
-                        bool changed = !VectorUtils.EffectivelyReached(rot, targetRot, CHANGE_TOLERANCE);
+                        bool changed = !rot.EffectivelyReached(targetRot, CHANGE_TOLERANCE);
                         if (changed) {
                             startingRot = transform.rotation;
                             targetRot = rot;

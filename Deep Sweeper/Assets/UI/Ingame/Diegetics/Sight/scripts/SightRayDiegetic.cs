@@ -241,7 +241,7 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sight
         public override void ResetValue(Phase phase) {}
 
         /// <inheritdoc/>
-        public override void OnPhaseStarts(Phase phase) { Activate(true); }
+        public override void OnPhaseStarts(Phase phase) {}
 
         /// <inheritdoc/>
         public override void OnPhasePauses(Phase phase) { Activate(false, 0); }
@@ -250,6 +250,6 @@ namespace DeepSweeper.UI.Ingame.Diegetics.Sight
         public override void OnPhaseResumes(Phase phase) { Activate(true, 0); }
 
         /// <inheritdoc/>
-        public override void OnPhaseEnds(Phase phase, bool success) { Activate(false); }
+        public override void OnPhaseEnds(Phase phase, bool success) {}
     }
 }
