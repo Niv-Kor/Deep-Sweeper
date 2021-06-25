@@ -7714,22 +7714,22 @@ PrefabInstance:
     - target: {fileID: 3047450920800506125, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: Characters.Array.data[0]
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3047450920800506125, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: Characters.Array.data[1]
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3047450920800506125, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: Characters.Array.data[2]
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3047450920800506125, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: Characters.Array.data[3]
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3638984990056160272, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
@@ -7747,76 +7747,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: c3f9675592ee40548b4238cb755f10a0,
         type: 3}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[2].Value
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[4].Value
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[5].Value
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[6].Value
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[4].Effect
-      value: aperture
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[4].Filter
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[5].Effect
-      value: intensity
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[5].Filter
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[6].Effect
-      value: intensity
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[6].Filter
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[4].LerpTime
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[5].LerpTime
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4306355561123475826, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
-        type: 3}
-      propertyPath: FXInstruction.Array.data[6].LerpTime
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 5351911047801909624, guid: 2643dd6e942eabc4fb7bd56a5aaff5ff,
         type: 3}
       propertyPath: m_RootOrder
